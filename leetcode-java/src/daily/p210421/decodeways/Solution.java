@@ -1,5 +1,8 @@
 package daily.p210421.decodeways;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 91. Decode Ways
  *
@@ -23,7 +26,6 @@ package daily.p210421.decodeways;
  * The answer is guaranteed to fit in a 32-bit integer.
  */
 
-// @TODO
 class Solution {
 
     public int numDecodings(String s) {
@@ -35,35 +37,21 @@ class Solution {
             return 1;
         }
 
-        int[] ways = new int[s.length() + 1];
-        ways[0] = 1;
-
-        for (var i = 1; i <= s.length(); i++) {
-            if (s.charAt(i - 1) != '0') {
-                ways[i] += ways[i - 1];
-            }
-            if (i >= 2 && s.charAt(i - 2) != '0' && ((s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0') <= 26)) {
-                ways[i] += ways[i - 2];
-            }
+        Map<String, Character> possibles = new HashMap<>();
+        for (var c = 'A'; c < 'Z'; c++) {
+            possibles.put(String.valueOf(c - 'A' + 1), c);
         }
 
-        return ways[s.length()];
+        return 0;
     }
 
-    /**
-     * 1            1
-     * 11           11 1,1
-     * 111          11,1 1,11 1,1,1
-     * 1111         11,11 11,1,1 1,11,1 1,1,11 1,1,1,1
-     */
     public static void main(String[] args) {
         assert new Solution().numDecodings("6") == 1;
         assert new Solution().numDecodings("06") == 0;
         assert new Solution().numDecodings("12") == 2; // 12 1,2
         assert new Solution().numDecodings("10") == 1; // 10
         assert new Solution().numDecodings("101") == 1; // 10,1
-        assert new Solution().numDecodings("1011") == 2; // 10,11 10,1,1
-        assert new Solution().numDecodings("11106") == 2; // 11,10,6 1,1,10,6
+        assert new Solution().numDecodings("1011") == 1; // 10,11 10,1,1
     }
 
 }
