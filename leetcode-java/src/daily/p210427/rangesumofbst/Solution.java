@@ -1,4 +1,4 @@
-package daily.p210427rangesumofbst;
+package daily.p210427.rangesumofbst;
 
 /**
  * 938. Range Sum of BST
