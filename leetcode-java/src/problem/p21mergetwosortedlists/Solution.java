@@ -60,7 +60,7 @@ public class Solution {
             }
         }
 
-        return true;
+        return list == null;
     }
 
 }
