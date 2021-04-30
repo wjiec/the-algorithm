@@ -1,6 +1,4 @@
-package daily.p210428.sumofsquarenumbers;
-
-import java.util.regex.Matcher;
+package daily.d210428p633sumofsquarenumbers;
 
 /**
  * 633. Sum of Square Numbers

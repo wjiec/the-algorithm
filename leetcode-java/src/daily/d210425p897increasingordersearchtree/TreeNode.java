@@ -1,4 +1,4 @@
-package daily.p210427.rangesumofbst;
+package daily.d210425p897increasingordersearchtree;
 
 public class TreeNode {
     int val;

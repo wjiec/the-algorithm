@@ -1,7 +1,5 @@
 package problem.p21mergetwosortedlists;
 
-import daily.p210425.increasingordersearchtree.TreeNode;
-
 /**
  * 21. Merge Two Sorted Lists
  *

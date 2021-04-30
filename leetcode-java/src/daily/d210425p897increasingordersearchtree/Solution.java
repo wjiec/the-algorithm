@@ -1,4 +1,6 @@
-package daily.p210425.increasingordersearchtree;
+package daily.d210425p897increasingordersearchtree;
+
+import java.util.Stack;
 
 /**
  * 897. Increasing Order Search Tree
@@ -9,23 +11,6 @@ package daily.p210425.increasingordersearchtree;
  * node in the tree is now the root of the tree, and every node has no left child and only one right child.
  */
 
-import java.util.Stack;
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 public class Solution {
 
     public TreeNode increasingBST(TreeNode root) {

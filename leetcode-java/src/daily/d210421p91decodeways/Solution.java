@@ -1,7 +1,4 @@
-package daily.p210421.decodeways;
-
-import java.util.HashMap;
-import java.util.Map;
+package daily.d210421p91decodeways;
 
 /**
  * 91. Decode Ways
@@ -37,12 +34,19 @@ class Solution {
             return 1;
         }
 
-        Map<String, Character> possibles = new HashMap<>();
-        for (var c = 'A'; c < 'Z'; c++) {
-            possibles.put(String.valueOf(c - 'A' + 1), c);
+        int[] ways = new int[s.length() + 1];
+        ways[0] = 1;
+
+        for (var i = 1; i <= s.length(); i++) {
+            if (s.charAt(i - 1) != '0') {
+                ways[i] += ways[i - 1];
+            }
+            if (i >= 2 && s.charAt(i - 2) != '0' && ((s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0') <= 26)) {
+                ways[i] += ways[i - 2];
+            }
         }
 
-        return 0;
+        return ways[s.length()];
     }
 
     public static void main(String[] args) {
