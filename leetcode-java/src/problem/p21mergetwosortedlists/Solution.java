@@ -1,5 +1,10 @@
 package problem.p21mergetwosortedlists;
 
+import common.ListNode;
+
+import static common.ListNode.build;
+import static common.Checker.check;
+
 /**
  * 21. Merge Two Sorted Lists
  *
@@ -36,29 +41,6 @@ public class Solution {
         assert check(new Solution().mergeTwoLists(null, null));
         assert check(new Solution().mergeTwoLists(null, build(0)), 0);
         assert check(new Solution().mergeTwoLists(build(1,2,4), build(1,3,4)), 1,1,2,3,4);
-    }
-
-    private static ListNode build(int ...numbers) {
-        ListNode list = new ListNode();
-        ListNode curr = list;
-        for (var n : numbers) {
-            curr.next = new ListNode(n);
-            curr = curr.next;
-        }
-
-        return list.next;
-    }
-
-    private static boolean check(ListNode list, int ...numbers) {
-        for (var n : numbers) {
-            if (list != null && list.val == n) {
-                list = list.next;
-            } else {
-                return false;
-            }
-        }
-
-        return list == null;
     }
 
 }

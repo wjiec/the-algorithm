@@ -1,5 +1,10 @@
 package problem.p2addtwonumbers;
 
+import common.ListNode;
+
+import static common.ListNode.build;
+import static common.Checker.check;
+
 /**
  * 2. Add Two Numbers
  *
@@ -45,29 +50,6 @@ class Solution {
         assert check(new Solution().addTwoNumbers(build(1, 0), build(1)), 2, 0);
         assert check(new Solution().addTwoNumbers(build(1, 1), build(9, 8)), 0, 0, 1);
         assert check(new Solution().addTwoNumbers(build(2, 4, 3), build(5, 6, 4)), 7, 0, 8);
-    }
-
-    private static ListNode build(int ...numbers) {
-        ListNode list = new ListNode();
-        ListNode curr = list;
-        for (var n : numbers) {
-            curr.next = new ListNode(n);
-            curr = curr.next;
-        }
-
-        return list.next;
-    }
-
-    private static boolean check(ListNode list, int ...numbers) {
-        for (var n : numbers) {
-            if (list != null && list.val == n) {
-                list = list.next;
-            } else {
-                return false;
-            }
-        }
-
-        return list == null;
     }
 
 }

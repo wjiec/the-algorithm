@@ -24,4 +24,16 @@ public class Checker {
         return p.val == q.val && check(p.left, q.left) && check(p.right, q.right);
     }
 
+    public static boolean check(ListNode list, int ...numbers) {
+        for (var n : numbers) {
+            if (list != null && list.val == n) {
+                list = list.next;
+            } else {
+                return false;
+            }
+        }
+
+        return list == null;
+    }
+
 }

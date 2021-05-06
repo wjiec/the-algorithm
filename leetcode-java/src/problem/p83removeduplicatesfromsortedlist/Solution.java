@@ -1,5 +1,10 @@
 package problem.p83removeduplicatesfromsortedlist;
 
+import common.ListNode;
+
+import static common.ListNode.build;
+import static common.Checker.check;
+
 /**
  * 83. Remove Duplicates from Sorted List
  *
@@ -29,29 +34,6 @@ public class Solution {
         assert check(new Solution().deleteDuplicates(build(1,1,1,1,1)), 1);
         assert check(new Solution().deleteDuplicates(build(1,1,2)), 1, 2);
         assert check(new Solution().deleteDuplicates(build(1,1,2,3,3)), 1, 2, 3);
-    }
-
-    private static ListNode build(int ...numbers) {
-        ListNode list = new ListNode();
-        ListNode curr = list;
-        for (var n : numbers) {
-            curr.next = new ListNode(n);
-            curr = curr.next;
-        }
-
-        return list.next;
-    }
-
-    private static boolean check(ListNode list, int ...numbers) {
-        for (var n : numbers) {
-            if (list != null && list.val == n) {
-                list = list.next;
-            } else {
-                return false;
-            }
-        }
-
-        return list == null;
     }
 
 }
