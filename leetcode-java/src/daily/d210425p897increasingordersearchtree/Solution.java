@@ -1,5 +1,7 @@
 package daily.d210425p897increasingordersearchtree;
 
+import common.TreeNode;
+
 import java.util.Stack;
 
 /**
@@ -74,24 +76,6 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        System.out.println(buildTree0());
-        System.out.println(new Solution().increasingBST(buildTree0()));
-        System.out.println(new Solution().byStack(buildTree0()));
-        System.out.println(new Solution().incredible(buildTree0()));
-    }
-
-    private static TreeNode buildTree0() {
-        TreeNode root = new TreeNode(5);
-        root.insert(3);
-        root.insert(2);
-        root.insert(1);
-        root.insert(4);
-        root.insert(6);
-        root.insert(8);
-        root.insert(7);
-        root.insert(9);
-
-        return root;
     }
 
 }

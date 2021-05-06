@@ -1,5 +1,7 @@
 package problem.p104maximumdepthofbinarytree;
 
+import common.TreeNode;
+
 /**
  * 104. Maximum Depth of Binary Tree
  *

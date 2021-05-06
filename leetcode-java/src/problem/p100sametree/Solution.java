@@ -1,5 +1,7 @@
 package problem.p100sametree;
 
+import common.TreeNode;
+
 /**
  * 100. Same Tree
  *
@@ -22,6 +24,7 @@ public class Solution {
     }
 
     public static void main(String[] args) {
+        assert new Solution().isSameTree(TreeNode.build(1,2,3), TreeNode.build(1,2,3));
     }
 
 }

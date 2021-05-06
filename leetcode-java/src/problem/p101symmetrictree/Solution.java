@@ -1,5 +1,9 @@
 package problem.p101symmetrictree;
 
+import common.TreeNode;
+
+import java.util.Objects;
+
 /**
  * 101. Symmetric Tree
  *
@@ -22,6 +26,7 @@ public class Solution {
     }
 
     public static void main(String[] args) {
+        assert new Solution().isSymmetric(Objects.requireNonNull(TreeNode.build(1, 2, 2, 3, 4, 4, 3)));
     }
 
 }

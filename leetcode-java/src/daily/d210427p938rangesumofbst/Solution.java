@@ -1,5 +1,7 @@
 package daily.d210427p938rangesumofbst;
 
+import common.TreeNode;
+
 /**
  * 938. Range Sum of BST
  *
@@ -24,20 +26,6 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        System.out.println(buildTree0());
-        System.out.println(new Solution().rangeSumBST(buildTree0(), 7, 15));
-        System.out.println(new Solution().rangeSumBST(null, 7, 15));
-    }
-
-    private static TreeNode buildTree0() {
-        TreeNode root = new TreeNode(10);
-        root.insert(5);
-        root.insert(3);
-        root.insert(7);
-        root.insert(15);
-        root.insert(18);
-
-        return root;
     }
 
 }

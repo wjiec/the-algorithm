@@ -1,5 +1,7 @@
 package problem.p110balancedbinarytree;
 
+import common.TreeNode;
+
 /**
  * 110. Balanced Binary Tree
  *
