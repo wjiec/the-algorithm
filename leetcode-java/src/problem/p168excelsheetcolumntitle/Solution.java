@@ -1,5 +1,13 @@
 package problem.p168excelsheetcolumntitle;
 
+/**
+ * 168. Excel Sheet Column Title
+ *
+ * https://leetcode-cn.com/problems/excel-sheet-column-title/
+ *
+ * Given an integer columnNumber, return its corresponding column title as it appears in an Excel sheet.
+ */
+
 public class Solution {
 
     public String convertToTitle(int columnNumber) {
