@@ -25,6 +25,10 @@ public class Checker {
     }
 
     public static boolean check(ListNode list, int ...numbers) {
+        if (list == null || numbers.length == 0) {
+            return list == null && numbers.length == 0;
+        }
+
         for (var n : numbers) {
             if (list != null && list.val == n) {
                 list = list.next;
