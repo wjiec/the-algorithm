@@ -1,6 +1,17 @@
-package weekly.biweekly52.p4;
+package weekly.bw52.p4p5212sumofflooredpairs;
 
 import java.util.Arrays;
+
+/**
+ * 5212. Sum of Floored Pairs
+ *
+ * https://leetcode-cn.com/contest/biweekly-contest-52/problems/sum-of-floored-pairs/
+ *
+ * Given an integer array nums, return the sum of floor(nums[i] / nums[j]) for all pairs of indices
+ * 0 <= i, j < nums.length in the array. Since the answer may be too large, return it modulo 109 + 7.
+ *
+ * The floor() function returns the integer part of the division.
+ */
 
 public class Solution {
 
