@@ -1,4 +1,17 @@
-package weekly.w242.p0;
+package weekly.w242.p0p1869longercontiguoussegmentsofonesthanzeros;
+
+/**
+ * 1869. Longer Contiguous Segments of Ones than Zeros
+ *
+ * Given a binary string s, return true if the longest contiguous segment of 1s is strictly longer than
+ * the longest contiguous segment of 0s in s. Return false otherwise.
+ *
+ * For example, in s = "110100010" the longest contiguous segment of 1s has length 2,
+ * and the longest contiguous segment of 0s has length 3.
+ *
+ * Note that if there are no 0s, then the longest contiguous segment of 0s is considered to have length 0.
+ * The same applies if there are no 1s.
+ */
 
 public class Solution {
 
