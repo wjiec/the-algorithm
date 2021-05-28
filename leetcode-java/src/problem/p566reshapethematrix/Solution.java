@@ -39,7 +39,6 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        System.out.println(Arrays.deepToString(new Solution().matrixReshape(new int[][]{{1, 2}}, 1, 1)));
         assert Arrays.deepEquals(new Solution().matrixReshape(new int[][]{{1,2}, {3,4}}, 1, 4), new int[][]{{1,2,3,4}});
         assert Arrays.deepEquals(new Solution().matrixReshape(new int[][]{{1,2}, {3,4}}, 2, 4), new int[][]{{1,2}, {3,4}});
         assert Arrays.deepEquals(new Solution().matrixReshape(new int[][]{{1,2}}, 1, 1), new int[][]{{1, 2}});
