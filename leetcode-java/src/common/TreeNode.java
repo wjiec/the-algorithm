@@ -39,4 +39,23 @@ public class TreeNode {
         return root;
     }
 
+    public static TreeNode build(String input) {
+        if (input.charAt(0) == '[') {
+            input = input.substring(1);
+        }
+        if (input.charAt(input.length() - 1) == ']') {
+            input = input.substring(0, input.length() - 1);
+        }
+
+        String[] ss = input.split(",");
+        Integer[] ns = new Integer[ss.length];
+        for (int i = 0; i < ss.length; i++) {
+            if (!ss[i].equals("null")) {
+                ns[i] = Integer.valueOf(ss[i].trim(), 10);
+            }
+        }
+
+        return build(ns);
+    }
+
 }
