@@ -15,6 +15,19 @@ public class Checker {
         return true;
     }
 
+    public static boolean check(boolean[] l, boolean[] r) {
+        if (l.length != r.length) {
+            return false;
+        }
+
+        for (int i = 0; i < l.length; i++) {
+            if (l[i] != r[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean check(TreeNode p, TreeNode q) {
         if (p == null && q == null) {
             return true;
