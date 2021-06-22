@@ -21,9 +21,9 @@ public class Solution {
 
     public List<Boolean> prefixesDivBy5(int[] nums) {
         List<Boolean> ans = new ArrayList<>();
-        for (int i = 0, l = nums.length, v = 0, sum = 0; i < l; i++) {
-            v = ((v << 1) | nums[i]) & 0xf;
-            ans.add((sum += v) % 5 == 0);
+        for (int i = 0, l = nums.length, v = 0; i < l; i++) {
+            v = ((v << 1) | nums[i]) % 5;
+            ans.add(v == 0);
         }
         return ans;
     }
