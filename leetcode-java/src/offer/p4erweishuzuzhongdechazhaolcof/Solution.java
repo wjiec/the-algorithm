@@ -11,7 +11,16 @@ package offer.p4erweishuzuzhongdechazhaolcof;
 
 public class Solution {
 
-    // @TODO
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int row = matrix.length - 1, col = 0;
+        while (row >= 0 && col < matrix[0].length) {
+            if (matrix[row][col] > target) row--;
+            else if (matrix[row][col] < target) col++;
+            else return true;
+        }
+        return false;
+    }
+
     public boolean findNumberIn2DArray(int[][] matrix, int target) {
         if (matrix.length == 0) return false;
         for (int i = 0, n = matrix[0].length; i < n; i++) {
