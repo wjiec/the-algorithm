@@ -1,7 +1,5 @@
 package daily.d210912p678validparenthesisstring;
 
-import java.util.Stack;
-
 /**
  * 678. Valid Parenthesis String
  *
