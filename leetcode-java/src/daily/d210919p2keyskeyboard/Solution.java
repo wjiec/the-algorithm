@@ -1,4 +1,4 @@
-package daily.d2109192keyskeyboard;
+package daily.d210919p2keyskeyboard;
 
 /**
  * 650. 2 Keys Keyboard
