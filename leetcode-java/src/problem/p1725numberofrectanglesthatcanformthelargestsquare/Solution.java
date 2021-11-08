@@ -1,8 +1,5 @@
 package problem.p1725numberofrectanglesthatcanformthelargestsquare;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 1725. Number Of Rectangles That Can Form The Largest Square
  *
