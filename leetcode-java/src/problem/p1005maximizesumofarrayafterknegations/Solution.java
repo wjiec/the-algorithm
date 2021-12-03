@@ -1,6 +1,8 @@
 package problem.p1005maximizesumofarrayafterknegations;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 1005. Maximize Sum Of Array After K Negations
@@ -17,23 +19,37 @@ import java.util.Arrays;
 public class Solution {
 
     public int largestSumAfterKNegations(int[] nums, int k) {
-        Arrays.sort(nums);
-
-        int sum = 0, idx = 0;
-        for (; nums[idx] < 0 && idx < k; idx++) nums[idx] = -nums[idx];
-        if ((k - idx) % 2 == 1) {
-            if (idx != 0 && nums[idx - 1] < nums[idx]) {
-                idx -= 1;
-            }
-
-            nums[idx] = -nums[idx];
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
         }
-
-        for (var n : nums) sum += n;
-        return sum;
+        int ans = Arrays.stream(nums).sum();
+        for (int i = -100; i < 0; ++i) {
+            if (freq.containsKey(i)) {
+                int ops = Math.min(k, freq.get(i));
+                ans += (-i) * ops * 2;
+                freq.put(i, freq.get(i) - ops);
+                freq.put(-i, freq.getOrDefault(-i, 0) + ops);
+                k -= ops;
+                if (k == 0) {
+                    break;
+                }
+            }
+        }
+        if (k % 2 == 1 && !freq.containsKey(0)) {
+            for (int i = 1; i <= 100; ++i) {
+                if (freq.containsKey(i)) {
+                    ans -= i * 2;
+                    break;
+                }
+            }
+        }
+        return ans;
     }
 
     public static void main(String[] args) {
+        assert new Solution().largestSumAfterKNegations(new int[]{-4,-2,-3}, 4) == 5;
+
         assert new Solution().largestSumAfterKNegations(new int[]{-8,3,-5,-3,-5,-2}, 6) == 22;
         assert new Solution().largestSumAfterKNegations(new int[]{4,2,3}, 1) == 5;
         assert new Solution().largestSumAfterKNegations(new int[]{3,-1,0,2}, 3) == 6;
