@@ -1,9 +1,7 @@
 package problem.p2032twooutofthree;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 2032. Two Out of Three
