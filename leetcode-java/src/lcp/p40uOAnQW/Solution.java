@@ -1,8 +1,6 @@
 package lcp.p40uOAnQW;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 /**
  * LCP 40. 心算挑战
