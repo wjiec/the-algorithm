@@ -1,7 +1,9 @@
 package problem.p219containsduplicateii;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 219. Contains Duplicate II
@@ -14,13 +16,28 @@ import java.util.Map;
 
 public class Solution {
 
+    // slow
     public boolean containsNearbyDuplicate(int[] nums, int k) {
-        Map<Integer, Integer> indexs = new HashMap<>();
+        Set<Integer> set = new HashSet<>();
         for (int i = 0; i < nums.length; i++) {
-            if (indexs.containsKey(nums[i]) && i - indexs.get(nums[i]) <= k) {
+            if (set.contains(nums[i])) {
                 return true;
             }
-            indexs.put(nums[i], i);
+
+            set.add(nums[i]);
+            if (set.size() > k) set.remove(nums[i - k]);
+        }
+        return false;
+    }
+
+    // fast
+    public boolean containsNearbyDuplicate1(int[] nums, int k) {
+        Map<Integer, Integer> indexes = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (indexes.containsKey(nums[i]) && i - indexes.get(nums[i]) <= k) {
+                return true;
+            }
+            indexes.put(nums[i], i);
         }
         return false;
     }
@@ -29,6 +46,10 @@ public class Solution {
         assert new Solution().containsNearbyDuplicate(new int[]{1,2,3,1}, 3);
         assert new Solution().containsNearbyDuplicate(new int[]{1,0,1,1}, 1);
         assert !new Solution().containsNearbyDuplicate(new int[]{1,2,3,1,2,3}, 2);
+
+        assert new Solution().containsNearbyDuplicate1(new int[]{1,2,3,1}, 3);
+        assert new Solution().containsNearbyDuplicate1(new int[]{1,0,1,1}, 1);
+        assert !new Solution().containsNearbyDuplicate1(new int[]{1,2,3,1,2,3}, 2);
     }
 
 }
