@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         LeetcodeCN Pager
+// @name         LeetCodeCN Pager
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  Fucking Pagination
