@@ -34,7 +34,7 @@ public class Solution {
                 nums[i] = 0xff;
 
                 curr.add(v);
-                dfs(nums, ans, curr);
+                backtrack(nums, ans, curr);
                 curr.remove(curr.size() - 1);
 
                 nums[i] = v;
