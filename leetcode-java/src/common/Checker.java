@@ -1,31 +1,30 @@
 package common;
 
+import java.lang.reflect.Array;
+
 public class Checker {
 
-    public static boolean check(int[] l, int[] r) {
-        if (l.length != r.length) {
-            return false;
-        }
-
-        for (int i = 0; i < l.length; i++) {
-            if (l[i] != r[i]) {
+    public static boolean check(Object a, Object b) {
+        Class<?> ca = a.getClass(), cb = b.getClass();
+        if (ca.isArray() && cb.isArray()) {
+            if (Array.getLength(a) != Array.getLength(b)) {
                 return false;
             }
-        }
-        return true;
-    }
 
-    public static boolean check(boolean[] l, boolean[] r) {
-        if (l.length != r.length) {
-            return false;
-        }
-
-        for (int i = 0; i < l.length; i++) {
-            if (l[i] != r[i]) {
-                return false;
+            for (int i = 0, l = Array.getLength(a); i < l; i++) {
+                if (!check(Array.get(a, i), Array.get(b, i))) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+
+        if (ca == Double.class && cb == Double.class) {
+            double x = (double) a, y = (double) b;
+            return (x > y ? x - y : y - x) < 1e-10;
+        }
+
+        return a.equals(b);
     }
 
     public static boolean check(TreeNode p, TreeNode q) {
@@ -51,6 +50,14 @@ public class Checker {
         }
 
         return list == null;
+    }
+
+    public static void main(String[] args) {
+        assert check(new int[]{1, 2, 3}, new int[]{1, 2, 3});
+        assert !check(new int[]{1, 2, 3}, new int[]{1, 2, 3, 4});
+        assert check(1, 1);
+        assert check("hello", "hello");
+        assert check(9.261, 9.261000000000001);
     }
 
 }
