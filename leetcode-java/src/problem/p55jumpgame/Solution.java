@@ -1,4 +1,4 @@
-package problem.p56jumpgame;
+package problem.p55jumpgame;
 
 /**
  * 55. Jump Game
