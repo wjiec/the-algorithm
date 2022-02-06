@@ -2,8 +2,8 @@ package problem.p2addtwonumbers;
 
 import common.ListNode;
 
-import static common.ListNode.build;
 import static common.Checker.check;
+import static common.ListNode.build;
 
 /**
  * 2. Add Two Numbers

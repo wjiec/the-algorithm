@@ -1,9 +1,7 @@
 package daily.d220126p2013detectsquares;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 2013. Detect Squares

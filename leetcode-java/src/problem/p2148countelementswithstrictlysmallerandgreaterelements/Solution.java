@@ -1,7 +1,5 @@
 package problem.p2148countelementswithstrictlysmallerandgreaterelements;
 
-import java.util.*;
-
 /**
  * 2148. Count Elements With Strictly Smaller and Greater Elements
  *

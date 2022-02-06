@@ -1,6 +1,5 @@
 package daily.d210830p528randompickwithweight;
 
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

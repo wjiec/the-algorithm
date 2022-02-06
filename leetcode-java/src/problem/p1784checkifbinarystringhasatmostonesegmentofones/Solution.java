@@ -1,7 +1,5 @@
 package problem.p1784checkifbinarystringhasatmostonesegmentofones;
 
-import javax.security.auth.login.CredentialNotFoundException;
-
 /**
  * 1784. Check if Binary String Has at Most One Segment of Ones
  *

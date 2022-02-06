@@ -1,7 +1,5 @@
 package problem.p1614maximumnestingdepthoftheparentheses;
 
-import java.util.Stack;
-
 /**
  * 1614. Maximum Nesting Depth of the Parentheses
  *

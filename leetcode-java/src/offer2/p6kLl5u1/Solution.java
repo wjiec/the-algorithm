@@ -2,8 +2,6 @@ package offer2.p6kLl5u1;
 
 import common.Checker;
 
-import java.awt.*;
-
 /**
  * 剑指 Offer II 006. 排序数组中两个数字之和
  *

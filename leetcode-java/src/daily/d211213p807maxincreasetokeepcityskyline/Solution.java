@@ -1,7 +1,5 @@
 package daily.d211213p807maxincreasetokeepcityskyline;
 
-import java.util.Arrays;
-
 /**
  * 807. Max Increase to Keep City Skyline
  *

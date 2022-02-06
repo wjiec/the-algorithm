@@ -1,8 +1,5 @@
 package problem.p53maximumsubarray;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.awt.print.Pageable;
-
 /**
  * 53. Maximum Subarray
  *

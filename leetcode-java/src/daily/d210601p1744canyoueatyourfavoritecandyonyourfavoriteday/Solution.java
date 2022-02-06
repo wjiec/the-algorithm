@@ -2,8 +2,6 @@ package daily.d210601p1744canyoueatyourfavoritecandyonyourfavoriteday;
 
 import common.Checker;
 
-import java.util.Arrays;
-
 /**
  * 1744. Can You Eat Your Favorite Candy on Your Favorite Day?
  *

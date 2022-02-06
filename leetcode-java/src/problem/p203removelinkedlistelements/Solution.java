@@ -3,8 +3,6 @@ package problem.p203removelinkedlistelements;
 import common.Checker;
 import common.ListNode;
 
-import java.util.List;
-
 /**
  * 203. Remove Linked List Elements
  *

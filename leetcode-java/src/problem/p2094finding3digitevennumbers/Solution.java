@@ -1,6 +1,8 @@
 package problem.p2094finding3digitevennumbers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 2094. Finding 3-Digit Even Numbers

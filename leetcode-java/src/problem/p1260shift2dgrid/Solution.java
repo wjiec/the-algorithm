@@ -1,6 +1,5 @@
 package problem.p1260shift2dgrid;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 

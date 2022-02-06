@@ -1,7 +1,5 @@
 package problem.p1360numberofdaysbetweentwodates;
 
-import java.util.Map;
-
 /**
  * 1360. Number of Days Between Two Dates
  *

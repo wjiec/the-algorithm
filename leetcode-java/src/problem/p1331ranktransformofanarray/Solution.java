@@ -2,9 +2,9 @@ package problem.p1331ranktransformofanarray;
 
 import common.Checker;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 1331. Rank Transform of an Array

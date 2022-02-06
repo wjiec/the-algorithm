@@ -1,7 +1,5 @@
 package problem.p2000reverseprefixofword;
 
-import java.util.Stack;
-
 /**
  * 2000. Reverse Prefix of Word
  *

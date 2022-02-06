@@ -1,7 +1,5 @@
 package problem.p1854maximumpopulationyear;
 
-import java.util.Arrays;
-
 /**
  * 1854. Maximum Population Year
  *

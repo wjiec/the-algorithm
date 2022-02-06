@@ -1,6 +1,5 @@
 package problem.p1046laststoneweight;
 
-import java.util.Arrays;
 import java.util.PriorityQueue;
 
 /**

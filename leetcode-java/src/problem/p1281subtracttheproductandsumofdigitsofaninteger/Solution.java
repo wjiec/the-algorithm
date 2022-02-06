@@ -1,7 +1,5 @@
 package problem.p1281subtracttheproductandsumofdigitsofaninteger;
 
-import com.sun.jdi.PathSearchingVirtualMachine;
-
 /**
  * 1281. Subtract the Product and Sum of Digits of an Integer
  *

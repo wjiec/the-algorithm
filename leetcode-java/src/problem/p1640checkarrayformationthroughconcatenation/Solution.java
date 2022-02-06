@@ -1,8 +1,6 @@
 package problem.p1640checkarrayformationthroughconcatenation;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 1640. Check Array Formation Through Concatenation

@@ -1,7 +1,5 @@
 package problem.p54spiralmatrix;
 
-import common.Checker;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,8 +2,6 @@ package offer.p29shunshizhendayinjuzhenlcof;
 
 import common.Checker;
 
-import java.util.Arrays;
-
 /**
  * 剑指 Offer 29. 顺时针打印矩阵
  *

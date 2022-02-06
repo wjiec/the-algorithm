@@ -1,6 +1,8 @@
 package daily.d211001p1436destinationcity;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 1436. Destination City

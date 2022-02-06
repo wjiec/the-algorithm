@@ -1,7 +1,5 @@
 package problem.p228summaryranges;
 
-import common.ListNode;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

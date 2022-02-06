@@ -1,7 +1,5 @@
 package problem.p2129capitalizethetitle;
 
-import javax.crypto.spec.ChaCha20ParameterSpec;
-
 /**
  * 2129. Capitalize the Title
  *

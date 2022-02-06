@@ -3,7 +3,6 @@ package problem.p590narytreepostordertraversal;
 import common.NTreeNode;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

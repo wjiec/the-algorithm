@@ -1,6 +1,7 @@
 package daily.d210901p165compareversionnumbers;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 /**
  * 165. Compare Version Numbers

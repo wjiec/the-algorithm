@@ -1,7 +1,5 @@
 package problem.p1507reformatdate;
 
-import java.util.regex.Pattern;
-
 /**
  * 1507. Reformat Date
  *

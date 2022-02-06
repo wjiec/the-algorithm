@@ -2,8 +2,6 @@ package lcci.s16.p11divingboardlcci;
 
 import common.Checker;
 
-import java.util.Set;
-
 /**
  * 面试题 16.11. 跳水板
  *

@@ -1,7 +1,5 @@
 package problem.p14longestcommonprefix;
 
-import java.util.HashMap;
-
 /**
  * 14. Longest Common Prefix
  *

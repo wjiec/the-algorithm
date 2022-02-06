@@ -1,7 +1,6 @@
 package daily.d211202p406relativeranks;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 
 /**
  * 506. Relative Ranks

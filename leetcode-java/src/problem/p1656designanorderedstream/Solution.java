@@ -1,6 +1,5 @@
 package problem.p1656designanorderedstream;
 
-import java.sql.Struct;
 import java.util.*;
 
 /**

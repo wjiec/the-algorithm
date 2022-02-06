@@ -1,8 +1,6 @@
 package problem.p1103distributecandiestopeople;
 
-import javax.print.attribute.standard.NumberUp;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * 1103. Distribute Candies to People

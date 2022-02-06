@@ -1,8 +1,5 @@
 package daily.d211124p423reconstructoriginaldigitsfromenglish;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 423. Reconstruct Original Digits from English
  *

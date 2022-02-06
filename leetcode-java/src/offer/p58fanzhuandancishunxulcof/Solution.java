@@ -1,7 +1,5 @@
 package offer.p58fanzhuandancishunxulcof;
 
-import java.util.Stack;
-
 /**
  * 剑指 Offer 58 - I. 翻转单词顺序
  *

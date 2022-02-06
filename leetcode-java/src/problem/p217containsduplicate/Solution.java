@@ -1,9 +1,7 @@
 package problem.p217containsduplicate;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 217. Contains Duplicate

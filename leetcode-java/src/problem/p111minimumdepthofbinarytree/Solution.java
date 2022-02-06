@@ -1,6 +1,5 @@
 package problem.p111minimumdepthofbinarytree;
 
-import com.sun.source.tree.Tree;
 import common.TreeNode;
 
 /**

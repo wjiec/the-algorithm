@@ -1,7 +1,5 @@
 package offer2.p101NUPfPr;
 
-import java.util.Arrays;
-
 /**
  * 剑指 Offer II 101. 分割等和子集
  *

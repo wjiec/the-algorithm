@@ -1,9 +1,5 @@
 package problem.p1399countlargestgroup;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 1399. Count Largest Group
  *

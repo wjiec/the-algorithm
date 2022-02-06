@@ -1,9 +1,7 @@
 package lcp.p11qiwanggeshutongji;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * LCP 11. 期望个数统计

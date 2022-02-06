@@ -1,7 +1,5 @@
 package problem.p1822signoftheproductofanarray;
 
-import java.awt.*;
-
 /**
  * 1822. Sign of the Product of an Array
  *

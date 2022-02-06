@@ -1,9 +1,5 @@
 package problem.p1217minimumcosttomovechipstothesameposition;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 1217. Minimum Cost to Move Chips to The Same Position
  *

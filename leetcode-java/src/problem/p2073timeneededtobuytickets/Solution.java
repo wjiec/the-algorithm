@@ -1,8 +1,5 @@
 package problem.p2073timeneededtobuytickets;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 /**
  * 2073. Time Needed to Buy Tickets
  *

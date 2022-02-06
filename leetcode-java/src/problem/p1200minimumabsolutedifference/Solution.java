@@ -1,7 +1,5 @@
 package problem.p1200minimumabsolutedifference;
 
-import com.sun.jdi.PathSearchingVirtualMachine;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

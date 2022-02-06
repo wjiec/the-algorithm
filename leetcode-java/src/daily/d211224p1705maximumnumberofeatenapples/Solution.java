@@ -1,6 +1,5 @@
 package daily.d211224p1705maximumnumberofeatenapples;
 
-import java.security.Principal;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 

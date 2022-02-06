@@ -2,8 +2,8 @@ package problem.p83removeduplicatesfromsortedlist;
 
 import common.ListNode;
 
-import static common.ListNode.build;
 import static common.Checker.check;
+import static common.ListNode.build;
 
 /**
  * 83. Remove Duplicates from Sorted List

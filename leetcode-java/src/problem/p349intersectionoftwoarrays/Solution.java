@@ -2,9 +2,6 @@ package problem.p349intersectionoftwoarrays;
 
 import common.Checker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 349. Intersection of Two Arrays
  *

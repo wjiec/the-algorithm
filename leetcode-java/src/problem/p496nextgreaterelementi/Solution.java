@@ -5,7 +5,6 @@ import common.Checker;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * 496. Next Greater Element I

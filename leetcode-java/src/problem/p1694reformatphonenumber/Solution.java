@@ -1,7 +1,6 @@
 package problem.p1694reformatphonenumber;
 
 import java.util.ArrayDeque;
-import java.util.Stack;
 
 /**
  * 1694. Reformat Phone Number

@@ -1,10 +1,8 @@
 package daily.d210908p502ipo;
 
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * 502. IPO

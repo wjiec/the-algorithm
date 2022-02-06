@@ -2,9 +2,7 @@ package daily.d210903smallestklcci;
 
 import common.Checker;
 
-import java.util.Arrays;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * 面试题 17.14. Smallest K LCCI

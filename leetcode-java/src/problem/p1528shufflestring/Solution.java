@@ -1,8 +1,5 @@
 package problem.p1528shufflestring;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 1528. Shuffle String
  *

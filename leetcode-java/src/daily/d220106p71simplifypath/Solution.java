@@ -2,7 +2,6 @@ package daily.d220106p71simplifypath;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.StringJoiner;
 
 /**
  * 71. Simplify Path

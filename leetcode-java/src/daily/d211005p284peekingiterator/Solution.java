@@ -1,6 +1,9 @@
 package daily.d211005p284peekingiterator;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * 284. Peeking Iterator

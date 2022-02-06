@@ -1,7 +1,5 @@
 package offer.p61bukepaizhongdeshunzilcof;
 
-import jdk.jshell.spi.SPIResolutionException;
-
 /**
  * 剑指 Offer 61. 扑克牌中的顺子
  *

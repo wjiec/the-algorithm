@@ -1,8 +1,5 @@
 package problem.p1700numberofstudentsunabletoeatlunch;
 
-import java.util.Queue;
-import java.util.Stack;
-
 /**
  * 1700. Number of Students Unable to Eat Lunch
  *

@@ -1,7 +1,5 @@
 package offer.p42lianxuzishuzudezuidahelcof;
 
-import java.util.Arrays;
-
 /**
  * 剑指 Offer 42. 连续子数组的最大和
  *

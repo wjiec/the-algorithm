@@ -1,7 +1,5 @@
 package problem.p1974minimumtimetotypewordusingspecialtypewriter;
 
-import java.util.Map;
-
 /**
  * 1974. Minimum Time to Type Word Using Special Typewriter
  *

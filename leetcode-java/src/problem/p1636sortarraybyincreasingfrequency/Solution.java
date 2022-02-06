@@ -3,10 +3,6 @@ package problem.p1636sortarraybyincreasingfrequency;
 import common.Checker;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 1636. Sort Array by Increasing Frequency

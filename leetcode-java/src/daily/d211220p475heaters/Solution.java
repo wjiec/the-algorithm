@@ -1,7 +1,6 @@
 package daily.d211220p475heaters;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * 475. Heaters

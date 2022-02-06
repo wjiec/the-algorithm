@@ -3,7 +3,6 @@ package problem.p1356sortintegersbythenumberof1bits;
 import common.Checker;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * 1356. Sort Integers by The Number of 1 Bits

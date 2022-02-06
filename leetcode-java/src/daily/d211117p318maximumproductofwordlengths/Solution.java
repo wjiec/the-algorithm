@@ -1,7 +1,6 @@
 package daily.d211117p318maximumproductofwordlengths;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * 318. Maximum Product of Word Lengths

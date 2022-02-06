@@ -1,7 +1,5 @@
 package daily.d211105p1218longestarithmeticsubsequenceofgivendifference;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,7 +1,5 @@
 package problem.p1417reformatthestring;
 
-import java.util.Stack;
-
 /**
  * 1417. Reformat The String
  *

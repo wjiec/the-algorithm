@@ -1,7 +1,5 @@
 package problem.p892surfaceareaof3dshapes;
 
-import java.util.Map;
-
 /**
  * 892. Surface Area of 3D Shapes
  *

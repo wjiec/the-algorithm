@@ -1,7 +1,6 @@
 package daily.d210905p470implementrand10usingrand7;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

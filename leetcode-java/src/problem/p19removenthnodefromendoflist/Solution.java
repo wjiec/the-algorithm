@@ -2,10 +2,6 @@ package problem.p19removenthnodefromendoflist;
 
 import common.ListNode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 /**
  * 19. Remove Nth Node From End of List
  *
