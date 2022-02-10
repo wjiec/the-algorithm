@@ -1,7 +1,5 @@
 package problem.p64minimumpathsum;
 
-import java.util.Arrays;
-
 /**
  * 64. Minimum Path Sum
  *

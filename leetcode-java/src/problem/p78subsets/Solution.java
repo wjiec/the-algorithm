@@ -1,7 +1,6 @@
 package problem.p78subsets;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

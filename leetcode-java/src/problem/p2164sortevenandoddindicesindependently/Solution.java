@@ -3,7 +3,6 @@ package problem.p2164sortevenandoddindicesindependently;
 import common.Checker;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
