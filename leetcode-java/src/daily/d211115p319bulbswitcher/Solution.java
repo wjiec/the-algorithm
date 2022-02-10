@@ -5,7 +5,7 @@ package daily.d211115p319bulbswitcher;
  *
  * https://leetcode-cn.com/problems/bulb-switcher/
  *
- * There are n bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.
+ * There are n bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.
  *
  * On the third round, you toggle every third bulb (turning on if it's off or turning off if it's on).
  *

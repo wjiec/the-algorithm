@@ -5,10 +5,10 @@ package problem.p997findthetownjudge;
  *
  * https://leetcode-cn.com/problems/find-the-town-judge/
  *
- * In a town, there are n people labelled from 1 to n.
+ * In a town, there are n people labelled from 1 to n.
  * There is a rumor that one of these people is secretly the town judge.
  *
- * If the town judge exists, then:
+ * If the town judge exists, then:
  *
  * The town judge trusts nobody.
  * Everybody (except for the town judge) trusts the town judge.
@@ -16,7 +16,7 @@ package problem.p997findthetownjudge;
  * You are given trust, an array of pairs trust[i] = [a, b]
  * representing that the person labelled a trusts the person labelled b.
  *
- * If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
+ * If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
  */
 
 public class Solution {

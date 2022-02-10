@@ -5,9 +5,9 @@ package problem.p69sqrtx;
  *
  * https://leetcode-cn.com/problems/sqrtx/
  *
- * Given a non-negative integer x, compute and return the square root of x.
+ * Given a non-negative integer x, compute and return the square root of x.
  *
- * Since the return type is an integer, the decimal digits are truncated, and only the integer part of the result is returned.
+ * Since the return type is an integer, the decimal digits are truncated, and only the integer part of the result is returned.
  */
 
 public class Solution {

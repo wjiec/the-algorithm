@@ -11,7 +11,7 @@ package problem.p908smallestrangei;
  * After this process, we have some array result.
  *
  * Return the smallest possible difference between
- * the maximum value of result and the minimum value of result.
+ * the maximum value of result and the minimum value of result.
  */
 
 public class Solution {

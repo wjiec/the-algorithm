@@ -5,7 +5,7 @@ package problem.p1422maximumscoreaftersplittingastring;
  *
  * https://leetcode-cn.com/problems/maximum-score-after-splitting-a-string/
  *
- * Given a string s of zeros and ones, return the maximum score after
+ * Given a string s of zeros and ones, return the maximum score after
  * splitting the string into two non-empty substrings (i.e. left substring and right substring).
  *
  * The score after splitting a string is the number of zeros in the left substring

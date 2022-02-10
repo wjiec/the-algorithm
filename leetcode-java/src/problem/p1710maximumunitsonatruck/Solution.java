@@ -16,7 +16,7 @@ import java.util.Arrays;
  *
  * You are also given an integer truckSize, which is the maximum number of boxes that can be put on the truck.
  *
- * You can choose any boxes to put on the truck as long as the number of boxes does not exceed truckSize.
+ * You can choose any boxes to put on the truck as long as the number of boxes does not exceed truckSize.
  *
  * Return the maximum total number of units that can be put on the truck.
  */

@@ -9,7 +9,7 @@ package problem.p405convertanumbertohexadecimal;
  * All the letters in the answer string should be lowercase characters,
  * and there should not be any leading zeros in the answer except for the zero itself.
  *
- * Note: You are not allowed to use any built-in library method to directly solve this problem.
+ * Note: You are not allowed to use any built-in library method to directly solve this problem.
  */
 
 public class Solution {

@@ -5,12 +5,12 @@ package problem.p1374generateastringwithcharactersthathaveoddcounts;
  *
  * https://leetcode-cn.com/problems/generate-a-string-with-characters-that-have-odd-counts/
  *
- * Given an integer n, return a string with n characters such
+ * Given an integer n, return a string with n characters such
  * that each character in such string occurs an odd number of times.
  *
  * The returned string must contain only lowercase English letters.
  *
- * If there are multiples valid strings, return any of them.  
+ * If there are multiples valid strings, return any of them.
  */
 
 public class Solution {

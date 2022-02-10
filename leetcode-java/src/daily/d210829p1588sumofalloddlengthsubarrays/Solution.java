@@ -5,11 +5,11 @@ package daily.d210829p1588sumofalloddlengthsubarrays;
  *
  * https://leetcode-cn.com/problems/sum-of-all-odd-length-subarrays/
  *
- * Given an array of positive integers arr, calculate the sum of all possible odd-length subarrays.
+ * Given an array of positive integers arr, calculate the sum of all possible odd-length subarrays.
  *
- * A subarray is a contiguous subsequence of the array.
+ * A subarray is a contiguous subsequence of the array.
  *
- * Return the sum of all odd-length subarrays of arr.
+ * Return the sum of all odd-length subarrays of arr.
  */
 
 public class Solution {

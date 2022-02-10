@@ -5,7 +5,7 @@ package daily.d210920p673numberoflongestincreasingsubsequence;
  *
  * https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/
  *
- * Given an integer array nums, return the number of longest increasing subsequences.
+ * Given an integer array nums, return the number of longest increasing subsequences.
  *
  * Notice that the sequence has to be strictly increasing.
  */

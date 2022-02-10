@@ -15,7 +15,7 @@ import java.util.Arrays;
  * You may perform the following move any number of times:
  *
  * Increase or decrease the position of the ith student by 1
- * (i.e., moving the ith student from position x to x + 1 or x - 1)
+ * (i.e., moving the ith student from position x to x + 1 or x - 1)
  *
  * Return the minimum number of moves required to move each student to a seat
  * such that no two students are in the same seat.

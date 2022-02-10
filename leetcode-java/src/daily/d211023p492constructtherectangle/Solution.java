@@ -14,7 +14,7 @@ import common.Checker;
  * The width W should not be larger than the length L, which means L >= W.
  * The difference between length L and width W should be as small as possible.
  *
- * Return an array [L, W] where L and W are the length and width of the web page you designed in sequence.
+ * Return an array [L, W] where L and W are the length and width of the web page you designed in sequence.
  */
 
 public class Solution {

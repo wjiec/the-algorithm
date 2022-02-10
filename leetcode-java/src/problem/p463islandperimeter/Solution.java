@@ -6,7 +6,7 @@ package problem.p463islandperimeter;
  * https://leetcode-cn.com/problems/island-perimeter/
  *
  * You are given row x col grid representing a map where grid[i][j] = 1
- * represents land and grid[i][j] = 0 represents water.
+ * represents land and grid[i][j] = 0 represents water.
  *
  * Grid cells are connected horizontally/vertically (not diagonally).
  * The grid is completely surrounded by water,

@@ -10,14 +10,14 @@ import java.util.Set;
  *
  * You are given an array words of strings.
  *
- * A move onto s consists of swapping any two even indexed characters of s, or any two odd indexed characters of s.
+ * A move onto s consists of swapping any two even indexed characters of s, or any two odd indexed characters of s.
  *
- * Two strings s and t are special-equivalent if after any number of moves onto s, s == t.
+ * Two strings s and t are special-equivalent if after any number of moves onto s, s == t.
  *
  * For example, s = "zzxy" and t = "xyzz" are special-equivalent because we may make
- * the moves "zzxy" -> "xzzy" -> "xyzz" that swap s[0] and s[2], then s[1] and s[3].
+ * the moves "zzxy" -> "xzzy" -> "xyzz" that swap s[0] and s[2], then s[1] and s[3].
  *
- * Now, a group of special-equivalent strings from words is a non-empty subset of words such that:
+ * Now, a group of special-equivalent strings from words is a non-empty subset of words such that:
  *
  * Every pair of strings in the group are special equivalent, and;
  * The group is the largest size possible (ie., there isn't a string s not in

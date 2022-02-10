@@ -12,7 +12,7 @@ import java.util.Arrays;
  * Three stones are on a number line at positions a, b, and c.
  *
  * Each turn, you pick up a stone at an endpoint (ie., either the lowest or highest position stone),
- * and move it to an unoccupied position between those endpoints.
+ * and move it to an unoccupied position between those endpoints.
  *
  * Formally, let's say the stones are currently at positions x, y, z with x < y < z.
  *

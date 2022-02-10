@@ -7,7 +7,7 @@ import common.ListNode;
  *
  * https://leetcode-cn.com/problems/middle-of-the-linked-list/
  *
- * Given a non-empty, singly linked list with head node head, return a middle node of linked list.
+ * Given a non-empty, singly linked list with head node head, return a middle node of linked list.
  *
  * If there are two middle nodes, return the second middle node.
  */

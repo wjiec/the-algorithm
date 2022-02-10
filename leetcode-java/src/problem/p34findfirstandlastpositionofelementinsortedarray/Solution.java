@@ -12,7 +12,7 @@ import common.Checker;
  *
  * If target is not found in the array, return [-1, -1].
  *
- * You must write an algorithm with O(log n) runtime complexity.
+ * You must write an algorithm with O(log n) runtime complexity.
  */
 
 public class Solution {

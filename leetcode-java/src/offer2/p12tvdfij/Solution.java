@@ -5,7 +5,7 @@ package offer2.p12tvdfij;
  *
  * https://leetcode-cn.com/problems/tvdfij/
  *
- * 给你一个整数数组 nums ，请计算数组的 中心下标 。
+ * 给你一个整数数组 nums ，请计算数组的 中心下标 。
  *
  * 数组 中心下标 是数组的一个下标，其左侧所有元素相加的和等于右侧所有元素相加的和。
  *

@@ -5,7 +5,7 @@ package problem.p1556thousandseparator;
  *
  * https://leetcode-cn.com/problems/thousand-separator/
  *
- * Given an integer n, add a dot (".") as the thousands separator and return it in string format.
+ * Given an integer n, add a dot (".") as the thousands separator and return it in string format.
  */
 
 public class Solution {

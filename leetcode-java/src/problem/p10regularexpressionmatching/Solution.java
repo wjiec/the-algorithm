@@ -6,7 +6,7 @@ package problem.p10regularexpressionmatching;
  * https://leetcode-cn.com/problems/regular-expression-matching/
  *
  * Given an input string (s) and a pattern (p),
- * implement regular expression matching with support for '.' and '*' where: 
+ * implement regular expression matching with support for '.' and '*' where:
  *
  * '.' Matches any single character.​​​​
  * '*' Matches zero or more of the preceding element.

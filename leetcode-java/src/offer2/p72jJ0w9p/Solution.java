@@ -5,7 +5,7 @@ package offer2.p72jJ0w9p;
  *
  * https://leetcode-cn.com/problems/jJ0w9p/
  *
- * 给定一个非负整数 x ，计算并返回 x 的平方根，即实现 int sqrt(int x) 函数。
+ * 给定一个非负整数 x ，计算并返回 x 的平方根，即实现 int sqrt(int x) 函数。
  *
  * 正数的平方根有两个，只输出其中的正数平方根。
  *

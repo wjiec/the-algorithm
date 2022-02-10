@@ -5,9 +5,9 @@ package problem.p1539kthmissingpositivenumber;
  *
  * https://leetcode-cn.com/problems/kth-missing-positive-number/
  *
- * Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
+ * Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
  *
- * Find the kth positive integer that is missing from this array.
+ * Find the kth positive integer that is missing from this array.
  */
 
 public class Solution {

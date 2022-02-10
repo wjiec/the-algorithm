@@ -3,7 +3,7 @@
 
 https://leetcode-cn.com/problems/reformat-department-table/
 
-Write an SQL query to reformat the table such that there is a department id column and a revenue column for each month.
+Write an SQL query to reformat the table such that there is a department id column and a revenue column for each month.
 
 
 Create table If Not Exists Department (id int, revenue int, month varchar(5));

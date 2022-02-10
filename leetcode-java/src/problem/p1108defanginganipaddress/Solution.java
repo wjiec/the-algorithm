@@ -7,7 +7,7 @@ package problem.p1108defanginganipaddress;
  *
  * Given a valid (IPv4) IP address, return a defanged version of that IP address.
  *
- * A defanged IP address replaces every period "." with "[.]".
+ * A defanged IP address replaces every period "." with "[.]".
  */
 
 public class Solution {
