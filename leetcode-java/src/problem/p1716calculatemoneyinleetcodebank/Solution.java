@@ -5,7 +5,7 @@ package problem.p1716calculatemoneyinleetcodebank;
  *
  * https://leetcode-cn.com/problems/calculate-money-in-leetcode-bank/
  *
- * Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.
+ * Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.
  *
  * He starts by putting in $1 on Monday, the first day.
  *

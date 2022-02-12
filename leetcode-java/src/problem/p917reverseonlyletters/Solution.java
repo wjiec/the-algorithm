@@ -5,7 +5,7 @@ package problem.p917reverseonlyletters;
  *
  * https://leetcode-cn.com/problems/reverse-only-letters/
  *
- * Given a string s, return the "reversed" string where all characters that are not a letter stay in the same place,
+ * Given a string s, return the "reversed" string where all characters that are not a letter stay in the same place,
  * and all letters reverse their positions.
  */
 

@@ -7,7 +7,7 @@ package problem.p172factorialtrailingzeroes;
  *
  * Given an integer n, return the number of trailing zeroes in n!.
  *
- * Follow up: Could you write a solution that works in logarithmic time complexity?
+ * Follow up: Could you write a solution that works in logarithmic time complexity?
  */
 
 public class Solution {

@@ -5,8 +5,8 @@ package problem.p1232checkifitisastraightline;
  *
  * https://leetcode-cn.com/problems/check-if-it-is-a-straight-line/
  *
- * You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point.
- * Check if these points make a straight line in the XY plane.
+ * You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point.
+ * Check if these points make a straight line in the XY plane.
  */
 
 public class Solution {

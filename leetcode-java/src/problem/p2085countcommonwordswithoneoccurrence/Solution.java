@@ -9,7 +9,7 @@ import java.util.Map;
  * https://leetcode-cn.com/problems/count-common-words-with-one-occurrence/
  *
  * Given two string arrays words1 and words2, return the number of strings
- * that appear exactly once in each of the two arrays.
+ * that appear exactly once in each of the two arrays.
  */
 
 public class Solution {

@@ -7,7 +7,7 @@ package problem.p1360numberofdaysbetweentwodates;
  *
  * Write a program to count the number of days between two dates.
  *
- * The two dates are given as strings, their format is YYYY-MM-DD as shown in the examples.
+ * The two dates are given as strings, their format is YYYY-MM-DD as shown in the examples.
  */
 
 public class Solution {

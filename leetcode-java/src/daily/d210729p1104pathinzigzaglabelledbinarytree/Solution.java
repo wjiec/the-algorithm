@@ -15,7 +15,7 @@ import java.util.List;
  * while in the even numbered rows (second, fourth, sixth,...), the labelling is right to left.
  *
  * Given the label of a node in this tree, return the labels
- * in the path from the root of the tree to the node with that label.
+ * in the path from the root of the tree to the node with that label.
  */
 
 public class Solution {

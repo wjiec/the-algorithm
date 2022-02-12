@@ -7,10 +7,10 @@ import java.util.*;
  *
  * https://leetcode-cn.com/problems/display-table-of-food-orders-in-a-restaurant/
  *
- * Given the array orders, which represents the orders that customers have done in a restaurant.
- * More specifically orders[i]=[customerNamei,tableNumberi,foodItemi]
- * where customerNamei is the name of the customer, tableNumberi is the table customer sit at,
- * and foodItemi is the item customer orders.
+ * Given the array orders, which represents the orders that customers have done in a restaurant.
+ * More specifically orders[i]=[customerNamei,tableNumberi,foodItemi]
+ * where customerNamei is the name of the customer, tableNumberi is the table customer sit at,
+ * and foodItemi is the item customer orders.
  *
  * Return the restaurant's “display table”. The “display table” is a table whose row entries denote
  * how many of each food item each table ordered. The first column is the table number and

@@ -16,7 +16,7 @@ package problem.p2073timeneededtobuytickets;
  *
  * If a person does not have any tickets left to buy, the person will leave the line.
  *
- * Return the time taken for the person at position k (0-indexed) to finish buying tickets.
+ * Return the time taken for the person at position k (0-indexed) to finish buying tickets.
  */
 
 public class Solution {

@@ -5,10 +5,10 @@ package problem.p58lengthoflastword;
  *
  * https://leetcode-cn.com/problems/length-of-last-word/
  *
- * Given a string s consists of some words separated by spaces, return the length of the last word in the string.
+ * Given a string s consists of some words separated by spaces, return the length of the last word in the string.
  * If the last word does not exist, return 0.
  *
- * A word is a maximal substring consisting of non-space characters only.
+ * A word is a maximal substring consisting of non-space characters only.
  */
 
 public class Solution {

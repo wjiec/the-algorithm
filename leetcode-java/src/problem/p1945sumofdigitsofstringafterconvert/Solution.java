@@ -17,7 +17,7 @@ package problem.p1945sumofdigitsofstringafterconvert;
  * For example, if s = "zbax" and k = 2, then the resulting integer would be 8 by the following operations:
  *
  * Convert: "zbax" ➝ "(26)(2)(1)(24)" ➝ "262124" ➝ 262124
- * Transform #1: 262124 ➝ 2 + 6 + 2 + 1 + 2 + 4 ➝ 17
+ * Transform #1: 262124 ➝ 2 + 6 + 2 + 1 + 2 + 4 ➝ 17
  * Transform #2: 17 ➝ 1 + 7 ➝ 8
  * Return the resulting integer after performing the operations described above.
  */

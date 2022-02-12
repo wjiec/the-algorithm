@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * https://leetcode-cn.com/problems/rank-transform-of-an-array/
  *
- * Given an array of integers arr, replace each element with its rank.
+ * Given an array of integers arr, replace each element with its rank.
  *
  * The rank represents how large the element is. The rank has the following rules:
  *

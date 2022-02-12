@@ -6,7 +6,7 @@ package daily.d210712p275hindexii;
  * https://leetcode-cn.com/problems/h-index-ii/
  *
  * Given an array of integers citations where citations[i] is the number of citations
- * a researcher received for their ith paper and citations is sorted in an ascending order,
+ * a researcher received for their ith paper and citations is sorted in an ascending order,
  * return compute the researcher's h-index.
  *
  * According to the definition of h-index on Wikipedia: A scientist has an index h

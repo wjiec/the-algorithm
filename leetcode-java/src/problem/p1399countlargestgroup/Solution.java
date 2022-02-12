@@ -5,9 +5,9 @@ package problem.p1399countlargestgroup;
  *
  * https://leetcode-cn.com/problems/count-largest-group/
  *
- * Given an integer n. Each number from 1 to n is grouped according to the sum of its digits. 
+ * Given an integer n. Each number from 1 to n is grouped according to the sum of its digits. 
  *
- * Return how many groups have the largest size.
+ * Return how many groups have the largest size.
  */
 
 public class Solution {

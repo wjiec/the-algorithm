@@ -8,7 +8,7 @@ import common.Checker;
  * https://leetcode-cn.com/problems/can-you-eat-your-favorite-candy-on-your-favorite-day/
  *
  * You are given a (0-indexed) array of positive integers candiesCount where candiesCount[i]
- * represents the number of candies of the ith type you have.
+ * represents the number of candies of the ith type you have.
  * You are also given a 2D array queries where queries[i] = [favoriteTypei, favoriteDayi, dailyCapi].
  *
  * You play a game with the following rules:

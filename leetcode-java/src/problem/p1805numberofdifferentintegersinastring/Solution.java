@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * You will replace every non-digit character with a space.
  *
- * For example, "a123bc34d8ef34" will become " 123  34 8  34".
+ * For example, "a123bc34d8ef34" will become " 123  34 8  34".
  *
  * Notice that you are left with some integers that are separated by at least one space: "123", "34", "8", and "34".
  *

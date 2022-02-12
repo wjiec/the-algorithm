@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * Follow up:
  *
- * What is the expected value for the number of calls to rand7() function?
+ * What is the expected value for the number of calls to rand7() function?
  * Could you minimize the number of calls to rand7()?
  */
 

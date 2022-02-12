@@ -3,7 +3,7 @@
 
 https://leetcode-cn.com/problems/rising-temperature/
 
-Write an SQL query to find all dates' id with higher temperature compared to its previous dates (yesterday).
+Write an SQL query to find all dates' id with higher temperature compared to its previous dates (yesterday).
 
 Return the result table in any order.
 

@@ -5,7 +5,7 @@ package daily.d210518p1442counttripletsthatcanformtwoarraysofequalxor;
  *
  * https://leetcode-cn.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor/
  *
- * Given an array of integers arr.
+ * Given an array of integers arr.
  *
  * We want to select three indices i, j and k where (0 <= i < j <= k < arr.length).
  *

@@ -9,9 +9,9 @@ import java.util.Arrays;
  *
  * Given an array of integers arr, a lucky integer is an integer which has a frequency in the array equal to its value.
  *
- * Return a lucky integer in the array. If there are multiple lucky integers return the largest of them.
+ * Return a lucky integer in the array. If there are multiple lucky integers return the largest of them.
  *
- * If there is no lucky integer return -1.
+ * If there is no lucky integer return -1.
  */
 
 public class Solution {

@@ -5,9 +5,9 @@ package problem.p1550threeconsecutiveodds;
  *
  * https://leetcode-cn.com/problems/three-consecutive-odds/
  *
- * Given an integer array arr, return true if there are three consecutive odd numbers in the array.
+ * Given an integer array arr, return true if there are three consecutive odd numbers in the array.
  *
- * Otherwise, return false.
+ * Otherwise, return false.
  */
 
 public class Solution {
