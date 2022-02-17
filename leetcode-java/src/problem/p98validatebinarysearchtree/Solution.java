@@ -2,8 +2,6 @@ package problem.p98validatebinarysearchtree;
 
 import common.TreeNode;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.Stack;
 
 /**

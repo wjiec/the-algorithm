@@ -1,7 +1,5 @@
 package daily.d220212pnumberofenclaves;
 
-import common.PrettyPrinter;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
