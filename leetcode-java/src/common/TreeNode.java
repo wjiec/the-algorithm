@@ -27,7 +27,7 @@ public class TreeNode {
         nodes.add(root);
 
         for (int i = 1; i < values.length; i += 2) {
-            var node = nodes.remove();
+            TreeNode node = nodes.remove();
             if (values[i] != null) {
                 node.left = new TreeNode(values[i]);
                 nodes.add(node.left);
