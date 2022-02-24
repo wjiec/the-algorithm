@@ -21,7 +21,7 @@ public class Checker {
 
         if (ca == Double.class && cb == Double.class) {
             double x = (double) a, y = (double) b;
-            return (x > y ? x - y : y - x) < 1e-10;
+            return (x > y ? x - y : y - x) < 1e-5;
         }
 
         return a.equals(b);
