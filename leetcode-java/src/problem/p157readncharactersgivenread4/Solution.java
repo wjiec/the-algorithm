@@ -1,7 +1,5 @@
 package problem.p157readncharactersgivenread4;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  * 157. Read N Characters Given Read4
  *
