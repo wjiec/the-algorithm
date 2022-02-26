@@ -26,6 +26,7 @@ public class PrettyPrinter {
     }
 
     private static String toString(Object object, Indent indent) {
+        if (object == null) return indent.toString() + "null";
         StringBuilder sb = new StringBuilder();
         if (object.getClass().getComponentType().isArray()) {
             sb.append(indent).append("[\n");
