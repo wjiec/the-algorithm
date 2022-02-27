@@ -1,6 +1,7 @@
 package problem.p170twosumiiidatastructuredesign;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 170. Two Sum III - Data structure design
