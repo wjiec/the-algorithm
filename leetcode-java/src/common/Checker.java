@@ -1,6 +1,8 @@
 package common;
 
 import java.lang.reflect.Array;
+import java.util.HashSet;
+import java.util.List;
 
 public class Checker {
 
@@ -25,6 +27,10 @@ public class Checker {
         }
 
         return a.equals(b);
+    }
+
+    public static <T extends List<?>> boolean anyOrder(T a, T b) {
+        return a.size() == b.size() && a.containsAll(b);
     }
 
     public static boolean check(TreeNode p, TreeNode q) {
