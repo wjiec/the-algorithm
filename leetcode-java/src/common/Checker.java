@@ -1,7 +1,6 @@
 package common;
 
 import java.lang.reflect.Array;
-import java.util.HashSet;
 import java.util.List;
 
 public class Checker {
@@ -56,6 +55,13 @@ public class Checker {
         }
 
         return list == null;
+    }
+
+    public static boolean check(ListNode a, ListNode b) {
+        while (a != null && b != null && a.val == b.val) {
+            a = a.next; b = b.next;
+        }
+        return a == null && b == null;
     }
 
     public static void main(String[] args) {
