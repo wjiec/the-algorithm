@@ -1,6 +1,7 @@
 package common;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Checker {
@@ -23,6 +24,23 @@ public class Checker {
         if (ca == Double.class && cb == Double.class) {
             double x = (double) a, y = (double) b;
             return (x > y ? x - y : y - x) < 1e-5;
+        }
+
+        return a.equals(b);
+    }
+
+    public static boolean anyOrder(Object a, Object b) {
+        Class<?> ca = a.getClass(), cb = b.getClass();
+        if (ca.isArray() && cb.isArray()) {
+            if (Array.getLength(a) != Array.getLength(b)) {
+                return false;
+            }
+
+            List<Object> la = new ArrayList<>(), lb = new ArrayList<>();
+            for (int i = 0, l = Array.getLength(a); i < l; i++) {
+                la.add(Array.get(a, i)); lb.add(Array.get(b, i));
+            }
+            return anyOrder(la, lb);
         }
 
         return a.equals(b);
