@@ -1,5 +1,7 @@
 package problem.p341flattennestedlistiterator;
 
+import common.NestedInteger;
+
 import java.util.*;
 
 /**
@@ -19,24 +21,6 @@ import java.util.*;
  */
 
 public class Solution {
-
-    private interface NestedInteger {
-        boolean isInteger();
-        Integer getInteger();
-        List<NestedInteger> getList();
-    }
-
-    private static class NestedIntegerImpl implements NestedInteger {
-        private final Integer value;
-        private final List<NestedInteger> list;
-        public NestedIntegerImpl(Integer v) { this(v, null); }
-        public NestedIntegerImpl(List<NestedInteger> l) { this(null, l); }
-        public NestedIntegerImpl(Integer v, List<NestedInteger> l) { value = v; list = l; }
-
-        @Override public boolean isInteger() { return value != null; }
-        @Override public Integer getInteger() { return value; }
-        @Override public List<NestedInteger> getList() { return list; }
-    }
 
     private static class NestedIterator implements Iterator<Integer> {
         private final Deque<Iterator<NestedInteger>> stack = new ArrayDeque<>();
@@ -62,50 +46,50 @@ public class Solution {
 
     public static void main(String[] args) {
         List<NestedInteger> list = List.of(
-            new NestedIntegerImpl(1),
-            new NestedIntegerImpl(List.of(
-                new NestedIntegerImpl(2),
-                new NestedIntegerImpl(List.of()),
-                new NestedIntegerImpl(List.of(
-                    new NestedIntegerImpl(3),
-                    new NestedIntegerImpl(4),
-                    new NestedIntegerImpl(List.of(
-                        new NestedIntegerImpl(5),
-                        new NestedIntegerImpl(6)
+            new  NestedInteger(1),
+            new  NestedInteger(List.of(
+                new  NestedInteger(2),
+                new  NestedInteger(List.of()),
+                new  NestedInteger(List.of(
+                    new  NestedInteger(3),
+                    new  NestedInteger(4),
+                    new  NestedInteger(List.of(
+                        new  NestedInteger(5),
+                        new  NestedInteger(6)
                     )),
-                    new NestedIntegerImpl(7)
+                    new  NestedInteger(7)
                 )),
-                new NestedIntegerImpl(8)
+                new  NestedInteger(8)
             )),
-            new NestedIntegerImpl(9),
-            new NestedIntegerImpl(List.of(
-                new NestedIntegerImpl(10),
-                new NestedIntegerImpl(11),
-                new NestedIntegerImpl(List.of(
-                    new NestedIntegerImpl(12),
-                    new NestedIntegerImpl(13)
+            new  NestedInteger(9),
+            new  NestedInteger(List.of(
+                new  NestedInteger(10),
+                new  NestedInteger(11),
+                new  NestedInteger(List.of(
+                    new  NestedInteger(12),
+                    new  NestedInteger(13)
                 )),
-                new NestedIntegerImpl(14)
+                new  NestedInteger(14)
             )),
-            new NestedIntegerImpl(15),
-            new NestedIntegerImpl(16),
-            new NestedIntegerImpl(List.of(
-                new NestedIntegerImpl(17),
-                new NestedIntegerImpl(List.of(
-                    new NestedIntegerImpl(18),
-                    new NestedIntegerImpl(List.of(
-                        new NestedIntegerImpl(19),
-                        new NestedIntegerImpl(List.of(
-                            new NestedIntegerImpl(20),
-                            new NestedIntegerImpl(List.of(
-                                new NestedIntegerImpl(21)
+            new  NestedInteger(15),
+            new  NestedInteger(16),
+            new  NestedInteger(List.of(
+                new  NestedInteger(17),
+                new  NestedInteger(List.of(
+                    new  NestedInteger(18),
+                    new  NestedInteger(List.of(
+                        new  NestedInteger(19),
+                        new  NestedInteger(List.of(
+                            new  NestedInteger(20),
+                            new  NestedInteger(List.of(
+                                new  NestedInteger(21)
                             ))
                         ))
                     ))
                 ))
             )),
-            new NestedIntegerImpl(22),
-            new NestedIntegerImpl(List.of())
+            new  NestedInteger(22),
+            new  NestedInteger(List.of())
         );
 
         NestedIterator iter = new NestedIterator(list);
@@ -118,7 +102,7 @@ public class Solution {
             System.out.println(iter.next());
         }
 
-        iter = new NestedIterator(List.of(new NestedIntegerImpl(List.of())));
+        iter = new NestedIterator(List.of(new  NestedInteger(List.of())));
         while (iter.hasNext()) {
             System.out.println(iter.next());
         }
