@@ -1,5 +1,8 @@
 package problem.p394decodestring;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * 394. Decode String
  *
@@ -24,19 +27,24 @@ package problem.p394decodestring;
 public class Solution {
 
     public String decodeString(String s) {
-        return decodeString(s.toCharArray(), 0);
-    }
-
-    private String decodeString(char[] chars, int i) {
-        if (i >= chars.length) return "";
-
-        StringBuilder sb = new StringBuilder();
-        while (i < chars.length && !Character.isDigit(chars[i])) sb.append(i++);
-
         int count = 0;
-        while (i < chars.length && Character.isDigit(chars[i])) count = count * 10 + (chars[i++] - '0');
-        if (count != 0) sb.append(decodeString(chars, i + 1).repeat(count));
+        StringBuilder sb = new StringBuilder();
+        Deque<Integer> numbers = new ArrayDeque<>();
+        Deque<StringBuilder> strings = new ArrayDeque<>();
+        for (int i = 0, n = s.length(); i < n; i++) {
+            char curr = s.charAt(i);
+            if (Character.isDigit(curr)) count = count * 10 + curr - '0';
+            else if (Character.isLetter(curr)) sb.append(curr);
+            else if (curr == '[') {
+                strings.push(sb);
+                numbers.push(count);
 
+                count = 0;
+                sb = new StringBuilder();
+            } else {
+                sb = strings.pop().append(sb.toString().repeat(numbers.pop()));
+            }
+        }
         return sb.toString();
     }
 
