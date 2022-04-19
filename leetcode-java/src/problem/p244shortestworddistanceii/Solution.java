@@ -1,8 +1,6 @@
 package problem.p244shortestworddistanceii;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * 244. Shortest Word Distance II
@@ -23,23 +21,27 @@ import java.util.TreeSet;
 public class Solution {
 
     private static class WordDistance {
-        private final Map<String, TreeSet<Integer>> map = new HashMap<>();
+        private final Map<String, List<Integer>> map = new HashMap<>();
         public WordDistance(String[] wordsDict) {
             for (int i = 0; i < wordsDict.length; i++) {
                 if (!map.containsKey(wordsDict[i])) {
-                    map.put(wordsDict[i], new TreeSet<>());
+                    map.put(wordsDict[i], new ArrayList<>());
                 }
                 map.get(wordsDict[i]).add(i);
             }
         }
 
         public int shortest(String word1, String word2) {
-            int ans = Integer.MAX_VALUE;
-            TreeSet<Integer> set = map.get(word2);
-            for (var idx : map.get(word1)) {
-                Integer ceil = set.ceiling(idx), floor = set.floor(idx);
-                if (ceil != null && ceil - idx < ans) ans = ceil - idx;
-                if (floor != null && idx - floor < ans) ans = idx - floor;
+            List<Integer> l1 = map.get(word1);
+            List<Integer> l2 = map.get(word2);
+            int a = 0, b = 0, ans = Integer.MAX_VALUE;
+            while (a < l1.size() && b < l2.size()) {
+                int diff = Math.abs(l1.get(a) - l2.get(b));
+                if (diff < ans) ans = diff;
+                // 如果A当前下标小于B的下标，那么最佳的做法是往后移动A的下标
+                // 如果我们往后移动B的下标，那么这个距离会变得更大
+                if (l1.get(a) < l2.get(b)) a++;
+                else b++;
             }
             return ans;
         }
