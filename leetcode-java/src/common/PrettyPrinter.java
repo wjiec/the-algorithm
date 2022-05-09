@@ -1,6 +1,7 @@
 package common;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 
 public class PrettyPrinter {
 
@@ -22,6 +23,9 @@ public class PrettyPrinter {
     public static String toString(Object object) {
         Class<?> cl = object.getClass();
         if (!cl.isArray()) return object.toString();
+        if (object instanceof Collection<?>) {
+            return toString(((Collection<?>) object).toArray(), new Indent());
+        }
         return toString(object, new Indent());
     }
 
