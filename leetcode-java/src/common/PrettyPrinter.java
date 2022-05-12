@@ -71,9 +71,11 @@ public class PrettyPrinter {
         }
 
         private String middleString(int val) {
+            String align = "";
             int len = String.valueOf(val).length();
-            int padding = (width - len) / 2;
-            return String.format("<%s%d%s>", " ".repeat(padding), val, " ".repeat(width - len - padding));
+            int left = (width - len) / 2; int right = width - len - left;
+            if (left != right) { align = "\u2002"; }
+            return String.format("<%s%s%d%s>", " ".repeat(left), align, val, " ".repeat(right));
         }
     }
 
