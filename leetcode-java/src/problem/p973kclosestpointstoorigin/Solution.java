@@ -2,7 +2,6 @@ package problem.p973kclosestpointstoorigin;
 
 import common.PrettyPrinter;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
