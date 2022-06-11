@@ -18,7 +18,11 @@ public class Solution {
     public int minFlipsMonoIncr(String s) {
         int ones = 0, ans = 0;
         for (var c : s.toCharArray()) {
+            // 如果 c == '1' 则这个字符不影响翻转次数
             if (c == '1') ones++;
+            // 否则 c == '0' 我们有两种选择
+            //      1. 把前面所有的 '0' (ans) 翻转为 '1' (ans + 1)
+            //      2. 把前面所有的 '1' (ones) 翻转为 '0'
             else ans = Math.min(ans + 1, ones);
         }
         return ans;
