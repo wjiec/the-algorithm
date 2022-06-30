@@ -12,6 +12,7 @@ import java.util.Deque;
  * contains all the distinct characters of s exactly once.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public String smallestSubsequence(String s) {
@@ -23,6 +24,7 @@ public class Solution {
         for (var c : s.toCharArray()) {
             if (!visited[c]) {
                 while (!stack.isEmpty() && stack.peek() > c) {
+                    // 栈顶元素在字符串之后还会再次出现, 所以这里删除是安全的
                     if (freq[stack.peek()] > 0) {
                         visited[stack.pop()] = false;
                     } else break;
