@@ -28,54 +28,43 @@ import java.util.function.IntConsumer;
  * void odd(printNumber) Calls printNumber to output one odd number.
  */
 
-@SuppressWarnings("ClassCanBeRecord")
 public class Solution {
 
     private static class ZeroEvenOdd {
-        private volatile int count;
+        private final int n;
         private volatile int seq = 1;
-        private volatile boolean zero = true;
-        private volatile boolean even = true;
-        private final Object bus = new Object();
-        public ZeroEvenOdd(int n) { this.count = 2 * n; }
+        public ZeroEvenOdd(int n) { this.n = n; }
 
         // printNumber.accept(x) outputs "x", where x is an integer.
         public void zero(IntConsumer printNumber) throws InterruptedException {
-            while (count > 0) {
-                synchronized (bus) {
-                    while (!zero) bus.wait();
-                    --count;
+            for (int i = 1; i <= n; i++) {
+                synchronized (this) {
+                    while (seq % 2 == 0) wait();
 
                     printNumber.accept(0);
-                    zero = false;
-                    even = !even;
-                    bus.notifyAll();
+                    seq++; notifyAll();
                 }
             }
         }
 
         public void even(IntConsumer printNumber) throws InterruptedException {
-            while (count > 0) {
-                synchronized (bus) {
-                    while (!even) bus.wait();
-                    --count;
+            for (int i = 2; i <= n; i += 2) {
+                synchronized (this) {
+                    while (seq % 4 != 0) wait();
 
-                    printNumber.accept(seq++);
-                    zero = true;
-                    bus.notifyAll();
+                    printNumber.accept(i);
+                    seq++; notifyAll();
                 }
             }
         }
 
         public void odd(IntConsumer printNumber) throws InterruptedException {
-            while (count > 0) {
-                synchronized (bus) {
-                    while (even) bus.wait();
-                    --count;
+            for (int i = 1; i <= n; i += 2) {
+                synchronized (this) {
+                    while (seq % 4 != 2) wait();
 
-                    printNumber.accept(seq++);
-                    zero = true;
-                    bus.notifyAll();
+                    printNumber.accept(i);
+                    seq++; notifyAll();
                 }
             }
         }
