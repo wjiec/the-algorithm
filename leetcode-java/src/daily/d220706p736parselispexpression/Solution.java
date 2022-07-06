@@ -71,22 +71,31 @@ public class Solution {
         if (token.equals("add")) {
             int left = eval(ctx.with());
             int right = eval(ctx.with());
+            idx++;
             return left + right;
         }
 
         if (token.equals("mult")) {
             int left = eval(ctx.with());
             int right = eval(ctx.with());
+            idx++;
             return left * right;
         }
 
         if (token.equals("let")) {
             while (idx < tokens.size()) {
                 String name = tokens.get(idx++);
+                if (isNumber(name.toCharArray())) {
+                    idx++;
+                    return Integer.valueOf(name, 10);
+                }
                 if (name.equals("(")) {
-                    return eval(ctx.with());
+                    int v = eval(ctx.with());
+                    idx++;
+                    return v;
                 }
                 if (idx < tokens.size() && tokens.get(idx).equals(")")) {
+                    idx++;
                     return ctx.get(name);
                 }
                 int value = eval(ctx.with());
@@ -124,6 +133,10 @@ public class Solution {
     }
 
     public static void main(String[] args) {
+        assert new Solution().evaluate("(let y 2 x (let q 2 z y 2) x)") == 2;
+        assert new Solution().evaluate("(let x 7 -12)") == -12;
+        assert new Solution().evaluate("(let x 2 (mult (let x 3 y 4 (add x y)) x))") == 14;
+        assert new Solution().evaluate("(let a1 3 b2 (add a1 1) b2)") == 4;
         assert new Solution().evaluate("(let x 2 (add (let x 3 (let x 4 x)) x))") == 6;
 
         assert new Solution().evaluate("(let x 2 (mult x (let x 3 y 4 (add x y))))") == 14;
