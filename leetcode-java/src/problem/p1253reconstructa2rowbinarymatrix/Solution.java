@@ -34,22 +34,29 @@ public class Solution {
         List<Integer> b = new ArrayList<>(colsum.length);
 
         for (int i = 0; i < colsum.length; i++) {
-            if (colsum[i] == 0) { a.set(i, 0); b.set(i, 0); }
-            if (colsum[i] == 2) { a.set(i, 1); b.set(i, 1); upper--; lower--; }
+            if (colsum[i] == 0) { a.add(i, 0); b.add(i, 0); }
+            if (colsum[i] == 1) { a.add(i, null); b.add(i, null); }
+            if (colsum[i] == 2) { a.add(i, 1); b.add(i, 1); upper--; lower--; }
         }
         if (upper < 0 || lower < 0) return Collections.emptyList();
 
-        for (int i = 0; i < colsum.length && upper > 0; i++) {
-            if (a.get(i) == null) { a.set(i, 1); upper--; }
-        }
-
-        for (int i = 0; i < colsum.length && lower > 0; i++) {
-            if (b.get(i) == null && a.get(i) != 1) {
-                b.set(i, 1); lower--;
+        for (int i = 0; i < colsum.length; i++) {
+            if (a.get(i) == null) {
+                if (upper > 0) { a.set(i, 1); upper--; }
+                else a.set(i, 0);
             }
         }
 
-        if (upper != 0 || lower != 0) return Collections.emptyList();
+        for (int i = 0; i < colsum.length; i++) {
+            if (b.get(i) == null) {
+                if (a.get(i) == 0) {
+                    if (lower == 0) return Collections.emptyList();
+                    b.set(i, 1); lower--;
+                } else b.set(i, 0);
+            }
+        }
+
+        if (upper > 0 || lower > 0) return Collections.emptyList();
         return List.of(a, b);
     }
 
