@@ -1,5 +1,15 @@
 package weekly.bw83.B;
 
+/**
+ * 6129. Number of Zero-Filled Subarrays
+ *
+ * https://leetcode.cn/contest/biweekly-contest-83/problems/number-of-zero-filled-subarrays/
+ *
+ * Given an integer array nums, return the number of subarrays filled with 0.
+ *
+ * A subarray is a contiguous non-empty sequence of elements within an array.
+ */
+
 public class Solution {
 
     public long zeroFilledSubarray(int[] nums) {
