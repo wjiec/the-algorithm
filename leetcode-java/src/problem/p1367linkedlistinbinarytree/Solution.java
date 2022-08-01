@@ -19,6 +19,9 @@ import common.TreeNode;
 public class Solution {
 
     public boolean isSubPath(ListNode head, TreeNode root) {
+        if (root == null) return false;
+        if (check(root, head)) return true;
+        return isSubPath(head, root.left) || isSubPath(head, root.right);
     }
 
     private boolean check(TreeNode tree, ListNode list) {
