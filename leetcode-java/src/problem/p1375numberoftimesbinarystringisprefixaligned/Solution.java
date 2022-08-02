@@ -1,8 +1,5 @@
 package problem.p1375numberoftimesbinarystringisprefixaligned;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 1375. Number of Times Binary String Is Prefix-Aligned
  *
@@ -22,10 +19,17 @@ import java.util.Set;
 public class Solution {
 
     public int numTimesAllBlue(int[] flips) {
-        int ans = 0;
-        Set<Integer> ones = new HashSet<>();
+        int ans = 0, ones = 0;
+        boolean[] bits = new boolean[flips.length + 1];
         for (int i = 1; i <= flips.length; i++) {
+            int flipping = flips[i - 1];
+            bits[flipping] = !bits[flipping];
+
+            if (flipping < i) ones += bits[flipping] ? 1 : -1;
+            if (bits[i]) ones++;
+            if (ones == i) ans++;
         }
+
         return ans;
     }
 
