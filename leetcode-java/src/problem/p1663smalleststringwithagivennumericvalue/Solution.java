@@ -24,14 +24,14 @@ package problem.p1663smalleststringwithagivennumericvalue;
 public class Solution {
 
     public String getSmallestString(int n, int k) {
-        StringBuilder sb = new StringBuilder();
-        for (; n != 0; n--) {
+        char[] ans = new char[n];
+        for (int i = n - 1; i >= 0; i--) {
             // 需要至少保留n-1个a(=1)
-            int x = Math.min(k - n + 1, 26);
-            sb.append((char) ('a' + x - 1));
+            int x = Math.min(k - i, 26);
+            ans[i] = (char) ('a' + x - 1);
             k -= x;
         }
-        return sb.reverse().toString();
+        return new String(ans);
     }
 
     public static void main(String[] args) {
