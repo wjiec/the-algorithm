@@ -1,0 +1,42 @@
+package problem.p1663smalleststringwithagivennumericvalue;
+
+/**
+ * 1663. Smallest String With A Given Numeric Value
+ *
+ * https://leetcode.cn/problems/smallest-string-with-a-given-numeric-value/
+ *
+ * The numeric value of a lowercase character is defined as its position (1-indexed) in
+ * the alphabet, so the numeric value of a is 1, the numeric value of b is 2, the numeric
+ * value of c is 3, and so on.
+ *
+ * The numeric value of a string consisting of lowercase characters is defined as the sum
+ * of its characters' numeric values. For example, the numeric value of the string "abe" is
+ * equal to 1 + 2 + 5 = 8.
+ *
+ * You are given two integers n and k. Return the lexicographically smallest string with
+ * length equal to n and numeric value equal to k.
+ *
+ * Note that a string x is lexicographically smaller than string y if x comes before y in
+ * dictionary order, that is, either x is a prefix of y, or if i is the first position such
+ * that x[i] != y[i], then x[i] comes before y[i] in alphabetic order.
+ */
+
+public class Solution {
+
+    public String getSmallestString(int n, int k) {
+        StringBuilder sb = new StringBuilder();
+        for (; n != 0; n--) {
+            // 需要至少保留n-1个a(=1)
+            int x = Math.min(k - n + 1, 26);
+            sb.append((char) ('a' + x - 1));
+            k -= x;
+        }
+        return sb.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        assert new Solution().getSmallestString(3, 27).equals("aay");
+        assert new Solution().getSmallestString(5, 73).equals("aaszz");
+    }
+
+}
