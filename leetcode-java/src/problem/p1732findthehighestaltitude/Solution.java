@@ -10,7 +10,7 @@ package problem.p1732findthehighestaltitude;
  * The biker starts his trip on point 0 with altitude equal 0.
  *
  * You are given an integer array gain of length n where gain[i] is the net gain in altitude
- * between points i​​​​​​ and i + 1 for all (0 <= i < n). Return the highest altitude of a point.
+ * between points i and i + 1 for all (0 <= i < n). Return the highest altitude of a point.
  */
 
 public class Solution {

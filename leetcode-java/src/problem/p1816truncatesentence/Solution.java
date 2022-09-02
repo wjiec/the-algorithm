@@ -11,11 +11,11 @@ package problem.p1816truncatesentence;
  *
  * For example, "Hello World", "HELLO", and "hello world hello world" are all sentences.
  *
- * You are given a sentence s​​​​​​ and an integer k​​​​​​.
+ * You are given a sentence s and an integer k.
  *
- * You want to truncate s​​​​​​ such that it contains only the first k​​​​​​ words.
+ * You want to truncate s such that it contains only the first k words.
  *
- * Return s​​​​​​ after truncating it.
+ * Return s after truncating it.
  */
 
 public class Solution {
