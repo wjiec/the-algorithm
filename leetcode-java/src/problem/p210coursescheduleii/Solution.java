@@ -1,5 +1,6 @@
 package problem.p210coursescheduleii;
 
+import ability.Graph;
 import common.Checker;
 
 import java.util.*;
@@ -20,6 +21,7 @@ import java.util.*;
  * If it is impossible to finish all courses, return an empty array.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int[] findOrder(int numCourses, int[][] prerequisites) {
@@ -61,14 +63,28 @@ public class Solution {
         return learned == numCourses ? ans : new int[]{};
     }
 
+    private static class TopologicalSort {
+        public int[] findOrder(int numCourses, int[][] prerequisites) {
+            Graph.TopologicalSort ts = new Graph.TopologicalSort(numCourses);
+            // [a, b] 表示 a 的前置条件是 b
+            for (var cond : prerequisites) ts.addTask(cond[0], cond[1]);
+            return ts.sort();
+        }
+    }
+
     public static void main(String[] args) {
         assert Checker.check(new Solution().findOrder(2,
             new int[][]{{1, 0}}), new int[]{0,1});
-
         assert Checker.check(new Solution().findOrder(4,
             new int[][]{{1, 0}, {2, 0}, {3, 1}, {2, 1}}), new int[]{0,1,2,3});
-
         assert Checker.check(new Solution().findOrder(1,
+            new int[][]{}), new int[]{0});
+
+        assert Checker.check(new TopologicalSort().findOrder(2,
+            new int[][]{{1, 0}}), new int[]{0,1});
+        assert Checker.check(new TopologicalSort().findOrder(4,
+            new int[][]{{1, 0}, {2, 0}, {3, 1}, {2, 1}}), new int[]{0,1,2,3});
+        assert Checker.check(new TopologicalSort().findOrder(1,
             new int[][]{}), new int[]{0});
     }
 

@@ -1,6 +1,15 @@
 package ability;
 
-public class Ablity {
+// 通用算法以及一些通用方法
+public class Ability {
+
+    // indexOf 找到数组中值 v 所在的位置, 如果找不到则返回 -1
+    public static int indexOf(int[] list, int v) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] == v) return i;
+        }
+        return -1;
+    }
 
     // 不可变键值对
     public record Pair<K, V>(K key, V value) {}
@@ -23,16 +32,6 @@ public class Ablity {
                 v = parent[v];
             }
             return v;
-        }
-    }
-
-    // 拓扑排序, 对有向无环图中的节点进行排序
-    public static class TopologicalSort {
-    }
-
-    // 最小生成树
-    public static class Kruskal {
-        public void addEdge(int src, int dst, int weight) {
         }
     }
 

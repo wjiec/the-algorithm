@@ -15,6 +15,7 @@ import java.util.*;
  * Return true if you can finish all courses. Otherwise, return false.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
