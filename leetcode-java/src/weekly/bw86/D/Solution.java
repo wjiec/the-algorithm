@@ -21,23 +21,15 @@ import java.util.TreeMap;
 
 public class Solution {
 
-    private record Robot(int charge, int running) {}
-
     public int maximumRobots(int[] chargeTimes, int[] runningCosts, long budget) {
-        Robot[] robots = new Robot[chargeTimes.length];
-        for (int i = 0; i < chargeTimes.length; i++) {
-            robots[i] = new Robot(chargeTimes[i], runningCosts[i]);
-        }
-
-        long ans = 0, sum = 0, n = robots.length;
+        long ans = 0, sum = 0, n = chargeTimes.length;
         TreeMap<Integer, Integer> max = new TreeMap<>();
         for (int l = 0, r = 0; r < n; r++) {
-            sum += robots[r].running;
-            max.merge(robots[r].charge, 1, Integer::sum);
+            sum += runningCosts[r];
+            max.merge(chargeTimes[r], 1, Integer::sum);
             while (l <= r && max.lastKey() + (r - l + 1) * sum > budget) {
-                sum -= robots[l].running;
-                max.merge(robots[l].charge, 1, (old, val) -> old - val == 0 ? null : old - val);
-                l++;
+                sum -= runningCosts[l];
+                max.merge(chargeTimes[l++], 1, (old, val) -> old - val == 0 ? null : old - val);
             }
             ans = Math.max(ans, r - l + 1);
         }
