@@ -1,5 +1,7 @@
 package problem.p304rangesumquery2dimmutable;
 
+import ability.Matrix;
+
 /**
  * 304. Range Sum Query 2D - Immutable
  *
@@ -35,6 +37,17 @@ public class Solution {
         }
     }
 
+    private static class AbilityMatrix {
+        private final Matrix.PrefixSum ps;
+        public AbilityMatrix(int[][] matrix) {
+            ps = new Matrix.PrefixSum(matrix);
+        }
+
+        public int sumRegion(int row1, int col1, int row2, int col2) {
+            return (int) ps.range(row1, col1, row2, col2);
+        }
+    }
+
     public static void main(String[] args) {
         NumMatrix numMatrix = new NumMatrix(new int[][]{
             {3, 0, 1, 4, 2},
@@ -46,6 +59,17 @@ public class Solution {
         assert numMatrix.sumRegion(2, 1, 4, 3) == 8;
         assert numMatrix.sumRegion(1, 1, 2, 2) == 11;
         assert numMatrix.sumRegion(1, 2, 2, 4) == 12;
+
+        AbilityMatrix aMatrix = new AbilityMatrix(new int[][]{
+            {3, 0, 1, 4, 2},
+            {5, 6, 3, 2, 1},
+            {1, 2, 0, 1, 5},
+            {4, 1, 0, 1, 7},
+            {1, 0, 3, 0, 5}
+        });
+        assert aMatrix.sumRegion(2, 1, 4, 3) == 8;
+        assert aMatrix.sumRegion(1, 1, 2, 2) == 11;
+        assert aMatrix.sumRegion(1, 2, 2, 4) == 12;
     }
 
 }

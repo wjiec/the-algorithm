@@ -26,11 +26,6 @@ public class Graph {
         }
     }
 
-    // 带权重的有向图
-    public static class DirectedWithWeight extends Directed {
-        public DirectedWithWeight(int n) { super(n); }
-    }
-
     // 记录每个顶点入度的有向图
     public static class InDirected extends Directed {
         // 记录每个顶点的入度
@@ -53,8 +48,8 @@ public class Graph {
         }
 
         // 更通俗形式的为图中增加一条边
-        public void addTask(int task, int prerequisite) {
-            addEdge(prerequisite, task);
+        public void addTask(int target, int prerequisite) {
+            addEdge(prerequisite, target);
         }
     }
 
@@ -98,8 +93,7 @@ public class Graph {
     }
 
     // 最小生成树
-    public static class Kruskal extends DirectedWithWeight {
-        public Kruskal(int n) { super(n); }
-    }
+    //  - 计算带权重的有向图中连接所有顶点的最小代价
+    public static class Kruskal { }
 
 }
