@@ -1,6 +1,51 @@
 package ability;
 
+@SuppressWarnings("DuplicatedCode")
 public class Array {
+
+    // 获取数组中的最大值
+    public static int max(int[] array) {
+        int max = 0;
+        for (var v : array) if (v > max) max = v;
+        return max;
+    }
+
+    // 获取长整形数组中的最大值
+    public static long max(long[] array) {
+        long max = 0;
+        for (var v : array) if (v > max) max = v;
+        return max;
+    }
+
+    // 从满足 array[0] <= array[1] <= array[n-1] <= array[n] 的数组
+    // 中找到第一个大于等于 target 的下标
+    //
+    // 从满足 array[0] >= array[1] >= array[n-1] >= array[n] 的数组
+    // 中找到第一个小于等于 target 的下标
+    public static int lower(int[] array, int target) {
+        int l = 0, r = array.length;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+
+    // 从满足 array[0] <= array[1] <= array[n-1] <= array[n] 的数组
+    // 中找到第一个大于 target 的下标
+    //
+    // 从满足 array[0] >= array[1] >= array[n-1] >= array[n] 的数组
+    // 中找到第一个小于 target 的下标
+    public static int upper(int[] array, int target) {
+        int l = 0, r = array.length;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] > target) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
 
     // 整数前缀和
     public static class PrefixSum {
@@ -32,6 +77,29 @@ public class Array {
         public long get(int idx) {
             return prefixSum[idx + 1] - prefixSum[idx];
         }
+    }
+
+    public static void main(String[] args) {
+        int[] list = new int[]{1, 1, 2, 3, 5, 5, 5, 7, 9, 9, 9, 10};
+        System.out.println(lower(list, 2));
+        System.out.println(lower(list, 4));
+        System.out.println(lower(list, 5));
+        System.out.println();
+
+        System.out.println(lower(list, 0));
+        System.out.println(lower(list, 1));
+        System.out.println(lower(list, 11));
+        System.out.println();
+
+        System.out.println(upper(list, 2));
+        System.out.println(upper(list, 4));
+        System.out.println(upper(list, 5));
+        System.out.println();
+
+        System.out.println(upper(list, 0));
+        System.out.println(upper(list, 1));
+        System.out.println(upper(list, 11));
+        System.out.println();
     }
 
 }
