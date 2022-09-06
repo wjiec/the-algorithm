@@ -14,6 +14,7 @@ import java.util.Arrays;
  * You may assume the input array always has a valid answer.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public void wiggleSort(int[] nums) {
