@@ -18,6 +18,11 @@ public class Ability {
         return -1;
     }
 
+    // 返回 a - b 的结果，如果结果为 0 则返回 null
+    public static Integer subtract(Integer a, Integer b) {
+        return a - b == 0 ? null : a - b;
+    }
+
     // 一些数学的方法
     public static class Math {
         // 等差数列(arithmetic progression)
