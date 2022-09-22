@@ -47,18 +47,27 @@ public class Solution {
 
         public int move(String direction) {
             switch (direction.charAt(0)) {
-                case 'U' -> { return move(x, y - 1); }
-                case 'D' -> { return move(x, y + 1); }
-                case 'L' -> { return move(x - 1, y); }
-                case 'R' -> { return move(x + 1, y); }
+                case 'U' -> { return move(x - 1, y); }
+                case 'D' -> { return move(x + 1, y); }
+                case 'L' -> { return move(x, y - 1); }
+                case 'R' -> { return move(x, y + 1); }
             }
             return bodies.size();
         }
 
         private int move(int dx, int dy) {
-            if (dx < 0 || dx >= width || dy < 0 || dy >= height) return -1;
+            if (dx < 0 || dx >= height || dy < 0 || dy >= width) return -1;
+            // 吃到食物了
             if (index < foods.length && dx == foods[index][0] && dy == foods[index][1]) {
+                index++; // 放置下一个食物
+                bodies.add(new int[]{x, y});
+            } else if (!bodies.isEmpty()) {
+                bodies.remove();
+                bodies.add(new int[]{x, y});
             }
+
+            // 检测会不会碰到身体[头与移动后的身体相撞]
+            for (var body : bodies) if (body[0] == dx && body[1] == dy) return -1;
 
             x = dx; y = dy;
             return bodies.size();
@@ -73,6 +82,20 @@ public class Solution {
         assert snakeGame.move("U") == 1;
         assert snakeGame.move("L") == 2;
         assert snakeGame.move("U") == -1;
+
+        snakeGame = new SnakeGame(3, 3, new int[][]{{2, 0}, {0, 0}, {0, 2}, {2, 2}});
+        assert snakeGame.move("D") == 0;
+        assert snakeGame.move("D") == 1;
+        assert snakeGame.move("R") == 1;
+        assert snakeGame.move("U") == 1;
+        assert snakeGame.move("U") == 1;
+        assert snakeGame.move("L") == 2;
+        assert snakeGame.move("D") == 2;
+        assert snakeGame.move("R") == 2;
+        assert snakeGame.move("R") == 2;
+        assert snakeGame.move("U") == 3;
+        assert snakeGame.move("L") == 3;
+        assert snakeGame.move("D") == 3;
     }
 
 }
