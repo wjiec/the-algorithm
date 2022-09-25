@@ -1,7 +1,6 @@
 package weekly.w312.C;
 
 import common.Checker;
-import common.PrettyPrinter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,9 +45,6 @@ public class Solution {
                 ans.add(i);
             }
         }
-        PrettyPrinter.println(prefix);
-        PrettyPrinter.println(suffix);
-        System.out.println(ans);
         return ans;
     }
 
