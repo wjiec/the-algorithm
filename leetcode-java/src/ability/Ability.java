@@ -1,6 +1,5 @@
 package ability;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,10 +40,6 @@ public class Ability {
         public static long gcd(long a, long b) {
             return b == 0 ? a : gcd(b, a % b);
         }
-        // 大数的最大公约数
-        public static BigInteger gcd(BigInteger a, BigInteger b) {
-            return b.equals(BigInteger.ZERO) ? a : gcd(b, a.mod(b));
-        }
 
         // 最小公倍数
         public static int lcm(int a, int b) {
@@ -54,9 +49,19 @@ public class Ability {
         public static long lcm(long a, long b) {
             return a / gcd(a, b) * b;
         }
-        // 大数的最小公倍数
-        public static BigInteger lcm(BigInteger a, BigInteger b) {
-            return a.divide(gcd(a, b)).multiply(b);
+
+        // 快速幂算法, 求 (base ^ pow) % mod 的值
+        public static long pow(long base, long pow, long mod) {
+            long ans = 1;
+            while (pow > 0) {
+                if ((pow & 1) != 0) {
+                    ans = (ans * base) % mod;
+                }
+
+                base = (base * base) % mod;
+                pow >>= 1;
+            }
+            return ans;
         }
     }
 
