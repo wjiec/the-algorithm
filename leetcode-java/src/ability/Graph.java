@@ -1,28 +1,55 @@
 package ability;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 // 图论算法模板
 @SuppressWarnings({"unchecked", "SpellCheckingInspection"})
 public class Graph {
 
+    // 图中的顶点数
+    protected final int vertices;
+
+    // 图中的所有边
+    protected final Set<Integer>[] edges;
+
+    // 构造一个图
+    public Graph(int n) {
+        this.vertices = n; edges = new Set[vertices];
+        for (int i = 0; i < vertices; i++) {
+            edges[i] = new HashSet<>();
+        }
+    }
+
     // 有向图
-    public static class Directed {
-        // 图中的顶点数
-        protected final int vertices;
+    public static class Directed extends Graph {
+        public Directed(int n) { super(n); }
+    }
 
-        // 图中的所有边
-        protected final Set<Integer>[] edges;
+    // 无向图
+    public static class Undirected extends Graph {
+        public Undirected(int n) { super(n); }
 
-        // 初始化一个有向图
-        public Directed(int n) {
-            vertices = n; edges = new Set[vertices];
-            for (int i = 0; i < vertices; i++) {
-                edges[i] = new HashSet<>();
-            }
+        // 为图中增加一条边, 无向图中需要双向匹配
+        public void addEdge(int a, int b) {
+            edges[a].add(b); edges[b].add(a);
+        }
+    }
+
+    // 带权重的无向图
+    public static class UndirectedWithWeight extends Undirected {
+        // 图中顶点之间的权重
+        protected final Map<Integer, Map<Integer, Integer>> weight;
+
+        // 初始化带权重的无向图
+        public UndirectedWithWeight(int n) {
+            super(n); weight = new HashMap<>();
+        }
+
+        // 为图中增加一条边, 其权重为 w
+        public void addEdge(int a, int b, int w) {
+            addEdge(a, b);
+            weight.computeIfAbsent(a, v -> new HashMap<>()).put(b, w);
+            weight.computeIfAbsent(b, v -> new HashMap<>()).put(a, w);
         }
     }
 
@@ -95,5 +122,40 @@ public class Graph {
     // 最小生成树
     //  - 计算带权重的有向图中连接所有顶点的最小代价
     public static class Kruskal { }
+
+    // 单源最短路径
+    //  - 求解非负权图上单源最短路径的算法
+    public static class Dijkstra extends UndirectedWithWeight {
+        public Dijkstra(int n) { super(n); }
+
+        private static final long INF = Long.MAX_VALUE / 2;
+
+        // 返回一个数组表示每个顶点距离 source 的最短路径
+        public long[] distance(long source) {
+            long[] distance = new long[vertices];
+            Arrays.fill(distance, INF);
+
+            // [node, distance] 距离
+            PriorityQueue<long[]> pq = new PriorityQueue<>(Comparator.comparingLong(v -> v[1]));
+            pq.add(new long[]{source, 0});
+
+            // 对那些刚刚被加入集合的结点的所有出边执行松弛操作
+            while (pq.isEmpty()) {
+                long[] curr = pq.remove();
+                int idx = (int) curr[0];
+
+                if (distance[idx] <= curr[1]) continue;
+                distance[idx] = curr[1];
+
+                for (var next : edges[idx]) {
+                    if (distance[next] >= INF) {
+                        pq.add(new long[]{next, curr[1] + weight.get(idx).get(next)});
+                    }
+                }
+            }
+
+            return distance;
+        }
+    }
 
 }

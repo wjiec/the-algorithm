@@ -1,5 +1,6 @@
 package ability;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,12 +55,28 @@ public class Ability {
         public static long pow(long base, long pow, long mod) {
             long ans = 1;
             while (pow > 0) {
-                if ((pow & 1) != 0) {
+                if ((pow & 1L) != 0) {
                     ans = (ans * base) % mod;
                 }
 
                 base = (base * base) % mod;
                 pow >>= 1;
+            }
+            return ans;
+        }
+
+        // 大数快速幂算法, 求 (base ^ pow) % mod 的值
+        public static BigInteger pow(BigInteger base, BigInteger pow, BigInteger mod) {
+            BigInteger ans = BigInteger.ONE;
+            while (pow.compareTo(BigInteger.ZERO) > 0) {
+                if (pow.testBit(0)) {
+                    ans = ans.multiply(base);
+                    ans = ans.mod(mod);
+                }
+
+                base = base.multiply(base);
+                base = base.mod(mod);
+                pow = pow.shiftRight(1);
             }
             return ans;
         }
