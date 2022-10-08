@@ -1,5 +1,7 @@
 package problem.p2033minimumoperationstomakeaunivaluegrid;
 
+import java.util.Arrays;
+
 /**
  * 2033. Minimum Operations to Make a Uni-Value Grid
  *
@@ -17,21 +19,18 @@ package problem.p2033minimumoperationstomakeaunivaluegrid;
 public class Solution {
 
     public int minOperations(int[][] grid, int x) {
-        int sum = 0; boolean even = x % 2 == 0;
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int m = grid.length, n = grid[0].length, c = grid[0][0], i = 0;
+        int[] sorted = new int[m * n];
         for (var row : grid) {
             for (var v : row) {
-                sum += v;
-                if (even && v % 2 == 1) return -1;
-                min = Math.min(min, v);
-                max = Math.max(max, v);
+                if ((v - c) % x != 0) return -1;
+                sorted[i++] = v;
             }
         }
 
-        int tot = grid.length * grid[0].length, ans = Integer.MAX_VALUE;
-        for (int i = min; i <= max; i += x) {
-            ans = Math.min(ans, Math.abs(sum - tot * i) / x);
-        }
+        Arrays.sort(sorted);
+        int mid = sorted[m * n / 2], ans = 0;
+        for (var v : sorted) ans += Math.abs(v - mid) / x;
         return ans;
     }
 
