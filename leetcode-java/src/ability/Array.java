@@ -1,7 +1,23 @@
 package ability;
 
+import java.util.Arrays;
+
 @SuppressWarnings("DuplicatedCode")
 public class Array {
+
+    // 初始化一个数组并填充默认值为 fill
+    public static int[] make(int len, int fill) {
+        int[] array = new int[len];
+        Arrays.fill(array, fill);
+        return array;
+    }
+
+    // 初始化一个数组并填充默认值为 fill
+    public static int[] make(int len, int fill, int ...init) {
+        int[] array = make(len, fill);
+        System.arraycopy(init, 0, array, 0, Math.min(init.length, len));
+        return array;
+    }
 
     // 获取数组中的最大值
     public static int max(int[] array) {
