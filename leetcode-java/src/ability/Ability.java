@@ -10,12 +10,18 @@ public class Ability {
     // 不可变键值对
     public record Pair<K, V>(K key, V value) {}
 
-    // indexOf 找到数组中值 v 所在的位置, 如果找不到则返回 -1
+    // 找到数组中值 v 所在的位置, 如果找不到则返回 -1
     public static int indexOf(int[] list, int v) {
         for (int i = 0; i < list.length; i++) {
             if (list[i] == v) return i;
         }
         return -1;
+    }
+
+    // 计算两个点之间的距离
+    public static double distance(long x1, long y1, long x2, long y2) {
+        long dx = x1 - x2, dy = y1 - y2;
+        return java.lang.Math.sqrt(dx * dx + dy * dy);
     }
 
     // 返回 a - b 的结果，如果结果为 0 则返回 null
