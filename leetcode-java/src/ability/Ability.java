@@ -18,6 +18,15 @@ public class Ability {
         return -1;
     }
 
+    // 解析一个时间字符串，得到一个长度为 2 的数组，分别为
+    // 小时数和分钟数
+    public static int[] parseTime(String time) {
+        return new int[]{
+            Integer.parseInt(time.substring(0, 2)),
+            Integer.parseInt(time.substring(3, 5))
+        };
+    }
+
     // 计算两个点之间的距离
     public static double distance(long x1, long y1, long x2, long y2) {
         long dx = x1 - x2, dy = y1 - y2;
