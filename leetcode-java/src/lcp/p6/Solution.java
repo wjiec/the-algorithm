@@ -1,4 +1,4 @@
-package lcp.p6nayingbi;
+package lcp.p6;
 
 /**
  * LCP 06. 拿硬币

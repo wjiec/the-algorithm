@@ -1,4 +1,4 @@
-package lcp.p44sZ59z6;
+package lcp.p44;
 
 import common.TreeNode;
 

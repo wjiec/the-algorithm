@@ -1,4 +1,4 @@
-package lcp.p22ccw6C7;
+package lcp.p22;
 
 /**
  * LCP 22. 黑白方格画

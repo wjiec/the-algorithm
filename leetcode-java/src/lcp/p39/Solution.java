@@ -1,4 +1,4 @@
-package lcp.p39a0jQkd0;
+package lcp.p39;
 
 /**
  * LCP 39. 无人机方阵

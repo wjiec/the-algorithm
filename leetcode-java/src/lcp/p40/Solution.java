@@ -1,4 +1,4 @@
-package lcp.p40uOAnQW;
+package lcp.p40;
 
 import java.util.Arrays;
 

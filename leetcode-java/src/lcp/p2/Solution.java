@@ -1,4 +1,4 @@
-package lcp.p2deepdarkfraction;
+package lcp.p2;
 
 import common.Checker;
 

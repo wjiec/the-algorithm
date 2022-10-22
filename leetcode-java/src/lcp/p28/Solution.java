@@ -1,4 +1,4 @@
-package lcp.p28a4xy4Wx;
+package lcp.p28;
 
 import java.util.Arrays;
 

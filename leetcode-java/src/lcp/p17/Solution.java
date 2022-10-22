@@ -1,4 +1,4 @@
-package lcp.p17nGK0Fy;
+package lcp.p17;
 
 /**
  * LCP 17. 速算机器人

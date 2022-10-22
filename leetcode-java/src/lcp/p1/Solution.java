@@ -1,4 +1,4 @@
-package lcp.p1guessnumbers;
+package lcp.p1;
 
 /**
  * LCP 01. 猜数字

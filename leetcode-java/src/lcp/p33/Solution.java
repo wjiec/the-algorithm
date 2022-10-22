@@ -1,4 +1,4 @@
-package lcp.p33o8SXZn;
+package lcp.p33;
 
 /**
  * LCP 33. 蓄水

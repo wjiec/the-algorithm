@@ -1,4 +1,4 @@
-package lcp.p29SNJvJP;
+package lcp.p29;
 
 /**
  * LCP 29. 乐团站位
