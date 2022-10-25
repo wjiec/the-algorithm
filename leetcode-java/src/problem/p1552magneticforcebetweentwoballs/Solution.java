@@ -17,6 +17,7 @@ import java.util.Arrays;
  * Given the integer array position and the integer m. Return the required force.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int maxDistance(int[] position, int m) {
