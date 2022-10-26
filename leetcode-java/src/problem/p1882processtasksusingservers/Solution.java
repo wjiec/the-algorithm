@@ -33,30 +33,41 @@ import java.util.PriorityQueue;
 
 public class Solution {
 
-    public int[] assignTasks(int[] servers, int[] tasks) {
-        // [index, weight, idle]
-        PriorityQueue<long[]> busy = new PriorityQueue<>(Comparator.comparingLong(s -> s[2]));
-        PriorityQueue<long[]> idle = new PriorityQueue<>((a, b) -> {
-            if (a[1] != b[1]) return (int) (a[1] - b[1]);
-            return (int) (a[0] - b[0]);
-        });
-        for (int i = 0; i < servers.length; i++) idle.add(new long[]{i, servers[i], 0});
+    private static class Server {
+        private long free = 0;
+        private final int index;
+        private final int weight;
+        public Server(int i, int w) { index = i; weight = w; }
+    }
 
-        long t = 0;
+    public int[] assignTasks(int[] servers, int[] tasks) {
+        PriorityQueue<Server> busy = new PriorityQueue<>(Comparator.comparingLong(s -> s.free));
+        PriorityQueue<Server> idle = new PriorityQueue<>((a, b) -> {
+            if (a.weight != b.weight) return a.weight - b.weight;
+            return a.index - b.index;
+        });
+        for (int i = 0; i < servers.length; i++) idle.add(new Server(i, servers[i]));
+
+        long curr = 0;
         int[] ans = new int[tasks.length];
         for (int i = 0; i < tasks.length; ) {
-            while (!busy.isEmpty() && busy.peek()[2] <= t) {
+            curr = Math.max(curr, i);
+            while (!busy.isEmpty() && busy.peek().free <= curr) {
                 idle.add(busy.remove());
             }
             if (idle.isEmpty() && !busy.isEmpty()) {
-                t = busy.peek()[2]; continue;
+                curr = busy.peek().free;
+                while (!busy.isEmpty() && busy.peek().free <= curr) {
+                    idle.add(busy.remove());
+                }
             }
 
-            long[] s = idle.remove();
-            ans[i] = (int) s[0];
-            s[2] = t + tasks[i];
-            busy.add(s); t++; i++;
+            Server s = idle.remove();
+            ans[i] = s.index;
+            s.free = curr + tasks[i++];
+            busy.add(s);
         }
+
         return ans;
     }
 
