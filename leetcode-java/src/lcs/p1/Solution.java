@@ -1,4 +1,4 @@
-package lcs.p1Ju9Xwi;
+package lcs.p1;
 
 /**
  * LCS 01. 下载插件

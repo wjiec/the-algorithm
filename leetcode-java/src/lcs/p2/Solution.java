@@ -1,4 +1,4 @@
-package lcs.p2WqXACV;
+package lcs.p2;
 
 import java.util.Arrays;
 
