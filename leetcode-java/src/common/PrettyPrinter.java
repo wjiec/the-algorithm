@@ -98,7 +98,12 @@ public class PrettyPrinter {
 
     public static String toString(Object object) {
         Class<?> cl = object.getClass();
-        if (!cl.isArray()) return object.toString();
+        if (!cl.isArray()) {
+            if (object instanceof Boolean) {
+                return (Boolean) object ? "T" : "F";
+            }
+            return object.toString();
+        }
         if (object instanceof Collection<?>) {
             return toString(((Collection<?>) object).toArray(), new Indent());
         }
