@@ -1,26 +1,21 @@
-package problem.p146lrucache;
+package offer2.p31;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 146. LRU Cache
+ * 剑指 Offer II 031. 最近最少使用缓存
  *
- * https://leetcode-cn.com/problems/lru-cache/
+ * https://leetcode.cn/problems/OrIXps/
  *
- * Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+ * 运用所掌握的数据结构，设计和实现一个  LRU (Least Recently Used，最近最少使用) 缓存机制 。
  *
- * Implement the LRUCache class:
+ * 实现 LRUCache 类：
  *
- * LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
- *
- * int get(int key) Return the value of the key if the key exists, otherwise return -1.
- *
- * void put(int key, int value) Update the value of the key if the key exists. Otherwise,
- * add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation,
- * evict the least recently used key.
- *
- * The functions get and put must each run in O(1) average time complexity.
+ * LRUCache(int capacity) 以正整数作为容量 capacity 初始化 LRU 缓存
+ * int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 。
+ * void put(int key, int value) 如果关键字已经存在，则变更其数据值；如果关键字不存在，则插入该组「关键字-值」。
+ * 当缓存容量达到上限时，它应该在写入新数据之前删除最久未使用的数据值，从而为新的数据值留出空间。
  */
 
 @SuppressWarnings("DuplicatedCode")
@@ -28,7 +23,7 @@ public class Solution {
 
     private static class LRUCache {
         private static class DequeLinkedNode {
-            private int key;
+            private final int key;
             private int value;
             private DequeLinkedNode prev;
             private DequeLinkedNode next;
@@ -111,18 +106,16 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        LRUCache cache = new LRUCache(2);
-        cache.put(1, 1);
-        cache.put(2, 2);
-        assert cache.get(1) == 1;
-
-        cache.put(3, 3);
-        assert cache.get(2) == -1;
-
-        cache.put(4, 4);
-        assert cache.get(1) == -1;
-        assert cache.get(3) == 3;
-        assert cache.get(4) == 4;
+        LRUCache lRUCache = new LRUCache(2);
+        lRUCache.put(1, 1);
+        lRUCache.put(2, 2);
+        assert lRUCache.get(1) == 1;
+        lRUCache.put(3, 3);
+        assert lRUCache.get(2) == -1;
+        lRUCache.put(4, 4);
+        assert lRUCache.get(1) == -1;
+        assert lRUCache.get(3) == 3;
+        assert lRUCache.get(4) == 4;
     }
 
 }
