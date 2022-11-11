@@ -19,6 +19,7 @@ import java.util.Stack;
  * and there will not be any division by zero operation.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int evalRPN(String[] tokens) {

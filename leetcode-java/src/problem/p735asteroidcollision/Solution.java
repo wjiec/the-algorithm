@@ -22,6 +22,7 @@ import java.util.Deque;
  * Two asteroids moving in the same direction will never meet.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int[] asteroidCollision(int[] asteroids) {

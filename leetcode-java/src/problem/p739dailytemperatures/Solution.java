@@ -17,6 +17,7 @@ import java.util.Deque;
  * If there is no future day for which this is possible, keep answer[i] == 0 instead.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int[] dailyTemperatures(int[] temperatures) {
