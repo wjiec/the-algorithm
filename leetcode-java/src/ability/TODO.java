@@ -6,4 +6,6 @@ public class TODO {
 
     // 2. Morris 遍历 https://leetcode.cn/problems/w6cpku/
 
+    // 3. lazy 线段树 https://leetcode.cn/problems/fi9suh/solution/ri-cheng-biao-by-leetcode-solution-w06j/
+
 }
