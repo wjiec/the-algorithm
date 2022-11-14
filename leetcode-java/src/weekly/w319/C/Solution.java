@@ -36,7 +36,6 @@ public class Solution {
             }
             ans += swaps(rows);
         }
-        System.out.println(ans);
         return ans;
     }
 
