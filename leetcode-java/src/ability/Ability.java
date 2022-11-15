@@ -125,6 +125,32 @@ public class Ability {
         }
     }
 
+    // 只包含小写字母的前缀树
+    public static class AlphaTrie {
+        private boolean leaf = false;
+        private final AlphaTrie[] map = new AlphaTrie[26];
+        public void asLeaf() { leaf = true; }
+        public boolean isLeaf() { return leaf; }
+        public AlphaTrie get(char c) { return map[c - 'a']; }
+        public AlphaTrie set(char c) { if (map[c - 'a'] == null) map[c - 'a'] = new AlphaTrie(); return get(c); }
+        public AlphaTrie set(String s) {
+            AlphaTrie curr = this;
+            for (var c : s.toCharArray()) {
+                curr = curr.set(c);
+            }
+            return curr;
+        }
+        public AlphaTrie get(String s) {
+            AlphaTrie curr = this;
+            for (var c : s.toCharArray()) {
+                if ((curr = curr.set(c)) == null) {
+                    break;
+                }
+            }
+            return curr;
+        }
+    }
+
     // 字典树
     public static class Trie<T> {
         // 记录所有的子树

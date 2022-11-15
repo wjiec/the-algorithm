@@ -22,6 +22,7 @@ import java.util.Map;
  * that has the prefix prefix, and false otherwise.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private static class Trie {
