@@ -18,6 +18,7 @@ package problem.p875kokoeatingbananas;
  * Return the minimum integer k such that she can eat all the bananas within h hours.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int minEatingSpeed(int[] piles, int h) {

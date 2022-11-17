@@ -14,6 +14,7 @@ import java.util.Arrays;
  * 注意：答案需要以 1e9 + 7 (1000000007) 为底取模，如：计算初始结果为：1000000008，请返回 1
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int breakfastNumber(int[] staple, int[] drinks, int x) {

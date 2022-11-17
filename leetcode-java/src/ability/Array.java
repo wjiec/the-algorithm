@@ -63,6 +63,13 @@ public class Array {
         return l;
     }
 
+    // 交换数组中的两个元素
+    public static void swap(int[] array, int a, int b) {
+        int stash = array[a];
+        array[a] = array[b];
+        array[b] = stash;
+    }
+
     // 整数前缀和
     public static class PrefixSum {
         // 存储前缀和结果, prefixSum[i] 表示 [0, i) 的区间和
