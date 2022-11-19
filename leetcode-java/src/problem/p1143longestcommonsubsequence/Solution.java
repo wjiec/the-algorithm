@@ -16,6 +16,7 @@ package problem.p1143longestcommonsubsequence;
  * A common subsequence of two strings is a subsequence that is common to both strings.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int longestCommonSubsequence(String text1, String text2) {
