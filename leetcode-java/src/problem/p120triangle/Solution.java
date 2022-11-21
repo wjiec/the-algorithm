@@ -13,6 +13,7 @@ import java.util.List;
  * if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int minimumTotal(List<List<Integer>> triangle) {

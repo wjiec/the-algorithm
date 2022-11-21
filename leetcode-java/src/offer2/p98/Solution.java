@@ -1,20 +1,15 @@
-package problem.p62uniquepaths;
+package offer2.p98;
 
 /**
- * 62. Unique Paths
+ * 剑指 Offer II 098. 路径的数目
  *
- * https://leetcode-cn.com/problems/unique-paths/
+ * https://leetcode.cn/problems/2AoeFn/
  *
- * There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]).
+ * 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
  *
- * The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]).
+ * 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
  *
- * The robot can only move either down or right at any point in time.
- *
- * Given the two integers m and n, return the number of possible unique paths that the robot
- * can take to reach the bottom-right corner.
- *
- * The test cases are generated so that the answer will be less than or equal to 2 * 109.
+ * 问总共有多少条不同的路径？
  */
 
 @SuppressWarnings("DuplicatedCode")
@@ -36,6 +31,7 @@ public class Solution {
     public static void main(String[] args) {
         assert new Solution().uniquePaths(3, 7) == 28;
         assert new Solution().uniquePaths(3, 2) == 3;
+        assert new Solution().uniquePaths(7, 3) == 28;
         assert new Solution().uniquePaths(3, 3) == 6;
     }
 
