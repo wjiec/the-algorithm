@@ -18,6 +18,7 @@ import java.util.Arrays;
  * You may assume that you have an infinite number of each kind of coin.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int coinChange(int[] coins, int amount) {

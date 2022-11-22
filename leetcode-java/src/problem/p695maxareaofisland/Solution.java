@@ -17,6 +17,7 @@ import java.util.Queue;
  * Return the maximum area of an island in grid. If there is no island, return 0.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private final int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

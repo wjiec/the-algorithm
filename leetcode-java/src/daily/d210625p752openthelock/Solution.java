@@ -21,6 +21,7 @@ import java.util.*;
  * return the minimum total number of turns required to open the lock, or -1 if it is impossible.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int openLock(String[] deadends, String target) {
