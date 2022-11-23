@@ -50,6 +50,10 @@ public class Checker {
         return a.size() == b.size() && a.containsAll(b);
     }
 
+    public static <T extends List<?>> boolean anyOrder(T a, Object b) {
+        return anyOrder(a, Builder.buildList(b));
+    }
+
     public static boolean check(TreeNode p, TreeNode q) {
         if (p == null && q == null) {
             return true;

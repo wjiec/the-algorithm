@@ -26,6 +26,7 @@ import java.util.Map;
  * in division by zero and that there is no contradiction.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private static class UnionFind {
