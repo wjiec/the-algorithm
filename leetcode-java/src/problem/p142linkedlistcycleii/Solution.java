@@ -18,6 +18,7 @@ import common.ListNode;
  * Do not modify the linked list.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public ListNode detectCycle(ListNode head) {

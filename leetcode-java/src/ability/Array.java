@@ -70,6 +70,18 @@ public class Array {
         array[b] = stash;
     }
 
+    // 反转整个数组中的元素
+    public static void reverse(int[] array) {
+        reverse(array, 0, array.length);
+    }
+
+    // 反转整个数组中指定范围[l, r)的元素
+    private static void reverse(int[] array, int l, int r) {
+        for (int a = l, b = r - 1; a < r; a++, b--) {
+            swap(array, a, b);
+        }
+    }
+
     // 整数前缀和
     public static class PrefixSum {
         // 存储前缀和结果, prefixSum[i] 表示 [0, i) 的区间和
