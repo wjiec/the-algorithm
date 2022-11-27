@@ -12,6 +12,7 @@ package problem.p1267countserversthatcommunicate;
  * Return the number of servers that communicate with any other server.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int countServers(int[][] grid) {
