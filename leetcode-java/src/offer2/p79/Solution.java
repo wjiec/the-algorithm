@@ -15,6 +15,7 @@ import java.util.List;
  * 解集 不能 包含重复的子集。你可以按 任意顺序 返回解集。
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public List<List<Integer>> subsets(int[] nums) {

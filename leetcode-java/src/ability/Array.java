@@ -1,6 +1,8 @@
 package ability;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("DuplicatedCode")
 public class Array {
@@ -31,6 +33,21 @@ public class Array {
         long max = 0;
         for (var v : array) if (v > max) max = v;
         return max;
+    }
+
+    // 获取数组的所有子集
+    public static List<List<Integer>> combinations(int[] array) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        ans.add(new ArrayList<>());
+        for (var v : array) {
+            for (int i = 0, l = ans.size(); i < l; i++) {
+                List<Integer> curr = new ArrayList<>(ans.get(i));
+                curr.add(v);
+                ans.add(curr);
+            }
+        }
+        return ans;
     }
 
     // 从满足 array[0] <= array[1] <= array[n-1] <= array[n] 的数组
