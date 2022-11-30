@@ -13,6 +13,7 @@ package problem.p240searcha2dmatrixii;
  * Integers in each column are sorted in ascending from top to bottom.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     /**
