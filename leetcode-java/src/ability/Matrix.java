@@ -3,6 +3,20 @@ package ability;
 @SuppressWarnings("DuplicatedCode")
 public class Matrix {
 
+    // 在某个位置的周围 8 个放心坐标的偏移
+    private final int[][] dirs8 = new int[][]{
+        {-1, -1}, {-1, +0}, {-1, +1},
+        {+0, -1}, /* OO */  {+0, +1},
+        {+1, -1}, {+1, +0}, {+1, +1}
+    };
+
+    // 在某个位置的周围 4 个方向坐标的偏移
+    private final int[][] dirs4 = new int[][]{
+                  {-1, +0},
+        {+0, -1}, /* OO */ {+0, +1},
+                  {+1, +0}
+    };
+
     // 交换矩阵中的两个位置的值
     private static void swap(int[][] matrix, int x1, int y1, int x2, int y2) {
         int stash = matrix[x1][y1];

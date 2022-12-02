@@ -50,6 +50,11 @@ public class Array {
         return ans;
     }
 
+    // 在一个排好序的数组中查找指定的值所在的下标, 如果找不到则返回 -1
+    public static int search(int[] array, int target) {
+        return -1;
+    }
+
     // 从满足 array[0] <= array[1] <= array[n-1] <= array[n] 的数组
     // 中找到第一个大于等于 target 的下标
     //
