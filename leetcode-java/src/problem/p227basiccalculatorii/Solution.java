@@ -19,6 +19,7 @@ import java.util.Deque;
  * strings as mathematical expressions, such as eval().
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int calculate(String s) {
