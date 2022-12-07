@@ -17,6 +17,7 @@ package daily.d210917p36validsudoku;
  * Only the filled cells need to be validated according to the mentioned rules.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public boolean isValidSudoku(char[][] board) {
