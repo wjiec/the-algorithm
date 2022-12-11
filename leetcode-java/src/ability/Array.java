@@ -51,8 +51,92 @@ public class Array {
     }
 
     // 在一个排好序的数组中查找指定的值所在的下标, 如果找不到则返回 -1
+    // 要求数组中数字按照顺序递增, 如果数组中存在重复值则随机返回一个下标
     public static int search(int[] array, int target) {
-        return -1;
+        int l = 0, r = array.length;
+        if (r == 0 || target < array[0] || target > array[r - 1]) return -1;
+
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] == target) return mid;
+            if (array[mid] > target) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+
+    // 在一个排好序的数组中查找第一个大于或等于指定的值的下标, 如果找不到则返回 -1
+    // 要求数组中数字按照顺序递增, 如果数组中存在重复值则随机返回一个下标
+    public static int ceiling(int[] array, int target) {
+        int l = 0, r = array.length;
+        if (r == 0 || target > array[r - 1]) return -1;
+
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+
+    // 在一个排好序的数组中查找第一个小于或等于指定的值的下标, 如果找不到则返回 -1
+    // 要求数组中数字按照顺序递增, 如果数组中存在重复值则随机返回一个下标
+    public static int floor(int[] array, int target) {
+        int l = 0, r = array.length, ans = 0;
+        if (r == 0 || target < array[0]) return -1;
+
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] > target) r = mid;
+            else { ans = mid; l = mid + 1; }
+        }
+        return ans;
+    }
+
+    // 倒序数组(按数组顺序递减)中的方法
+    public static class Reversed {
+        // 在一个排好序的数组中查找指定的值所在的下标, 如果找不到则返回 -1
+        // 要求数组中数字按照顺序递减, 如果数组中存在重复值则随机返回一个下标
+        public static int search(int[] array, int target) {
+            int l = 0, r = array.length;
+            if (r == 0 || target > array[0] || target < array[r - 1]) return -1;
+
+            while (l < r) {
+                int mid = l + (r - l) / 2;
+                if (array[mid] == target) return mid;
+                if (array[mid] < target) r = mid;
+                else l = mid + 1;
+            }
+            return l;
+        }
+
+        // 在一个排好序的数组中查找第一个大于或等于指定的值的下标, 如果找不到则返回 -1
+        // 要求数组中数字按照顺序递减, 如果数组中存在重复值则随机返回一个下标
+        public static int ceiling(int[] array, int target) {
+            int l = 0, r = array.length, ans = 0;
+            if (r == 0 || target > array[0]) return -1;
+
+            while (l < r) {
+                int mid = l + (r - l) / 2;
+                if (array[mid] < target) r = mid;
+                else { ans = mid; l = mid + 1; }
+            }
+            return ans;
+        }
+
+        // 在一个排好序的数组中查找第一个小于或等于指定的值的下标, 如果找不到则返回 -1
+        // 要求数组中数字按照顺序递减, 如果数组中存在重复值则随机返回一个下标
+        public static int floor(int[] array, int target) {
+            int l = 0, r = array.length, ans = 0;
+            if (r == 0 || target < array[r - 1]) return -1;
+
+            while (l < r) {
+                int mid = l + (r - l) / 2;
+                if (array[mid] > target) r = mid;
+                else { ans = mid; l = mid + 1; }
+            }
+            return ans;
+        }
     }
 
     // 从满足 array[0] <= array[1] <= array[n-1] <= array[n] 的数组
@@ -137,26 +221,13 @@ public class Array {
     }
 
     public static void main(String[] args) {
-        int[] list = new int[]{1, 1, 2, 3, 5, 5, 5, 7, 9, 9, 9, 10};
-        System.out.println(lower(list, 2));
-        System.out.println(lower(list, 4));
-        System.out.println(lower(list, 5));
-        System.out.println();
+        //                      0  1  2  3  4  5  6  7  8  9 10  11
+        int[] array = new int[]{1, 1, 2, 3, 5, 5, 5, 7, 9, 9, 9, 10};
+        System.out.println(floor(array, 2));
 
-        System.out.println(lower(list, 0));
-        System.out.println(lower(list, 1));
-        System.out.println(lower(list, 11));
-        System.out.println();
-
-        System.out.println(upper(list, 2));
-        System.out.println(upper(list, 4));
-        System.out.println(upper(list, 5));
-        System.out.println();
-
-        System.out.println(upper(list, 0));
-        System.out.println(upper(list, 1));
-        System.out.println(upper(list, 11));
-        System.out.println();
+        //                          0  1  2  3  4  5  6  7  8  9  10
+        int[] reversed = new int[]{10, 9, 8, 8, 7, 6, 5, 5, 3, 2, 1};
+        System.out.println(Reversed.ceiling(reversed, 0));
     }
 
 }
