@@ -23,6 +23,7 @@ import java.util.Map;
  * return the minimum number of crossed bricks after drawing such a vertical line.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     // mark 1
