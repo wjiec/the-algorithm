@@ -12,22 +12,66 @@
 (function() {
     'use strict';
 
-    let timer = setInterval(() => {
-        const btns = document.querySelectorAll('[data-key=description-content] button')
-        if (btns && btns.length) {
-            const feedback = btns[5];
-            feedback.innerHTML = feedback.innerHTML.replace('反馈', '转换')
-            clearInterval(timer);
-            timer = null;
+    const container = document.querySelector('.w-full .mt-3.flex')
 
-            feedback.onclick = (e) => {
-                e.preventDefault()
-                e.stopPropagation()
+    /**
+     * 添加一个按钮到头部的工具栏中
+     *
+     * @param text {string}
+     * @param eventListener {(ev: MouseEvent, el: HTMLElement) => void}
+     */
+    const appendToHeadBar = (text, eventListener) => {
+        if (container) {
+            const wrapper = document.createElement('div')
+            {
+                const content = document.createElement('div')
+                content.style.cursor = 'pointer'
+                content.classList.add('inline-block', 'rounded-[21px]', 'bg-opacity-[.15]', 'px-2.5', 'py-1',
+                    'text-xs', 'font-medium', 'capitalize', 'dark:bg-opacity-[.15]',
+                    'bg-blue', 'dark:bg-dark-blue', 'text-blue', 'dark:text-dark-blue')
+                content.innerText = text
+                wrapper.append(content)
 
-                document.querySelectorAll('[data-key=description-content] pre').forEach((el) => {
-                    el.innerText = el.innerText.replace(/\[/g, '{').replace(/\]/g, '}').replace(/"/g, '\'')
+                content.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (typeof eventListener === 'function') {
+                        eventListener(e, content)
+                    }
                 })
             }
+            container.appendChild(wrapper)
         }
-    }, 1000)
+    }
+
+    /**
+     * 遍历所有子节点, 并替换其中可能存在的字符
+     *
+     * @param element {HTMLElement | ChildNode}
+     */
+    const foreachChildren = (element) => {
+        if (element.hasChildNodes()) {
+            element.childNodes.forEach(foreachChildren)
+        } else {
+            element.textContent = element.textContent
+                .replaceAll('[', '{')
+                .replaceAll(']', '}')
+                .replaceAll('"', "'")
+        }
+    }
+
+    // 添加一个 "转换" 按钮, 用于将描述中的输入转换为更有利于复制的形式
+    appendToHeadBar('转换', () => {
+        const codeblocks = document.querySelectorAll('pre')
+        if (codeblocks && codeblocks.length !== 0) {
+            codeblocks.forEach(foreachChildren)
+        }
+    })
+
+    // 添加一个 "语言" 按钮, 用于切换题目的描述语言
+    appendToHeadBar('语言', () => {
+        document.querySelector('#headlessui-popover-panel-2')
+            .querySelector('.cursor-pointer')
+            .click()
+    })
 })();
