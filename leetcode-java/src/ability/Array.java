@@ -35,6 +35,39 @@ public class Array {
         return max;
     }
 
+    // 获取无序数组中第 k (从 0 开始) 小的元素
+    public static int quickSelect(int[] array, int k) {
+        return quickSelect(array, 0, array.length, k);
+    }
+
+    // 在无序数组中范围 [l, r) 中获取第 k (从 0 开始) 小的元素
+    private static int quickSelect(int[] array, int l, int r, int k) {
+        if (l < r) {
+            int mid = partition(array, l, r);
+            if (mid == k) return array[k];
+
+            if (mid > k) return quickSelect(array, l, mid, k);
+            return quickSelect(array, mid + 1, r, k);
+        }
+        return array[k];
+    }
+
+    // 对于 array 的范围 [l, r) 中的元素进行排序
+    private static int partition(int[] array, int l, int r) {
+        int mid = l + (r - l) / 2;
+        swap(array, mid, r - 1);
+
+        int pivot = array[r - 1], idx = l;
+        for (int i = l; i < r; i++) {
+            if (array[i] < pivot) {
+                swap(array, i, idx++);
+            }
+        }
+        swap(array, idx, r - 1);
+
+        return idx;
+    }
+
     // 获取数组的所有子集
     public static List<List<Integer>> combinations(int[] array) {
         List<List<Integer>> ans = new ArrayList<>();
