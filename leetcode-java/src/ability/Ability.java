@@ -27,6 +27,12 @@ public class Ability {
         };
     }
 
+    // 解析一个时间字符串，得到一个从 00:00 开始的按秒计时的时间
+    private static int parseTimeAsSeconds(String time) {
+        int[] times = parseTime(time);
+        return times[0] * 60 + times[1];
+    }
+
     // 计算两个点之间的距离
     public static double distance(long x1, long y1, long x2, long y2) {
         long dx = x1 - x2, dy = y1 - y2;
