@@ -41,6 +41,8 @@ public class Ability {
 
     // 返回 a - b 的结果，如果结果为 0 则返回 null
     public static Integer subtract(Integer a, Integer b) {
+        if (b == null) return a;
+        if (a == null) return -b;
         return a - b == 0 ? null : a - b;
     }
 
