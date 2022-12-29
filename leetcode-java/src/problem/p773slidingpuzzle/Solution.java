@@ -1,5 +1,7 @@
 package problem.p773slidingpuzzle;
 
+import common.TODO;
+
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
@@ -27,6 +29,7 @@ public class Solution {
 
     private record State(int[][] board, int x, int y, int s) {}
 
+    @TODO(tips = "A*")
     public int slidingPuzzle(int[][] board) {
         Queue<State> queue = new ArrayDeque<>();
         for (int i = 0; i < ROW_SIZE; i++) {
@@ -48,7 +51,7 @@ public class Solution {
             for (var dir : dirs) {
                 int dx = curr.x + dir[0], dy = curr.y + dir[1];
                 if (dx >= 0 && dx < ROW_SIZE && dy >= 0 && dy < COL_SIZE) {
-                    int[][] next = swap(board, curr.x, curr.y, dx, dy);
+                    int[][] next = swap(curr.board, curr.x, curr.y, dx, dy);
                     if (visited.add(toKey(next))) {
                         queue.add(new State(next, dx, dy, curr.s + 1));
                     }

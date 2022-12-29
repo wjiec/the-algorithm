@@ -23,4 +23,6 @@ public class TODO {
 
     // 9. AC 自动机 https://leetcode.cn/problems/multi-search-lcci/
 
+    // 10. A* 算法 https://leetcode.cn/problems/sliding-puzzle/solutions/845064/hua-dong-mi-ti-by-leetcode-solution-q8dn/
+
 }
