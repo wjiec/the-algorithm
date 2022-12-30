@@ -1,5 +1,7 @@
 package problem.p847shortestpathvisitingallnodes;
 
+import common.Tag;
+
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -21,6 +23,7 @@ import java.util.Queue;
 
 public class Solution {
 
+    @Tag({"走过所有路的最少步数", "广度优先搜索和状态压缩"})
     public int shortestPathLength(int[][] graph) {
         int n = graph.length;
         // [node, state, step]
