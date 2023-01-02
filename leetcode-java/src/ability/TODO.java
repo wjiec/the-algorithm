@@ -25,4 +25,7 @@ public class TODO {
 
     // 10. A* 算法 https://leetcode.cn/problems/sliding-puzzle/solutions/845064/hua-dong-mi-ti-by-leetcode-solution-q8dn/
 
+    // 11. 质数相关算法
+        // https://leetcode.cn/problems/count-primes/solutions/
+
 }
