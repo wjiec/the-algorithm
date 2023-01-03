@@ -1,7 +1,13 @@
 package ability;
 
-import common.PrettyPrinter;
+import java.util.Random;
 
+@SuppressWarnings({
+    "unused",
+    "DuplicatedCode",
+    "UnusedReturnValue",
+    "ResultOfMethodCallIgnored"
+})
 public class Prime {
 
     // 粗略估算小于等于 n 的实数中有多少个质数
@@ -29,8 +35,54 @@ public class Prime {
         return primes;
     }
 
-    // Miller-Rabin 素数测试
-    public static boolean isPrime(long n) {
+    // 前 12 个质数用于判断另一个数 n 是否为质数
+    private static final int[] PRIME_TESTS = new int[]{
+        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
+    };
+
+    // Miller-Rabin 素数测试, 返回 n 是否是质数
+    public static boolean isPrime(int n) {
+        if (n < 3 || n % 2 == 0) return n == 2;
+
+        int a = n - 1, b = 0;
+        while (a % 2 == 0) { a /= 2; b++; }
+
+        for (int i = 0, j; i < PRIME_TESTS.length; i++) {
+            if (PRIME_TESTS[i] >= n) return PRIME_TESTS[i] == n;
+
+            long v = Ability.Math.pow(PRIME_TESTS[i], a, n);
+            if (v == 1) continue;
+
+            for (j = 0; j < b; j++) {
+                if (v == n - 1) break;
+                v = (v * v) % n;
+            }
+            if (j >= b) return false;
+        }
+
+        return true;
+    }
+
+    // Miller-Rabin 素数测试, 对 n 进行 k 轮测试, 以检查
+    // 其是否为质数(建议是不少于 8 轮, 且不宜过大, 推荐 12 轮)
+    public static boolean isPrime(int n, int k) {
+        if (n < 3 || n % 2 == 0) return n == 2;
+
+        int a = n - 1, b = 0;
+        while (a % 2 == 0) { a /= 2; b++; }
+
+        for (int i = 0, j; i < k; i++) {
+            long r = new Random().nextInt(n - 2) + 2;
+            long v = Ability.Math.pow(r, a, n);
+            if (v == 1) continue;
+
+            for (j = 0; j < b; j++) {
+                if (v == n - 1) break;
+                v = (v * v) % n;
+            }
+            if (j >= b) return false;
+        }
+
         return true;
     }
 
@@ -39,7 +91,7 @@ public class Prime {
         // 朴素解法: 枚举 2 到 sqrt(n) 之间的所有实数, 判断
         // 其是否是 n 的约数
         public static boolean isPrime(int n) {
-            if (n < 2) return false;
+            if (n < 3 || n % 2 == 0) return n == 2;
             for (int i = 2; i * i <= n; i++) {
                 if (n % i == 0) return false;
             }
@@ -48,8 +100,13 @@ public class Prime {
     }
 
     public static void main(String[] args) {
-        int[] primes = euler(10);
-        PrettyPrinter.println(primes);
+        Benchmark.benchmark("Euler 1_000_000", () -> euler(1_000_000));
+        Benchmark.benchmark("Miller-Rabin 1_000_000 rand 12", () -> {
+            for (int i = 0; i < 1_000_000; i++) isPrime(i, 12);
+        });
+        Benchmark.benchmark("Miller-Rabin 1_000_000 prime 12", () -> {
+            for (int i = 0; i < 1_000_000; i++) isPrime(i);
+        });
     }
 
 }
