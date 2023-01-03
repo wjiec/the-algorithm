@@ -1,6 +1,6 @@
 package ability;
 
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "unused"})
 public class Matrix {
 
     // 在某个位置的周围 8 个放心坐标的偏移
