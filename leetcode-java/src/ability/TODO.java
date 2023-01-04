@@ -28,4 +28,7 @@ public class TODO {
     // 11. 质数相关算法
         // https://leetcode.cn/problems/count-primes/solutions/
 
+    // 12. 最小生成树
+        // https://leetcode.cn/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree
+
 }

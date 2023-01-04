@@ -3,7 +3,12 @@ package ability;
 import java.util.*;
 
 // 图论算法模板
-@SuppressWarnings({"unchecked", "SpellCheckingInspection"})
+@SuppressWarnings({
+    "unused",
+    "unchecked",
+    "DuplicatedCode",
+    "SpellCheckingInspection"
+})
 public class Graph {
 
     // 图中的顶点数
@@ -83,7 +88,6 @@ public class Graph {
     // 拓扑排序 - 对于图 G 中的任意一条有向边 (u, v), u 在排列中都出现在 v 的前面
     //  - 一般用来"排序"具有依赖关系的任务
     //  - 要求图中不能存在环
-    @SuppressWarnings("DuplicatedCode")
     public static class TopologicalSort extends InDirected {
         public TopologicalSort(int n) { super(n); }
 
