@@ -125,8 +125,9 @@ public class Graph {
     }
 
     // 最小生成树
-    //  - 计算带权重的有向图中连接所有顶点的最小代价
-    public static class Kruskal { }
+    //  - 计算带权重的无向图中连接所有顶点的最小代价
+    public static class Kruskal {
+    }
 
     // 单源最短路径
     //  - 求解非负权图上单源最短路径的算法
