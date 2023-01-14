@@ -26,77 +26,75 @@ import java.util.List;
 
 public class Solution {
 
-    private static class Edge {
-        private boolean available = true;
-        private final int idx, from, to, weight;
-        public Edge(int idx, int from, int to, int weight) {
-            this.idx = idx; this.from = from; this.to = to; this.weight = weight;
-        }
-    }
+    private record Edge(int idx, int from, int to, int weight) { }
 
     public List<List<Integer>> findCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
-        parents = new int[n];
+        parents = new int[n]; total = n;
         Edge[] egs = new Edge[edges.length];
         for (int i = 0; i < egs.length; i++) {
             egs[i] = new Edge(i, edges[i][0], edges[i][1], edges[i][2]);
         }
         Arrays.sort(egs, Comparator.comparingInt(v -> v.weight));
 
-        MST minimum = mst(n, egs[0].idx, egs);
+        reset(); int minimum = 0;
+        for (var edge : egs) {
+            if (union(edge.from, edge.to)) {
+                minimum += edge.weight;
+            }
+        }
+
         List<Integer> pseudo = new ArrayList<>();
         List<Integer> critical = new ArrayList<>();
 
         for (int i = 0; i < egs.length; i++) {
-            egs[i].available = false;
-            MST curr = mst(n, i, egs);
-            egs[i].available = true;
+            reset(); int curr = 0;
+            for (int j = 0; j < egs.length; j++) {
+                if (i != j && union(egs[j].from, egs[j].to)) {
+                    curr += egs[j].weight;
+                }
+            }
+            if (setCount != 1 || curr > minimum) {
+                critical.add(egs[i].idx);
+                continue;
+            }
 
-            if (curr.weight > minimum.weight) critical.add(egs[i].idx);
-            if (curr.weight == minimum.weight) pseudo.add(egs[i].idx);
+            reset(); curr = egs[i].weight;
+            union(egs[i].from, egs[i].to);
+            for (int j = 0; j < egs.length; j++) {
+                if (i != j && union(egs[j].from, egs[j].to)) {
+                    curr += egs[j].weight;
+                }
+            }
+            if (curr == minimum) pseudo.add(egs[i].idx);
         }
 
-        System.out.println(List.of(critical, pseudo));
         return List.of(critical, pseudo);
     }
 
-    private record MST(int weight, List<Integer> discard) {}
-
-    private MST mst(int n, int i, Edge[] edges) {
-        reset();
-        int weight = edges[i].weight;
-        union(edges[i].from, edges[i].to);
-        List<Integer> discard = new ArrayList<>();
-        for (var edge : edges) {
-            if (edge.available) {
-                if (find(edge.from) != find(edge.to)) {
-                    weight += edge.weight;
-                    union(edge.from, edge.to);
-                }
-            }
-        }
-
-        // 判断能不能删除当前这条边
-        int group = find(0);
-        for (int x = 0; x < n; x++) {
-            if (find(x) != group) {
-                return new MST(Integer.MAX_VALUE, new ArrayList<>());
-            }
-        }
-
-        return new MST(weight, discard);
-    }
-
+    private int total = 0;
+    private int setCount = 0;
     private int[] parents = null;
 
     private void reset() {
+        setCount = total;
         for (int i = 0; i < parents.length; i++) {
             parents[i] = i;
         }
     }
 
-    private void union(int a, int b) { parents[find(a)] = find(b); }
+    private boolean union(int a, int b) {
+        int fa = find(a), fb = find(b);
+        if (fa != fb) {
+            setCount--;
+            parents[fa] = fb;
+            return true;
+        }
+        return false;
+    }
 
-    private int find(int v) { return v == parents[v] ? v : (parents[v] = find(parents[v])); }
+    private int find(int v) {
+        return v == parents[v] ? v : (parents[v] = find(parents[v]));
+    }
 
     public static void main(String[] args) {
         assert Checker.check(new Solution().findCriticalAndPseudoCriticalEdges(4, new int[][]{
