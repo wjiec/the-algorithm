@@ -119,8 +119,12 @@ public class Ability {
         }
 
         // 合并两个节点
-        public void union(int a, int b) {
+        public boolean union(int a, int b) {
+            int fa = find(a), fb = find(b);
+            if (fa == fb) return false;
+
             parent[find(a)] = find(b);
+            return true;
         }
 
         // 查找指定节点的父节点同时压缩树
