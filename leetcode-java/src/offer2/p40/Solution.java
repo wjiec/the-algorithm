@@ -64,7 +64,6 @@ public class Solution {
             }
         }
 
-        System.out.println(ans);
         return ans;
     }
 
