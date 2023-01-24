@@ -7,6 +7,8 @@ import java.util.List;
 public class Checker {
 
     public static boolean check(Object a, Object b) {
+        if (a == null || b == null) return a == b;
+
         Class<?> ca = a.getClass(), cb = b.getClass();
         if (ca.isArray() && cb.isArray()) {
             if (Array.getLength(a) != Array.getLength(b)) {
