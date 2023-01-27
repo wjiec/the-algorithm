@@ -9,6 +9,7 @@ package problem.p1292maximumsidelengthofasquarewithsumlessthanorequaltothreshold
  * a sum less than or equal to threshold or return 0 if there is no such square.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int maxSideLength(int[][] mat, int threshold) {
