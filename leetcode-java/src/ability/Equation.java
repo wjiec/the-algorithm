@@ -3,10 +3,10 @@ package ability;
 public class Equation {
 
     // 表示是一个无意义的数字
-    public static final double NaN = Double.POSITIVE_INFINITY;
+    public static final double NaN = Double.NaN;
 
     // 判断值是否是一个无意义的数字
-    public static boolean isNaN(double v) { return v == NaN; }
+    public static boolean isNaN(double v) { return Double.isNaN(v); }
 
     // 一次函数
     public static class Linear {

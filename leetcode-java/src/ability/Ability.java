@@ -144,7 +144,12 @@ public class Ability {
         public void asLeaf() { leaf = true; }
         public boolean isLeaf() { return leaf; }
         public AlphaTrie get(char c) { return map[c - 'a']; }
-        public AlphaTrie set(char c) { if (map[c - 'a'] == null) map[c - 'a'] = new AlphaTrie(); return get(c); }
+        public AlphaTrie set(char c) {
+            if (map[c - 'a'] == null) {
+                map[c - 'a'] = new AlphaTrie();
+            }
+            return get(c);
+        }
         public AlphaTrie set(String s) {
             AlphaTrie curr = this;
             for (var c : s.toCharArray()) {
