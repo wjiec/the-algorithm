@@ -34,7 +34,7 @@ import java.util.TreeMap;
 public class Solution {
 
     @SuppressWarnings({"SameParameterValue", "FieldCanBeLocal", "unchecked"})
-    private static class MKAverage {
+    public static class MKAverage {
         private final int m, k;
         private final int BKT_MIN = 0, BKT_MID = 1, BKT_MAX = 2;
         private final int[] sums = new int[3], counts = new int[3];
