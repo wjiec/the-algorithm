@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // 通用算法以及一些通用方法
+@SuppressWarnings({"DuplicatedCode", "unused"})
 public class Ability {
 
     // 不可变键值对
