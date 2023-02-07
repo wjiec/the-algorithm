@@ -1,5 +1,7 @@
 package weekly.bw97.D;
 
+import common.TODO;
+
 /**
  * 2556. Disconnect Path in a Binary Matrix by at Most One Flip
  *
@@ -20,16 +22,63 @@ package weekly.bw97.D;
 
 public class Solution {
 
-    public boolean isPossibleToCutPath(int[][] grid) {
-        int m = grid.length, n = grid[0].length;
-        if (m * n <= 2) return false;
+    private int m = 0, n = 0;
 
-        return true;
+    @TODO
+    public boolean isPossibleToCutPath(int[][] grid) {
+        m = grid.length; n = grid[0].length;
+        return !dfs(grid, 0, 0) || !dfs(grid, 0, 0);
+    }
+
+    private boolean dfs(int[][] grid, int x, int y) {
+        if (x == m - 1 && y == n - 1) return true;
+
+        grid[x][y] = 0;
+        if (x + 1 < m && grid[x + 1][y] == 1 && dfs(grid, x + 1, y)) return true;
+        if (y + 1 < n && grid[x][y + 1] == 1 && dfs(grid, x, y + 1)) return true;
+
+        return false;
     }
 
     public static void main(String[] args) {
-        assert new Solution().isPossibleToCutPath(new int[][]{{1,1,1},{1,0,0},{1,1,1}});
-        assert !new Solution().isPossibleToCutPath(new int[][]{{1,1,1},{1,0,1},{1,1,1}});
+        assert new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1,1,1,1},
+            {1,0,1,1,1,1},
+            {1,1,1,0,1,1},
+            {0,0,0,1,1,1}
+        });
+
+        assert new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1},
+            {1,1,0},
+            {1,1,1}
+        });
+
+        assert new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1,0,0},
+            {1,0,1,0,0},
+            {1,1,1,1,1},
+            {0,0,1,1,1},
+            {0,0,1,1,1}
+        });
+
+        assert new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1},
+            {0,0,0},
+            {1,1,1}
+        });
+
+        assert new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1},
+            {1,0,0},
+            {1,1,1}
+        });
+
+        assert !new Solution().isPossibleToCutPath(new int[][]{
+            {1,1,1},
+            {1,0,1},
+            {1,1,1}
+        });
     }
 
 }
