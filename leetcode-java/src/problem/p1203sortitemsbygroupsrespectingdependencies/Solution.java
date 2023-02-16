@@ -1,10 +1,8 @@
 package problem.p1203sortitemsbygroupsrespectingdependencies;
 
-import ability.Graph.TopologicalSort;
 import common.PrettyPrinter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 1203. Sort Items by Groups Respecting Dependencies
@@ -31,44 +29,50 @@ import java.util.List;
 public class Solution {
 
     public int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
-        TopologicalSort sort = new TopologicalSort(n);
-        for (int i = 0; i < beforeItems.size(); i++) {
-            for (var before : beforeItems.get(i)) {
-                sort.addTask(i, before);
+        int[] degree = new int[n];
+        Map<Integer, Set<Integer>> edges = new HashMap<>();
+        for (int dst = 0; dst < beforeItems.size(); dst++) {
+            degree[dst] += beforeItems.get(dst).size();
+            for (var src : beforeItems.get(dst)) {
+                edges.computeIfAbsent(src, v -> new HashSet<>()).add(dst);
             }
         }
-
-        int[] order = sort.sort();
-        if (order.length == 0) return new int[0];
 
         List<Integer>[] groups = new List[m];
         for (int i = 0; i < m; i++) groups[i] = new ArrayList<>();
 
-        List<Integer> ungroups = new ArrayList<>();
-        for (var idx : order) {
-            if (group[idx] == -1) ungroups.add(idx);
-            else groups[group[idx]].add(idx);
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < degree.length; i++) {
+            if (degree[i] == 0) queue.add(i);
         }
 
-        int i = 0;
-        int[] ans = new int[n];
-        boolean[] removed = new boolean[n];
-        boolean[] visited = new boolean[m];
-        for (var idx : order) {
-            int g = group[idx];
-            if (g == -1) {
-                ans[i++] = idx;
-                removed[idx] = true;
-            } else if (!visited[g]) {
-                visited[g] = true;
-                for (var x : groups[g]) {
-                    ans[i++] = x;
+        List<Integer> sorts = new ArrayList<>(n);
+        while (!queue.isEmpty()) {
+            int curr = queue.remove();
+            int groupId = group[curr];
+
+            sorts.add(curr);
+            if (groupId != -1) groups[groupId].add(curr);
+
+            if (edges.containsKey(curr)) {
+                for (var next : edges.get(curr)) {
+                    if (--degree[next] == 0) {
+                        queue.add(next);
+                    }
                 }
             }
         }
-        for (var v : ungroups) {
-            if (!removed[v]) {
-                ans[i++] = v;
+        System.out.println(sorts);
+        if (sorts.size() != n) return new int[0];
+
+        int[] ans = new int[n];
+        for (int i = 0, j = 0; i < n; i++) {
+            int curr = sorts.get(i);
+            int groupId = group[curr];
+            if (groupId == -1) ans[j++] = curr;
+            else if (groups[groupId] != null) {
+                for (var v : groups[groupId]) ans[j++] = v;
+                groups[groupId] = null;
             }
         }
 
@@ -76,6 +80,14 @@ public class Solution {
     }
 
     public static void main(String[] args) {
+        // [3,2,0,1,4]
+        // g0 0 1 4
+        // g1 3
+        // g2 2
+        PrettyPrinter.println(new Solution().sortItems(5, 3, new int[]{0,0,2,1,0},
+            List.of(List.of(3), List.of(), List.of(), List.of(), List.of(1,3,2))));
+
+        // [6,3,4,1,5,2,0,7]
         PrettyPrinter.println(new Solution().sortItems(8, 2, new int[]{-1,-1,1,0,0,1,0,-1},
             List.of(List.of(), List.of(6), List.of(5), List.of(6), List.of(3,6), List.of(), List.of(), List.of())));
     }
