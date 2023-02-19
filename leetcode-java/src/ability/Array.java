@@ -86,8 +86,13 @@ public class Array {
     // 在一个排好序的数组中查找指定的值所在的下标, 如果找不到则返回 -1
     // 要求数组中数字按照顺序递增, 如果数组中存在重复值则随机返回一个下标
     public static int search(int[] array, int target) {
-        int l = 0, r = array.length;
-        if (r == 0 || target < array[0] || target > array[r - 1]) return -1;
+        return search(array, target, 0, array.length);
+    }
+
+    // 在一个排好序的数组中的 [l, r) 范围中查找指定的值所在的下标, 如果找不到则返回 -1
+    // 要求数组中数字按照顺序递增, 如果数组中存在重复值则随机返回一个下标
+    private static int search(int[] array, int target, int l, int r) {
+        if (l >= r || target < array[l] || target > array[r - 1]) return -1;
 
         while (l < r) {
             int mid = l + (r - l) / 2;

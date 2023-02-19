@@ -1,8 +1,12 @@
 package problem.p1203sortitemsbygroupsrespectingdependencies;
 
+import ability.Graph;
 import common.PrettyPrinter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 1203. Sort Items by Groups Respecting Dependencies
@@ -29,53 +33,44 @@ import java.util.*;
 public class Solution {
 
     public int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
-        int[] degree = new int[n];
-        Map<Integer, Set<Integer>> edges = new HashMap<>();
-        for (int dst = 0; dst < beforeItems.size(); dst++) {
-            degree[dst] += beforeItems.get(dst).size();
-            for (var src : beforeItems.get(dst)) {
-                edges.computeIfAbsent(src, v -> new HashSet<>()).add(dst);
-            }
+        // 所有 -1 的组并不是同一个组
+        for (int i = 0; i < group.length; i++) {
+            if (group[i] == -1) group[i] = m++;
         }
 
-        List<Integer>[] groups = new List[m];
-        for (int i = 0; i < m; i++) groups[i] = new ArrayList<>();
-
-        Queue<Integer> queue = new ArrayDeque<>();
-        for (int i = 0; i < degree.length; i++) {
-            if (degree[i] == 0) queue.add(i);
-        }
-
-        List<Integer> sorts = new ArrayList<>(n);
-        while (!queue.isEmpty()) {
-            int curr = queue.remove();
-            int groupId = group[curr];
-
-            sorts.add(curr);
-            if (groupId != -1) groups[groupId].add(curr);
-
-            if (edges.containsKey(curr)) {
-                for (var next : edges.get(curr)) {
-                    if (--degree[next] == 0) {
-                        queue.add(next);
-                    }
+        Graph.TopologicalSort items = new Graph.TopologicalSort(n);
+        Graph.TopologicalSort groups = new Graph.TopologicalSort(m);
+        for (int i = 0; i < beforeItems.size(); i++) {
+            int currGroup = group[i];
+            for (var before : beforeItems.get(i)) {
+                items.addTask(i, before);
+                int beforeGroup = group[before];
+                if (beforeGroup != currGroup) {
+                    groups.addTask(currGroup, beforeGroup);
                 }
             }
         }
-        System.out.println(sorts);
-        if (sorts.size() != n) return new int[0];
 
-        int[] ans = new int[n];
-        for (int i = 0, j = 0; i < n; i++) {
-            int curr = sorts.get(i);
-            int groupId = group[curr];
-            if (groupId == -1) ans[j++] = curr;
-            else if (groups[groupId] != null) {
-                for (var v : groups[groupId]) ans[j++] = v;
-                groups[groupId] = null;
-            }
+        int[] sortedItem = items.sort();
+        if (sortedItem.length == 0) return new int[0];
+
+        int[] sortedGroup = groups.sort();
+        if (sortedGroup.length == 0) return new int[0];
+
+        Map<Integer, List<Integer>> groupToItem = new HashMap<>();
+        for (var item : sortedItem) {
+            groupToItem.computeIfAbsent(group[item], v -> new ArrayList<>()).add(item);
         }
 
+        int idx = 0;
+        int[] ans = new int[n];
+        for (var groupId : sortedGroup) {
+            if (groupToItem.containsKey(groupId)) {
+                for (var item : groupToItem.get(groupId)) {
+                    ans[idx++] = item;
+                }
+            }
+        }
         return ans;
     }
 
@@ -84,6 +79,8 @@ public class Solution {
         // g0 0 1 4
         // g1 3
         // g2 2
+        // 3 <- 0
+        // 1 3 2 <- 4
         PrettyPrinter.println(new Solution().sortItems(5, 3, new int[]{0,0,2,1,0},
             List.of(List.of(3), List.of(), List.of(), List.of(), List.of(1,3,2))));
 

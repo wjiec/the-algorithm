@@ -6,8 +6,7 @@ import java.util.*;
 @SuppressWarnings({
     "unused",
     "unchecked",
-    "DuplicatedCode",
-    "SpellCheckingInspection"
+    "DuplicatedCode"
 })
 public class Graph {
 
