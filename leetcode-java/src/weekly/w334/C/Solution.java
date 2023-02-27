@@ -1,42 +1,33 @@
 package weekly.w334.C;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.Arrays;
+
+/**
+ * 2576. Find the Maximum Number of Marked Indices
+ *
+ * https://leetcode.cn/problems/find-the-maximum-number-of-marked-indices/
+ *
+ * You are given a 0-indexed integer array nums.
+ *
+ * Initially, all of the indices are unmarked. You are allowed to
+ * make this operation any number of times:
+ *
+ * Pick two different unmarked indices i and j such
+ * that 2 * nums[i] <= nums[j], then mark i and j.
+ *
+ * Return the maximum possible number of marked indices in nums
+ * using the above operation any number of times.
+ */
 
 public class Solution {
 
-    private record Number(int idx, int val) {
-        @Override
-        public String toString() {
-            return idx + "." + val;
-        }
-    }
-
     public int maxNumOfMarkedIndices(int[] nums) {
-        PriorityQueue<Number> nq = new PriorityQueue<>(Comparator.comparingInt(v -> v.val));
-        PriorityQueue<Number> dq = new PriorityQueue<>(Comparator.comparingInt(v -> v.val));
-        for (int i = 0; i < nums.length; i++) {
-            nq.add(new Number(i, nums[i]));
-            dq.add(new Number(i, nums[i] * 2));
+        Arrays.sort(nums);
+        int i = 0, n = nums.length;
+        for (int j = (n + 1) / 2; j < n; j++) {
+            if (2 * nums[i] <= nums[j]) i++;
         }
-
-        int ans = 0;
-        boolean[] mark = new boolean[nums.length];
-        while (!nq.isEmpty() && !dq.isEmpty()) {
-            int ni = nq.peek().idx;
-            int di = dq.peek().idx;
-            if (dq.peek().val <= nq.peek().val) {
-                if (!mark[ni] && !mark[di]) {
-                    ans += 2;
-                    mark[ni] = true;
-                    mark[di] = true;
-                }
-                if (mark[ni]) nq.remove();
-                if (mark[di]) dq.remove();
-            } else nq.remove();
-        }
-        System.out.println(ans);
-        return ans;
+        return i * 2;
     }
 
     public static void main(String[] args) {
