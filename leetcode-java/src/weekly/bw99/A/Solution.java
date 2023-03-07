@@ -43,6 +43,18 @@ public class Solution {
         dfs(chars, i + 1, a, b * 10 + chars[i] - '0');
     }
 
+    private static class Optimize {
+        public int splitNum(int num) {
+            char[] chars = String.valueOf(num).toCharArray();
+            Arrays.sort(chars);
+
+            int a = 0, b = 0, n = chars.length;
+            for (int i = 0; i < n; i += 2) a = a * 10 + chars[i] - '0';
+            for (int i = 1; i < n; i += 2) b = b * 10 + chars[i] - '0';
+            return a + b;
+        }
+    }
+
     public static void main(String[] args) {
     }
 

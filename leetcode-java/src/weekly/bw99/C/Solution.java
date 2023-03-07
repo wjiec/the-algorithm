@@ -2,9 +2,7 @@ package weekly.bw99.C;
 
 import ability.Ability;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
 
 /**
  * 2580. Count Ways to Group Overlapping Ranges
@@ -34,17 +32,18 @@ public class Solution {
             return a[0] - b[0];
         });
 
-        Deque<int[]> deque = new ArrayDeque<>();
+        int c = 0, r = -1;
         for (var range : ranges) {
-            if (!deque.isEmpty() && range[0] <= deque.peekLast()[1]) {
-                deque.peekLast()[1] = Math.max(deque.peekLast()[1], range[1]);
-            } else deque.addLast(range);
+            if (range[0] > r) {
+                c++; r = range[1];
+            } else r = Math.max(r, range[1]);
         }
 
-        return (int) Ability.Math.pow(2, deque.size(), 1_000_000_007);
+        return (int) Ability.Math.pow(2, c, 1_000_000_007);
     }
 
     public static void main(String[] args) {
+        assert new Solution().countWays(new int[][]{{0,1}}) == 2;
         assert new Solution().countWays(new int[][]{{5,11},{20,22},{1,3},{21,22},{11,11}}) == 8;
     }
 
