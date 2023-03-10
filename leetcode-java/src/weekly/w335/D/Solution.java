@@ -38,7 +38,6 @@ public class Solution {
         return dp[types.length][target];
     }
 
-
     public static void main(String[] args) {
         assert new Solution().waysToReachTarget(1, new int[][]{{6, 1}, {3, 2}, {2, 3}}) == 1;
         assert new Solution().waysToReachTarget(2, new int[][]{{6, 1}, {3, 2}, {2, 3}}) == 2;
