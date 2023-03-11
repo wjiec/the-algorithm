@@ -15,6 +15,7 @@ import java.util.Map;
  * 返回该子数组，若存在多个最长子数组，返回左端点下标值最小的子数组。若不存在这样的数组，返回一个空数组。
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public String[] findLongestSubarray(String[] array) {
