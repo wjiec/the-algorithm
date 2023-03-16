@@ -34,20 +34,19 @@ public class Solution {
                 idx = i; break;
             }
         }
-        if (idx == -1) return 0;
 
-        int ans = 1;
         Map<Integer, Integer> map = new HashMap<>();
-        for (int i = idx + 1, x = 0; i < n; i++) {
-            x += Integer.compare(nums[i], k);
-            map.merge(x, 1, Integer::sum);
+        map.put(0, 1);
+
+        int ans = 0, sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += Integer.compare(nums[i], k);
+            if (i >= idx) {
+                ans += map.getOrDefault(sum, 0);
+                ans += map.getOrDefault(sum - 1, 0);
+            } else map.merge(sum, 1, Integer::sum);
         }
 
-        for (int i = idx - 1, x = 0; i >= 0; i--) {
-            x += Integer.compare(nums[i], k);
-            ans += map.getOrDefault(-x, 0);
-            ans += map.getOrDefault(-x - 1, 0);
-        }
         return ans;
     }
 
