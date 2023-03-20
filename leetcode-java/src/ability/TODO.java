@@ -42,4 +42,7 @@ public class TODO {
 
     // 16. 换根DP
         // https://leetcode.cn/problems/count-number-of-possible-root-nodes/description/
+
+    // 17, 数位DP
+        // https://leetcode.cn/problems/numbers-with-repeated-digits/solutions/1748539/by-endlesscheng-c5vg/
 }
