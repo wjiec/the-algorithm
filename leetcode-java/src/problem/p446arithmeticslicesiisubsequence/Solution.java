@@ -21,6 +21,7 @@ package problem.p446arithmeticslicesiisubsequence;
 public class Solution {
 
     public int numberOfArithmeticSlices(int[] nums) {
+        return 1;
     }
 
     public static void main(String[] args) {
