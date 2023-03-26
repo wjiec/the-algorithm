@@ -1,5 +1,8 @@
 package problem.p446arithmeticslicesiisubsequence;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 446. Arithmetic Slices II - Subsequence
  *
@@ -21,10 +24,23 @@ package problem.p446arithmeticslicesiisubsequence;
 public class Solution {
 
     public int numberOfArithmeticSlices(int[] nums) {
-        return 1;
+        int ans = 0, n = nums.length;
+        Map<Long, Integer>[] dp = new Map[n];
+        for (int i = 0; i < n; i++) dp[i] = new HashMap<>();
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                long curr = (long) nums[i] - nums[j];
+                int count = dp[j].getOrDefault(curr, 0);
+                ans += count;
+                dp[i].merge(curr, count + 1, Integer::sum);
+            }
+        }
+        return ans;
     }
 
     public static void main(String[] args) {
+        assert new Solution().numberOfArithmeticSlices(new int[]{1,1,1,1,1,1,1,1}) == 219;
+
         assert new Solution().numberOfArithmeticSlices(new int[]{2,4,6,8,10}) == 7;
         assert new Solution().numberOfArithmeticSlices(new int[]{7,7,7,7,7}) == 16;
     }
