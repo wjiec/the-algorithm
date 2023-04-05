@@ -15,18 +15,13 @@ import java.util.Arrays;
  * Return the minimum cost to merge all piles of stones into one pile. If it is impossible, return -1.
  */
 
-
-/*
-有 N 堆石头排成一排，第 i 堆中有 stones[i] 块石头。
-
-每次移动（move）需要将连续的 K 堆石头合并为一堆，而这个移动的成本为这 K 堆石头的总数。
-
-找出把所有石头合并成一堆的最低成本。如果不可能，返回 -1 。
- */
-
 public class Solution {
 
+    private int k = 0;
+    private int[] sum = null;
+
     public int mergeStones(int[] stones, int k) {
+        this.k = k;
         int n = stones.length;
         if ((n - 1) % (k - 1) != 0) return -1;
 
@@ -37,31 +32,32 @@ public class Solution {
             }
         }
 
-        int[] sum = new int[n];
+        sum = new int[n];
         for (int i = 0, s = 0; i < n; i++) {
             dp[i][i][1] = 0;
-            sum[i] = (s + stones[i]);
+            sum[i] = (s += stones[i]);
         }
 
-        return dfs(dp, sum, 0, n - 1, 1, k);
+        return dfs(dp, 0, n - 1, 1);
     }
 
     private final int INF = Integer.MAX_VALUE / 3;
 
-    private int dfs(int[][][] dp, int[] sum, int l, int r, int c, int k) {
-        if (dp[l][r][c] != -1) return dp[l][r][c];
-        if (c > r - l + 1) return INF;
-        if (c == 1) {
-            int ans = dfs(dp, sum, l, r, k, k);
-            if (ans == INF) return dp[l][r][c] = INF;
-            return dp[l][r][c] + (sum[r] - (l == 0 ? 0 : sum[l - 1]));
+    private int dfs(int[][][] dp, int l, int r, int t) {
+        if (dp[l][r][t] != -1) return dp[l][r][t];
+        if (t > r - l + 1) return INF;
+
+        if (t == 1) {
+            int ans = dfs(dp, l, r, k);
+            if (ans == INF) return dp[l][r][t] = INF;
+            return dp[l][r][t] = ans + (sum[r] - (l == 0 ? 0 : sum[l - 1]));
         }
 
         int ans = INF;
-        for (int x = l; x < r; x += k - 1) {
-            ans = Math.min(ans, dfs(dp, sum, l, x, 1, k) + dfs(dp, sum, x + 1, r, c - 1, k));
+        for (int i = l; i < r; i += k - 1) {
+            ans = Math.min(ans, dfs(dp, l, i, 1) + dfs(dp, i + 1, r, t - 1));
         }
-        return dp[l][r][c] = ans;
+        return dp[l][r][t] = ans;
     }
 
     public static void main(String[] args) {
