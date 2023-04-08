@@ -35,34 +35,23 @@ public class Solution {
         Map<String, Integer> map = new HashMap<>();
         for (int i = 0; i < nr; i++) map.put(req_skills[i], 1 << i);
 
-        int[] states = new int[pr];
+        List<Integer>[] dp = new List[1 << nr];
+        dp[0] = new ArrayList<>();
+
         for (int i = 0; i < pr; i++) {
-            for (var skill : people.get(i)) {
-                states[i] |= map.get(skill);
-            }
-        }
+            int skillState = 0;
+            for (var skill : people.get(i)) skillState |= map.get(skill);
+            for (int prev = 0; prev < dp.length; prev++) {
+                if (dp[prev] == null) continue;
 
-        int mask = 1 << req_skills.length - 1;
-        List<Integer> ans = new ArrayList<>();
-        for (int i = 0; i < pr; i++) ans.add(i);
-
-        for (int i = 1, n = 1 << pr; i < n; i++) {
-            int currMask = 0;
-            List<Integer> curr = new ArrayList<>();
-            for (int j = 0; j < pr; j++) {
-                if ((i & (1 << j)) != 0) {
-                    currMask |= states[j];
-                    curr.add(j);
+                int next = prev | skillState;
+                if (dp[next] == null || (dp[prev].size() + 1) < dp[next].size()) {
+                    dp[next] = new ArrayList<>(dp[prev]);
+                    dp[next].add(i);
                 }
             }
-            if (currMask == mask && curr.size() < ans.size()) ans = curr;
         }
-
-        int[] array = new int[ans.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = ans.get(i);
-        }
-        return array;
+        return dp[dp.length - 1].stream().mapToInt(v -> v).toArray();
     }
 
     public static void main(String[] args) {
