@@ -9,6 +9,7 @@ package problem.p233numberofdigitone;
  * appearing in all non-negative integers less than or equal to n.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int countDigitOne(int n) {
