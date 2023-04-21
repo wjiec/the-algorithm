@@ -7,6 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2615. Sum of Distances
+ *
+ * https://leetcode.cn/contest/weekly-contest-340/problems/sum-of-distances/
+ *
+ * You are given a 0-indexed integer array nums. There exists an array arr of length nums.length,
+ * where arr[i] is the sum of |i - j| over all j such that nums[j] == nums[i] and j != i.
+ *
+ * If there is no such j, set arr[i] to be 0.
+ *
+ * Return the array arr.
+ */
+
 @SuppressWarnings("DuplicatedCode")
 public class Solution {
 
