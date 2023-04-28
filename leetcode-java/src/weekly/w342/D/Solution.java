@@ -17,15 +17,26 @@ package weekly.w342.D;
 public class Solution {
 
     public int minOperations(int[] nums) {
-        int distance = nums.length;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (gcd(nums[i], nums[j]) == 1) {
-                    distance = Math.min(distance, j - i);
+        int n = nums.length, g = 0, c1 = 0;
+        for (var num : nums) {
+            g = gcd(g, num);
+            if (num == 1) c1++;
+        }
+        if (g > 1) return -1;
+        if (c1 > 0) return n - c1;
+
+        int minSize = n;
+        for (int i = 0; i < n; i++) {
+            g = nums[i];
+            for (int j = i + 1; j < n; j++) {
+                g = gcd(g, nums[j]);
+                if (g == 1) {
+                    minSize = Math.min(minSize, j - i);
+                    break;
                 }
             }
         }
-        return distance + nums.length - 1;
+        return minSize + n - 1;
     }
 
     private int gcd(int a, int b) { return a % b == 0 ? b : gcd(b, a % b); }
