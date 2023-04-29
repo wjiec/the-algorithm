@@ -1,9 +1,6 @@
 package daily.d230428p1172dinnerplatestacks;
 
-import java.util.ArrayDeque;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * 1172. Dinner Plate Stacks
@@ -29,26 +26,38 @@ import java.util.PriorityQueue;
 public class Solution {
 
     private static class DinnerPlates {
-        private record IndexedStack(int idx, Deque<Integer> stack) { }
-
-        private int idx = 0;
         private final int capacity;
-        private final PriorityQueue<IndexedStack> half = new PriorityQueue<>(Comparator.comparingInt(a -> a.idx));
-        private final PriorityQueue<IndexedStack> full = new PriorityQueue<>(Comparator.comparingInt(a -> a.idx));
+        private final List<Deque<Integer>> stacks = new ArrayList<>();
+        private final PriorityQueue<Integer> hungry = new PriorityQueue<>();
         public DinnerPlates(int capacity) { this.capacity = capacity; }
 
         public void push(int val) {
-            if (half.isEmpty()) half.add(new IndexedStack(idx++, new ArrayDeque<>()));
-            IndexedStack curr = half.remove();
-            curr.stack.push(val);
-            if (curr.stack.size() == capacity) full.add(curr);
-            else half.add(curr);
+            if (!hungry.isEmpty() && hungry.peek() >= stacks.size()) hungry.clear();
+            if (hungry.isEmpty()) {
+                Deque<Integer> curr = new ArrayDeque<>();
+                curr.push(val); stacks.add(curr);
+                if (curr.size() < capacity) hungry.add(stacks.size() - 1);
+            } else {
+                Deque<Integer> curr = stacks.get(hungry.peek()); curr.push(val);
+                if (curr.size() == capacity) hungry.remove();
+            }
         }
 
-        public int pop() {
-        }
+        public int pop() { return popAtStack(stacks.size() - 1); }
 
         public int popAtStack(int index) {
+            if (index < 0 || index >= stacks.size() || stacks.get(index).isEmpty()) {
+                return -1;
+            }
+
+            Deque<Integer> curr = stacks.get(index);
+            if (curr.size() == capacity) hungry.add(index);
+
+            int ans = curr.pop();
+            while (!stacks.isEmpty() && stacks.get(stacks.size() - 1).isEmpty()) {
+                stacks.remove(stacks.size() - 1);
+            }
+            return ans;
         }
     }
 
