@@ -1,5 +1,10 @@
 package weekly.w343.C;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 2662. Minimum Cost of a Path With Special Roads
  *
@@ -26,25 +31,35 @@ package weekly.w343.C;
 public class Solution {
 
     public int minimumCost(int[] start, int[] target, int[][] specialRoads) {
-        int ans = cost(start, target);
-        for (var road : specialRoads) {
-            if (road[4] > ans) continue;
+        Map<Long, Integer> distance = new HashMap<>();
+        Set<Long> visited = new HashSet<>();
 
-            int c1 = cost(start[0], start[1], road[0], road[1]);
-            int c2 = cost(road[2], road[3], target[0], target[1]);
-            if (c1 + c2 + road[4] < ans) {
-                ans = Math.min(c1 + c2 + road[4],
-                    road[4]
-                        + minimumCost(start, new int[]{road[0], road[1]}, specialRoads) // c1
-                        + minimumCost(new int[]{road[2], road[3]}, target, specialRoads) // c2
-                );
+        long tHash = hash(target[0], target[1]);
+        distance.put(tHash, Integer.MAX_VALUE);
+        distance.put(hash(start[0], start[1]), 0);
+
+        while (true) {
+            long currHash = -1; int currDist = -1;
+            for (var e : distance.entrySet()) {
+                if (!visited.contains(e.getKey()) && (currDist == -1 || e.getValue() < currDist)) {
+                    currHash = e.getKey(); currDist = e.getValue();
+                }
+            }
+            if (currHash == tHash) return currDist;
+
+            visited.add(currHash);
+            int x = (int) (currHash >> 32), y = (int) (currHash & Integer.MAX_VALUE);
+            distance.merge(tHash, currDist + Math.abs(target[0] - x) + Math.abs(target[1] - y), Integer::min);
+
+            for (var road : specialRoads) {
+                int nextDist = currDist + Math.abs(road[0] - x) + Math.abs(road[1] - y) + road[4];
+                long nextHash = hash(road[2], road[3]);
+                distance.merge(nextHash, nextDist, Integer::min);
             }
         }
-        return ans;
     }
 
-    private int cost(int[] a, int[] b) { return cost(a[0], a[1], b[0], b[1]); }
-    private int cost(int x1, int y1, int x2, int y2) { return Math.abs(x1 - x2) + Math.abs(y1 - y2); }
+    private long hash(int a, int b) { return ((long) a << 32) | b; }
 
     public static void main(String[] args) {
         assert new Solution().minimumCost(new int[]{25474,6807}, new int[]{79990,8721}, new int[][]{
