@@ -24,19 +24,35 @@ import java.util.Map;
 public class Solution {
 
     public int waysToPartition(int[] nums, int k) {
-        int sum = 0;
-        Map<Integer, Integer> cnt = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            cnt.merge(sum += nums[i], 1, Integer::sum);
+        Map<Integer, Integer> r = new HashMap<>();
+        int[] sum = new int[nums.length]; sum[0] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            sum[i] = sum[i - 1] + nums[i];
+            r.merge(sum[i - 1], 1, Integer::sum);
         }
 
-        int ans = cnt.getOrDefault(sum / 2, 0);
+        int ans = 0, n = nums.length, tot = sum[n - 1];
+        if (tot % 2 == 0) ans = r.getOrDefault(tot / 2, 0);
+
+        Map<Integer, Integer> l = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int d = k - nums[i];
+            if ((tot + d) % 2 == 0) {
+                int a = l.getOrDefault((tot + d) / 2, 0);
+                int b = r.getOrDefault((tot - d) / 2, 0);
+                ans = Math.max(ans, a + b);
+            }
+
+            l.merge(sum[i], 1, Integer::sum);
+            r.merge(sum[i], -1, Integer::sum);
+        }
+        return ans;
     }
 
     public static void main(String[] args) {
         assert new Solution().waysToPartition(new int[]{2,-1,2}, 3) == 1;
         assert new Solution().waysToPartition(new int[]{0,0,0}, 1) == 2;
-        assert new Solution().waysToPartition(new int[]{22,4,-25,-20,-15,15,-16,7,19,-10,0,-13,-14}, -33) == 4s;
+        assert new Solution().waysToPartition(new int[]{22,4,-25,-20,-15,15,-16,7,19,-10,0,-13,-14}, -33) == 4;
     }
 
 }
