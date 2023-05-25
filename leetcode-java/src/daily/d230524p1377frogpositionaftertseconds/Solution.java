@@ -1,7 +1,6 @@
 package daily.d230524p1377frogpositionaftertseconds;
 
 import common.Checker;
-import common.PrettyPrinter;
 
 import java.util.HashSet;
 import java.util.Set;
