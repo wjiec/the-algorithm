@@ -124,7 +124,7 @@ public class Ability {
             int fa = find(a), fb = find(b);
             if (fa == fb) return false;
 
-            parent[find(a)] = find(b);
+            parent[fa] = fb;
             return true;
         }
 
