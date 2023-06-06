@@ -15,6 +15,7 @@ import java.util.Arrays;
  * belong to the interval [1, n].
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     @Template("数位DP")
