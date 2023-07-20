@@ -1,27 +1,27 @@
 package weekly.w354.C;
 
-import java.util.HashMap;
+import ability.Ability;
+
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
 
 public class Solution {
 
     public int minimumIndex(List<Integer> nums) {
-        Map<Integer, Integer> leftFreq = new HashMap<>();
-        Map<Integer, Integer> rightFreq = new HashMap<>();
-        for (var v : nums) rightFreq.merge(v, 1, Integer::sum);
+        Ability.Frequency<Integer> left = new Ability.Frequency<>();
+        Ability.Frequency<Integer> right = new Ability.Frequency<>();
+        for (var v : nums) right.push(v);
 
-        TreeMap<Integer, Integer> lff = new TreeMap<>();
-        TreeMap<Integer, Integer> rff = new TreeMap<>();
-        for (var f : rightFreq.values()) rff.merge(f, 1, Integer::sum);
+        for (int i = 0; i < nums.size() - 1; i++) {
+            left.push(nums.get(i));
+            right.remove(nums.get(i));
 
-        for (int i = 0; i < nums.size(); i++) {
-            int curr = leftFreq.merge(nums.get(i), 1, Integer::sum);
-            lff.merge(curr - 1, -1, Integer::sum);
-            lff.merge(curr, 1, Integer::sum);
+            Set<Integer> ls = left.lastSet(), rs = right.lastSet();
+            if (ls.size() == 1 && rs.size() == 1) {
+                if (ls.containsAll(rs)) return nums.get(i);
+            }
         }
-        return 1;
+        return -1;
     }
 
     public static void main(String[] args) {

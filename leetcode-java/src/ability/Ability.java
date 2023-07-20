@@ -1,8 +1,7 @@
 package ability;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 // 通用算法以及一些通用方法
 @SuppressWarnings({"DuplicatedCode", "unused"})
@@ -187,4 +186,32 @@ public class Ability {
         }
     }
 
+    public static class Frequency<T> {
+
+        private final Map<T, Integer> freq = new HashMap<>();
+        private final TreeMap<Integer, Set<T>> fSet = new TreeMap<>();
+
+        public int push(T value) { return add(value, 1); }
+        public int remove(T value) { return add(value, -1); }
+        public int getFreq(T value) { return freq.getOrDefault(value, 0); }
+        public Set<T> lastSet() { return fSet.lastEntry().getValue(); }
+        public Set<T> firstSet() { return fSet.firstEntry().getValue(); }
+
+        private int add(T value, int delta) {
+            int curr = freq.merge(value, delta, Integer::sum);
+            if (fSet.containsKey(curr - delta)) {
+                fSet.get(curr - delta).remove(value);
+                if (fSet.get(curr - delta).isEmpty()) {
+                    fSet.remove(curr - delta);
+                }
+            }
+
+            if (curr != 0) fSet.computeIfAbsent(curr, v -> new HashSet<>()).add(value);
+            if (curr == 0) freq.remove(value);
+            return curr;
+        }
+
+    }
+
 }
+
