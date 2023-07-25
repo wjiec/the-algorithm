@@ -1,9 +1,8 @@
 package weekly.w354.C;
 
-import ability.Ability;
-
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * 2780. Minimum Index of a Valid Split
@@ -30,18 +29,18 @@ import java.util.Set;
 public class Solution {
 
     public int minimumIndex(List<Integer> nums) {
-        Ability.Frequency<Integer> left = new Ability.Frequency<>();
-        Ability.Frequency<Integer> right = new Ability.Frequency<>();
-        for (var v : nums) right.push(v);
+        Map<Integer, Integer> map = new HashMap<>();
 
-        for (int i = 0; i < nums.size() - 1; i++) {
-            left.push(nums.get(i));
-            right.remove(nums.get(i));
+        int select = 0, count = 0;
+        for (int v : nums) {
+            int c = map.merge(v, 1, Integer::sum);
+            if (c * 2 > nums.size()) { select = v; count = c; }
+        }
 
-            Set<Integer> ls = left.lastSet(), rs = right.lastSet();
-            if (ls.size() == 1 && rs.size() == 1) {
-                if (ls.containsAll(rs)) return nums.get(i);
-            }
+        int cnt = 0;
+        for(int i = 0; i < nums.size(); i++){
+            if (nums.get(i) == select) cnt++;
+            if (cnt * 2 > i + 1 && (count - cnt) * 2 > nums.size() - i - 1) return i;
         }
         return -1;
     }
