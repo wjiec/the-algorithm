@@ -1,9 +1,5 @@
 package daily.d230831p1761minimumdegreeofaconnectedtrioinagraph;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 1761. Minimum Degree of a Connected Trio in a Graph
  *
