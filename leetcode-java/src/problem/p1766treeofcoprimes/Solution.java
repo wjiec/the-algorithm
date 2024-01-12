@@ -1,5 +1,7 @@
 package problem.p1766treeofcoprimes;
 
+import common.Checker;
+
 import java.util.*;
 
 /**
@@ -24,7 +26,7 @@ import java.util.*;
  * that nums[i] and nums[ans[i]] are coprime, or -1 if there is no such ancestor.
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "DataFlowIssue"})
 public class Solution {
 
     private final int INF = 51;
@@ -50,7 +52,6 @@ public class Solution {
 
         this.nums = nums;
         ans = new int[nums.length];
-        Arrays.fill(ans, -1);
         dfs(0, -1, 0);
         return ans;
     }
@@ -58,46 +59,41 @@ public class Solution {
     private final Map<Integer, Set<Integer>> graph = new HashMap<>();
 
     private void dfs(int curr, int parent, int depth) {
-        ans[curr] = find(nums[curr]);
-        System.out.printf("%s%d = %d %s == %s\n", " ".repeat(depth), nums[curr], ans[curr], valueToDepth, Arrays.deepToString(depthValues));
+        int val = nums[curr];
+        ans[curr] = find(val);
 
-        push(depth, curr, nums[curr]);
+        depthValues[depth][0] = curr;
+        depthValues[depth][1] = val;
+        stacks[val].push(depth);
+
         if (graph.containsKey(curr)) {
             for (var next : graph.get(curr)) {
                 if (next != parent) dfs(next, curr, depth + 1);
             }
         }
-        pop(depth, curr, nums[curr]);
+
+        stacks[val].pop();
     }
 
-    private final Map<Integer, Deque<Integer>> valueToDepth = new HashMap<>();
     private final int[][] depthValues = new int[100_100][2];
-
-    private void push(int depth, int node, int value) {
-        depthValues[depth][0] = node; depthValues[depth][1] = value;
-        valueToDepth.computeIfAbsent(value, v -> new LinkedList<>()).push(depth);
-    }
-
-    private void pop(int depth, int node, int value) {
-        if (valueToDepth.containsKey(value)) {
-            valueToDepth.get(value).pop();
-        }
-    }
+    private final Deque<Integer>[] stacks = new Deque[INF];
+    { Arrays.setAll(stacks, v -> new ArrayDeque<>()); }
 
     private int find(int value) {
-        int node = -1, depth = -1;
-        for (var kv : valueToDepth.entrySet()) {
-            if (coprime[value][kv.getKey()] && !kv.getValue().isEmpty()) {
-                if (kv.getValue().peek() > depth) {
-                    node = kv.getKey();
-                    depth = kv.getValue().peek();
+        int nodeValue = -1, depth = -1;
+        for (int i = 0; i < INF; i++) {
+            if (!stacks[i].isEmpty() && coprime[i][value]) {
+                if (stacks[i].peek() > depth) {
+                    nodeValue = i;
+                    depth = stacks[i].peek();
                 }
             }
         }
-        return node < 0 ? node : depthValues[node][0];
+        return nodeValue < 0 ? nodeValue : depthValues[depth][0];
     }
 
     public static void main(String[] args) {
+        assert Checker.check(new Solution().getCoprimes(new int[]{2,3,3,2}, new int[][]{{0, 1}, {1,2}, {1,3}}), new int[]{-1,0,0,1});
     }
 
 }
