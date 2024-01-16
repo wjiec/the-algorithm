@@ -19,6 +19,7 @@ import java.util.Arrays;
  * Note: A stepping number should not have a leading zero.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private final int MOD = 1_000_000_007;
