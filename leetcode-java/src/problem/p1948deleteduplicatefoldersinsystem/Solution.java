@@ -45,22 +45,16 @@ import java.util.*;
 public class Solution {
 
     private static class TreeNode {
+        private String hash;
         private final String name;
-        private final TreeNode parent;
         private final Map<String, TreeNode> children = new HashMap<>();
-        public TreeNode(String name) { this(name, null); }
-        public TreeNode(String name, TreeNode parent) {
-            this.name = name; this.parent = parent;
-        }
+        public TreeNode(String name) { this.name = name; }
         public TreeNode next(String name) {
-            return children.computeIfAbsent(name, v -> new TreeNode(v, this));
+            return children.computeIfAbsent(name, TreeNode::new);
         }
-        public boolean equals(TreeNode other) {
-            return other != null && children.keySet().containsAll(other.children.keySet());
-        }
-
-        @Override public String toString() { return String.format("<%s count=%d>", name, children.size()); }
     }
+
+    private final List<List<String>> ans = new ArrayList<>();
 
     public List<List<String>> deleteDuplicateFolder(List<List<String>> paths) {
         TreeNode root = new TreeNode("/");
@@ -69,60 +63,33 @@ public class Solution {
             for (var item : path) curr = curr.next(item);
         }
 
-        List<TreeNode> candidates = new ArrayList<>();
-        for (var next : root.children.entrySet()) {
-            var f = find(next.getValue(), root, 0);
-            if (f.node != null) candidates.add(f.node);
-        }
-
-        while (!candidates.isEmpty()) {
-            Set<Integer> removed = new HashSet<>();
-            for (int i = 0; i < candidates.size(); i++) {
-                for (int j = i + 1; j < candidates.size(); j++) {
-                    if (candidates.get(i).equals(candidates.get(j))) {
-                        removed.add(i); removed.add(j);
-                    }
-                }
-            }
-
-            List<TreeNode> next = new ArrayList<>();
-            for (var rmi : removed) {
-                var node = candidates.get(rmi);
-                if (node.parent != null) {
-                    node.parent.children.remove(node.name);
-                    next.add(node.parent);
-                }
-            }
-            candidates = next;
-        }
-
-        dfs(root, new ArrayDeque<>());
+        buildTree(root); dfs(root, new ArrayDeque<>());
         return ans;
     }
 
-    private record Found(int depth, TreeNode node) {}
+    private final Map<String, Integer> freq = new HashMap<>();
 
-    private Found find(TreeNode node, TreeNode parent, int depth) {
-        if (node.children.isEmpty()) {
-            return new Found(depth, parent);
+    private void buildTree(TreeNode node) {
+        if (node.children.isEmpty()) return;
+
+        List<String> ss = new ArrayList<>();
+        for (var st : node.children.values()) {
+            buildTree(st); ss.add(st.name + "(" + st.hash + ")");
         }
 
-        Found max = new Found(0, null);
-        for (var next : node.children.entrySet()) {
-            var f = find(next.getValue(), node, depth + 1);
-            if (f.depth > max.depth) max = f;
-        }
-        return max;
+        ss.sort(String::compareTo);
+        node.hash = String.join("", ss);
+        freq.merge(node.hash, 1, Integer::sum);
     }
 
-    private final List<List<String>> ans = new ArrayList<>();
+    private void dfs(TreeNode node, Deque<String> path) {
+        if (freq.getOrDefault(node.hash, 0) > 1) return;
+        if (!path.isEmpty()) ans.add(new ArrayList<>(path));
 
-    private void dfs(TreeNode node, Deque<String> curr) {
-        if (!curr.isEmpty()) ans.add(new ArrayList<>(curr));
-        for (var next : node.children.entrySet()) {
-            curr.addLast(next.getKey());
-            dfs(next.getValue(), curr);
-            curr.removeLast();
+        for (var next : node.children.values()) {
+            path.addLast(next.name);
+            dfs(next, path);
+            path.removeLast();
         }
     }
 
