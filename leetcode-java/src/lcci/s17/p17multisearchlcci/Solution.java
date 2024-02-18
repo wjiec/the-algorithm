@@ -4,7 +4,6 @@ import common.Checker;
 import common.PrettyPrinter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
