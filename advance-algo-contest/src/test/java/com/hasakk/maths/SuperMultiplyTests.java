@@ -1,8 +1,9 @@
-package com.hasakk.binary;
+package com.hasakk.maths;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SuperMultiplyTests {
 
@@ -16,7 +17,7 @@ class SuperMultiplyTests {
     })
     @ParameterizedTest(name = "({1} * {2}) % 1_000_000_007")
     public void mul(long a, long b, long want) {
-        Assertions.assertEquals(want, SuperMultiply.mul(a, b, MOD), () ->
+        assertEquals(want, SuperMultiply.mul(a, b, MOD), () ->
             String.format("(%d * %d) %% %d should equals %d", a, b, MOD, want));
     }
 

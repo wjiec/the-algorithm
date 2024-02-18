@@ -1,4 +1,4 @@
-package com.hasakk.binary;
+package com.hasakk.maths;
 
 public class SuperMultiply {
 
