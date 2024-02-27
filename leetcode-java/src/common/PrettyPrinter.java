@@ -102,16 +102,20 @@ public class PrettyPrinter {
             if (object instanceof Boolean) {
                 return (Boolean) object ? "T" : "F";
             }
+            if (object instanceof Collection<?>) {
+                return toString(((Collection<?>) object).toArray(), new Indent());
+            }
             return object.toString();
-        }
-        if (object instanceof Collection<?>) {
-            return toString(((Collection<?>) object).toArray(), new Indent());
         }
         return toString(object, new Indent());
     }
 
     private static String toString(Object object, Indent indent) {
         if (object == null) return indent.toString() + "null";
+        if (object instanceof Collection<?>) {
+            return toString(((Collection<?>) object).toArray(), indent);
+        }
+
         StringBuilder sb = new StringBuilder();
         if (object.getClass().getComponentType().isArray()) {
             sb.append(indent).append("[\n");
