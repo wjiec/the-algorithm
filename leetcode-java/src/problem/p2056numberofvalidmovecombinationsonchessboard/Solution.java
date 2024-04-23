@@ -1,8 +1,9 @@
 package problem.p2056numberofvalidmovecombinationsonchessboard;
 
-import common.Tag;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 2056. Number of Valid Move Combinations On Chessboard
@@ -41,9 +42,10 @@ import java.util.*;
  * other and swap positions in one second.
  */
 
-@Tag("NOT COMPLETED")
+@SuppressWarnings("unchecked")
 public class Solution {
 
+    private final static int INF = 9;
     private final Map<String, int[][]> dirs = new HashMap<>();
     {
         dirs.put("rook", new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}});
@@ -51,61 +53,49 @@ public class Solution {
         dirs.put("queen", new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}});
     }
 
-    private int[][] originPos = null;
+    private List<List<int[]>>[] enums = null;
 
     public int countCombinations(String[] pieces, int[][] positions) {
-        originPos = positions;
-        List<List<int[]>> all = new ArrayList<>();
+        enums = new List[pieces.length];
         for (int i = 0; i < pieces.length; i++) {
-            all.add(allPossible(pieces[i], positions[i]));
+            enums[i] = enumerate(pieces[i], positions[i]);
         }
 
-        dfs(all, 0, new int[all.size()]);
+        dfs(0, new int[pieces.length]);
         return ans;
     }
 
     private int ans = 0;
 
-    private void dfs(List<List<int[]>> g, int i, int[] posIndex) {
-        if (i == g.size()) {
-            if (isValid(g, posIndex, g.size())) ans++;
+    private void dfs(int i, int[] selected) {
+        if (i == selected.length) {
+            if (checkValid(selected)) ans++;
             return;
         }
 
-        int len = g.get(i).size();
-        for (int k = 0; k < len; k++) {
-            posIndex[i] = k;
-            dfs(g, i + 1, posIndex);
+        for (int j = 0; j < enums[i].size(); j++) {
+            selected[i] = j;
+            dfs(i + 1, selected);
         }
     }
 
-    private boolean isValid(List<List<int[]>> g, int[] posIndex, int r) {
-        if (g.size() == 1) return true;
-
-        // 是否有重叠
-        Set<Integer> seen = new HashSet<>();
-        for (int i = 0; i < r; i++) {
-            int[] finiPos = g.get(i).get(posIndex[i]);
-            if (!seen.add((finiPos[0] << 16) | finiPos[1])) {
-                return false;
-            }
-        }
-
-        // 检查是否能移动棋子
-        for (int i = 0; i < r; i++) {
-            var checkPos = g.get(i).get(posIndex[i]);
-            for (int j = 0; j < r; j++) {
-                if (i == j) continue;
-
-                var initPos = originPos[j];
-                var finiPos = g.get(j).get(posIndex[j]);
-                var dir = getDir(finiPos, initPos);
-                int dx = initPos[0], dy = initPos[1];
-                while (dx != finiPos[0] && dy != finiPos[1]) {
-                    if (dx == checkPos[0] && dy == checkPos[1]) {
-                        return false;
+    private boolean checkValid(int[] selected) {
+        boolean[][] board = new boolean[INF][INF];
+        for (int j = 0; j < INF; j++) {
+            if (j != 0) {
+                for (int i = 0; i < selected.length; i++) {
+                    if (j - 1 < enums[i].get(selected[i]).size() - 1) {
+                        int[] prev = enums[i].get(selected[i]).get(j - 1);
+                        board[prev[0]][prev[1]] = false;
                     }
-                    dx += dir[0]; dy += dir[1];
+                }
+            }
+
+            for (int i = 0; i < selected.length; i++) {
+                if (j < enums[i].get(selected[i]).size()) {
+                    int[] curr = enums[i].get(selected[i]).get(j);
+                    if (board[curr[0]][curr[1]]) return false;
+                    board[curr[0]][curr[1]] = true;
                 }
             }
         }
@@ -113,23 +103,23 @@ public class Solution {
         return true;
     }
 
-    private int[] getDir(int[] dst, int[] src) {
-        return new int[]{Integer.compare(dst[0], src[0]), Integer.compare(dst[1], src[1])};
-    }
+    private List<List<int[]>> enumerate(String piece, int[] pos) {
+        List<List<int[]>> ans = new ArrayList<>();
+        ans.add(List.of(new int[]{pos[0], pos[1]}));
 
-    private List<int[]> allPossible(String piece, int[] initPos) {
-        List<int[]> possibles = new ArrayList<>();
-        possibles.add(initPos);
+        int[][] dirs = this.dirs.get(piece);
+        for (var dir : dirs) {
+            List<int[]> curr = new ArrayList<>();
+            int cx = pos[0] + dir[0], cy = pos[1] + dir[1];
+            while (cx > 0 && cx < INF && cy > 0 && cy < INF) {
+                curr.add(new int[]{cx, cy});
+                ans.add(new ArrayList<>(curr));
 
-        for (var dir : dirs.get(piece)) {
-            int dx = initPos[0] + dir[0], dy = initPos[1] + dir[1];
-            while (dx >= 1 && dx <= 8 && dy >= 1 && dy <= 8) {
-                possibles.add(new int[]{dx, dy});
-                dx += dir[0]; dy += dir[1];
+                cx += dir[0]; cy += dir[1];
             }
         }
 
-        return possibles;
+        return ans;
     }
 
     public static void main(String[] args) {
