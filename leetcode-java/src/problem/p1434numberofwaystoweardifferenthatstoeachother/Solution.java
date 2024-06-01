@@ -18,7 +18,7 @@ import java.util.*;
  * Since the answer may be too large, return it modulo 109 + 7.
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "DuplicatedCode"})
 public class Solution {
 
     public int numberWays(List<List<Integer>> hats) {
@@ -45,29 +45,38 @@ public class Solution {
     }
 
     private static class DynamicProgramming {
+        private final static int MOD = 1_000_000_007;
         public int numberWays(List<List<Integer>> hats) {
+            int maxHatId = 0;
+            for (var hat : hats) {
+                for (var id : hat) {
+                    maxHatId = Math.max(maxHatId, id);
+                }
+            }
+
             // 喜欢 i 帽子的人
-            List<Integer>[] whoLike = new List[41];
-            Arrays.setAll(whoLike, i -> new HashMap<>());
+            List<Integer>[] whoLike = new List[maxHatId + 1];
+            Arrays.setAll(whoLike, i -> new ArrayList<>());
             for (int i = 0; i < hats.size(); i++) {
                 for (var hat : hats.get(i)) whoLike[hat].add(i);
             }
 
             int mask = 1 << hats.size();
             // dp[i][j] 表示使用前 i 顶帽子，并且已分配的人为 j 的方案数
-            int[][] dp = new int[41][mask]; dp[0][0] = 1;
-            for (int i = 1; i < dp.length; i++) {
-                // 都有哪些人喜欢 i 这顶帽子
-                for (var who : whoLike[i]) {
-                    for (int j = 0; j < mask; j++) {
-                        boolean canWear = (j & (1 << who)) == 0;
-
-                        dp[i][j] += dp[i - 1][j] + (who == j && (dp[i - 1][j] & (1 << j)) == 0 ? 1 : 0);
+            int[][] dp = new int[maxHatId + 1][mask]; dp[0][0] = 1;
+            for (int i = 1; i <= maxHatId; i++) {
+                for (int j = 0; j < mask; j++) {
+                    dp[i][j] = dp[i - 1][j];
+                    for (var person : whoLike[i]) {
+                        if ((j & (1 << person)) != 0) {
+                            dp[i][j] += dp[i - 1][j ^ (1 << person)];
+                            dp[i][j] %= MOD;
+                        }
                     }
                 }
             }
 
-            return 1;
+            return dp[maxHatId][mask - 1];
         }
     }
 
@@ -87,6 +96,17 @@ public class Solution {
 
         Benchmark.benchmark("dp", () -> {
             assert new DynamicProgramming().numberWays(new ArrayList<>(List.of(
+                List.of(1,3,5,10,12,13,14,15,16,18,19,20,21,27,34,35,38,39,40),
+                List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
+                List.of(3,7,10,12,13,14,15,17,21,25,29,31,35,40),
+                List.of(2,3,7,8,9,11,12,14,15,16,17,18,19,20,22,24,25,28,29,32,33,34,35,36,38),
+                List.of(6,12,17,20,22,26,28,30,31,32,34,35),
+                List.of(1,4,6,7,12,13,14,15,21,22,27,28,30,31,32,35,37,38,40),
+                List.of(6,12,21,25,38),
+                List.of(1,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,34,35,36,37,38,39,40)
+            ))) == 842465346;
+
+            assert new DynamicProgramming().numberWays(new ArrayList<>(List.of(
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
@@ -97,7 +117,7 @@ public class Solution {
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40),
                 List.of(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40)
-                ))) == 842465346;
+            ))) == 876855856;
         });
     }
 
