@@ -107,6 +107,7 @@ public class PrettyPrinter {
             }
             return object.toString();
         }
+
         return toString(object, new Indent());
     }
 
