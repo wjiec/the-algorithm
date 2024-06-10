@@ -63,9 +63,9 @@ public class Solution {
                 dp[curr] = (((dp[curr] * dp[next]) % MOD) * inv[cnt[next]]) % MOD;
                 cnt[curr] += cnt[next];
             }
-            dp[curr] = (dp[curr] * fac[cnt[curr]]) % MOD;
-            ++cnt[curr];
         }
+        dp[curr] = (dp[curr] * fac[cnt[curr]]) % MOD;
+        ++cnt[curr];
     }
 
     // 快速幂算法, 求 (base ^ pow) % mod 的值
