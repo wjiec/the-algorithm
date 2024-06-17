@@ -18,6 +18,7 @@ import java.util.List;
  * The first and last elements of the array are not a peak.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public List<Integer> findPeaks(int[] mountain) {
