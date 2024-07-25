@@ -19,6 +19,7 @@ import java.util.TreeMap;
  * The elements in original may be returned in any order.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private final int[] BAD_ANSWER = new int[0];
