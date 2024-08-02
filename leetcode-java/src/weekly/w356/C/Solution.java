@@ -20,6 +20,7 @@ package weekly.w356.C;
  * A substring is a contiguous sequence of characters within a string.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public String minimumString(String a, String b, String c) {
