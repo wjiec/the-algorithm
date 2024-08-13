@@ -1,9 +1,7 @@
 package weekly.w408.D;
 
 import ability.Ability.UnionFind;
-import common.Contest;
 
-@Contest
 public class Solution {
 
     // 并查集, 检查圆形是否将左上和右下边界连起来了
