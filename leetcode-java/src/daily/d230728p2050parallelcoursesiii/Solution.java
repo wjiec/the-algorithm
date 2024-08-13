@@ -25,6 +25,7 @@ import java.util.Set;
  *
  * Note: The test cases are generated such that it is possible to complete every
  * course (i.e., the graph is a directed acyclic graph).
+ * @noinspection unchecked
  */
 
 public class Solution {
