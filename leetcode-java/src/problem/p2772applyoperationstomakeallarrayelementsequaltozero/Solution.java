@@ -1,7 +1,5 @@
 package problem.p2772applyoperationstomakeallarrayelementsequaltozero;
 
-import common.PrettyPrinter;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
