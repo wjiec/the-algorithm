@@ -1,9 +1,7 @@
 package weekly.w413.C;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 3276. Select Cells in Grid With Maximum Score
@@ -76,6 +74,46 @@ public class Solution {
             if (seen[i]) key = key.or(BigInteger.ONE.shiftLeft(i));
         }
         return key;
+    }
+
+    @SuppressWarnings({"unchecked", "SequencedCollectionMethodCanBeUsed"})
+    private static class Optimization {
+        private final Set<Integer>[] numbers = new Set[101];
+        { Arrays.setAll(numbers, i -> new HashSet<>()); }
+
+        public int maxScore(List<List<Integer>> grid) {
+            int m = grid.size(), n = grid.get(0).size(), max = 0;
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    max = Math.max(max, grid.get(i).get(j));
+                    numbers[grid.get(i).get(j)].add(i);
+                }
+            }
+
+            return dfs(max, 0);
+        }
+
+        private final Map<Integer, Integer> memo = new HashMap<>();
+
+        // 表示当前选或者不选 num, 同时已选择行的压缩状态
+        private int dfs(int num, int selected) {
+            if (num == 0) return 0;
+
+            int key = (num << 16) | selected;
+            if (memo.containsKey(key)) return memo.get(key);
+
+            // 不选当前这个数字
+            int ans = dfs(num - 1, selected);
+            // 选择使用当前数字, 枚举这个数字出现的行
+            for (var idx : numbers[num]) {
+                if ((selected & (1 << idx)) == 0) {
+                    ans = Math.max(ans, num + dfs(num - 1, selected | (1 << idx)));
+                }
+            }
+
+            memo.put(key, ans);
+            return ans;
+        }
     }
 
     public static void main(String[] args) {
