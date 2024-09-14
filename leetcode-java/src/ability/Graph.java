@@ -145,7 +145,7 @@ public class Graph {
             pq.add(new long[]{source, 0});
 
             // 对那些刚刚被加入集合的结点的所有出边执行松弛操作
-            while (pq.isEmpty()) {
+            while (!pq.isEmpty()) {
                 long[] curr = pq.remove();
                 int idx = (int) curr[0];
 
