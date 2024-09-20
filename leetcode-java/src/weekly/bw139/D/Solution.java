@@ -37,7 +37,7 @@ public class Solution {
         List<Integer> lis = new ArrayList<>();
         for (var curr : coordinates) {
             // 只检查满足所选择条件的点是否可以加入LIS
-            if ((curr[0] < kx && curr[1] < ky) || (curr[0] > kx || curr[1] > ky)) {
+            if ((curr[0] < kx && curr[1] < ky) || (curr[0] > kx && curr[1] > ky)) {
                 // lis 中保存的是 y 的递增序列, 此时我们在 x 递增上进行迭代
                 // 对于相同的 x, 我们会不断使用新的比较小的 y 去替换之前选择的比较大的 y
                 //  (0, 0), (1, 9), (1, 8), (2, 9)
