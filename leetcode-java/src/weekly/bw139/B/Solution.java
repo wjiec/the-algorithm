@@ -1,8 +1,6 @@
 package weekly.bw139.B;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * 3286. Find a Safe Walk Through a Grid
@@ -54,7 +52,55 @@ public class Solution {
         return false;
     }
 
+    private static class BFS {
+        private static final int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        public boolean findSafeWalk(List<List<Integer>> grid, int health) {
+            int m = grid.size(), n = grid.get(0).size();
+
+            int[][] dis = new int[m][n];
+            for (var row : dis) Arrays.fill(row, m * n);
+            dis[0][0] = grid.get(0).get(0);
+
+            Deque<int[]> dq = new ArrayDeque<>();
+            dq.addFirst(new int[]{0, 0});
+
+            while (!dq.isEmpty()) {
+                var curr = dq.removeFirst();
+                int x = curr[0], y = curr[1];
+                if (dis[x][y] > health) continue;
+
+                for (var dir : dirs) {
+                    int dx = x + dir[0], dy = y + dir[1];
+                    if (dx >= 0 && dx < m && dy >= 0 && dy < n) {
+                        int dv = grid.get(dx).get(dy);
+                        if (dis[x][y] + dv < dis[dx][dy]) {
+                            dis[dx][dy] = dis[x][y] + dv;
+                            if (dv == 0) dq.addFirst(new int[]{dx, dy});
+                            else dq.addLast(new int[]{dx, dy});
+                        }
+                    }
+                }
+            }
+
+            return dis[m - 1][n - 1] < health;
+        }
+    }
+
     public static void main(String[] args) {
+        assert !new Solution().findSafeWalk(List.of(
+            List.of(0,1,1,0,0,0),
+            List.of(1,0,1,0,0,0),
+            List.of(0,1,1,1,0,1),
+            List.of(0,0,1,0,1,0)
+        ), 3);
+
+        assert !new BFS().findSafeWalk(List.of(
+            List.of(0,1,1,0,0,0),
+            List.of(1,0,1,0,0,0),
+            List.of(0,1,1,1,0,1),
+            List.of(0,0,1,0,1,0)
+        ), 3);
     }
 
 }
