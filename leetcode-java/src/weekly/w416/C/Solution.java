@@ -13,6 +13,7 @@ package weekly.w416.C;
  *
  * Note that the memory limits in this problem are smaller than usual, so you must
  * implement a solution with a linear runtime complexity.
+ * @noinspection DuplicatedCode
  */
 
 public class Solution {
