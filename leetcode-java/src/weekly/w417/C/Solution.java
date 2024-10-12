@@ -122,7 +122,7 @@ public class Solution {
                     vowels.merge(chars[r], 1, Integer::sum);
                 } else consonants++;
 
-                // 移动左边指针, 只要不满足条件
+                // 移动左边指针, 直到不满足条件
                 for (; vowels.size() == 5 && consonants >= k; l++) {
                     if (isVowel(chars[l])) {
                         if (vowels.merge(chars[l], -1, Integer::sum) == 0) {

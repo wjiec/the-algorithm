@@ -3,7 +3,7 @@ package ability;
 import java.util.ArrayList;
 import java.util.List;
 
-// 基于 ASCII 码的字符串实用工具类
+/** @noinspection DuplicatedCode*/ // 基于 ASCII 码的字符串实用工具类
 public class AsciiString {
 
     // 标记 ASCII 字符集中的所有元音字母
