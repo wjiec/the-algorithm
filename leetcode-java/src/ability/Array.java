@@ -14,6 +14,14 @@ public class Array {
         return array;
     }
 
+    public static int[] make(int[] t, int repeat) {
+        int[] ans = new int[t.length * repeat];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = t[i % t.length];
+        }
+        return ans;
+    }
+
     // 初始化一个数组并填充默认值为 fill
     public static int[] make(int len, int fill, int ...init) {
         int[] array = make(len, fill);
