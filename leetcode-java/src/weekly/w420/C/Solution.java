@@ -7,6 +7,25 @@ import java.util.function.IntFunction;
 
 import static ability.Prime.euler;
 
+/**
+ * 3326. Minimum Division Operations to Make Array Non Decreasing
+ *
+ * https://leetcode.cn/contest/weekly-contest-420/problems/minimum-division-operations-to-make-array-non-decreasing/
+ *
+ * You are given an integer array nums.
+ *
+ * Any positive divisor of a natural number x that is strictly less than x is called a proper divisor of x.
+ *
+ * For example, 2 is a proper divisor of 4, while 6 is not a proper divisor of 6.
+ *
+ * You are allowed to perform an operation any number of times on nums, where in each operation
+ * you select any one element from nums and divide it by its greatest proper divisor.
+ *
+ * Return the minimum number of operations required to make the array non-decreasing.
+ *
+ * If it is not possible to make the array non-decreasing using any number of operations, return -1.
+ */
+
 public class Solution {
 
     // 首先判断这里面所有的质数是否都是非递减的, 因为质数我们无法操作

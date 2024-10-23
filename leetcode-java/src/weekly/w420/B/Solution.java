@@ -1,6 +1,13 @@
 package weekly.w420.B;
 
-import common.PrettyPrinter;
+/**
+ * 3325. Count Substrings With K-Frequency Characters I
+ *
+ * https://leetcode.cn/contest/weekly-contest-420/problems/count-substrings-with-k-frequency-characters-i/
+ *
+ * Given a string s and an integer k, return the total number of substrings of s
+ * where at least one character appears at least k times.
+ */
 
 public class Solution {
 
