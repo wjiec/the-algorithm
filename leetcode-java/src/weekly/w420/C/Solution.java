@@ -2,11 +2,6 @@ package weekly.w420.C;
 
 import ability.Array;
 
-import java.util.*;
-import java.util.function.IntFunction;
-
-import static ability.Prime.euler;
-
 /**
  * 3326. Minimum Division Operations to Make Array Non Decreasing
  *
@@ -31,48 +26,30 @@ public class Solution {
     // 首先判断这里面所有的质数是否都是非递减的, 因为质数我们无法操作
     // 其次判断这里面所有的合数是否可以操作为比前一个质数更大或相等
     public int minOperations(int[] nums) {
-        int max = 0;
+        int max = 0, n = nums.length;
         for (var v : nums) max = Math.max(max, v);
 
-        int[] euler = euler(max + 1);
-        Set<Integer> isPrime = new HashSet<>();
-        List<Integer> primes = new ArrayList<>();
-        for (int i = 0; i < euler[0]; i++) {
-            isPrime.add(euler[i + 1]);
-            primes.add(euler[i + 1]);
-        }
-
-        Map<Integer, Integer> memo = new HashMap<>();
-        IntFunction<Integer> minFactor = (v) -> {
-            if (!memo.containsKey(v)) {
-                for (var prime : primes) {
-                    if (v % prime == 0) {
-                        memo.put(v, prime);
-                        break;
-                    }
-                }
-            }
-            return memo.get(v);
-        };
-
-        int ans = 0, n = nums.length;
-        for (int i = 0, p = -1; i <= n; i++) {
-            if (i < n && p >= 0 && nums[i] < nums[p]) return -1;
-            if (i == n || isPrime.contains(nums[i])) {
-                // 枚举质数之前的所有数
-                for (int j = Math.min(i - 1, n - 2); j > p; j--) {
-                    if (nums[j] > nums[j + 1]) {
-                        ans++;
-                        nums[j] = minFactor.apply(nums[j]);
-
-                        if (nums[j] > nums[j + 1] || (p >= 0 && nums[j] < nums[p])) return -1;
-                    }
-                }
-
-                p = i;
+        // 不要直接找某个值的质因数, 而是通过质因数去推所有可能的数
+        int[] minFactor = new int[max + 1];
+        for (int p = 2; p <= max; p++) {
+            if (minFactor[p] != 0) continue;
+            for (int j = p; j <= max; j += p) {
+                if (minFactor[j] == 0) minFactor[j] = p;
             }
         }
 
+        int ans = 0;
+        // 由于要满足非递减, 所以从后往前推所有可能的值, 最后一个的值不需要改
+        for (int i = n - 2; i >= 0; i--) {
+            // 如果当前位比后一位大, 不满足非递减
+            if (nums[i] > nums[i + 1]) {
+                // 那么我们只能选择将当前值减小
+                nums[i] = minFactor[nums[i]];
+                // 如果减小之后还是比后一位大, 那么就直接返回-1
+                if (nums[i] > nums[i + 1]) return -1;
+                ans++;
+            }
+        }
         return ans;
     }
 
