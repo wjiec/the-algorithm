@@ -1,8 +1,11 @@
 package weekly.w420.D;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import ability.Palindrome.Manacher;
+import common.Checker;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 3327. Check if DFS Strings Are Palindromes
@@ -33,44 +36,44 @@ import java.util.TreeSet;
 public class Solution {
 
     private char[] chars = null;
-    private final Map<Integer, TreeSet<Integer>> g = new HashMap<>();
 
+    /** @noinspection unchecked*/
     public boolean[] findAnswer(int[] parent, String s) {
+        int n = parent.length;
         chars = s.toCharArray();
-        for (int i = 0; i < parent.length; i++) {
-            g.computeIfAbsent(parent[i], k -> new TreeSet<>()).add(i);
-        }
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for (int i = 0; i < n; i++)
+            if (parent[i] >= 0) g[parent[i]].add(i);
 
-        boolean[] ans = new boolean[s.length()];
-        dfs(0, ans);
+        int[][] ranges = new int[n][2];
+        StringBuilder sb = new StringBuilder();
+        dfs(g, 0, sb, ranges);
+
+        Manacher m = new Manacher(sb.toString());
+
+        boolean[] ans = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = m.isPalindrome(ranges[i][0], ranges[i][1]);
+        }
 
         return ans;
     }
 
-    private String dfs(int node, boolean[] ans) {
-        if (!g.containsKey(node)) {
-            ans[node] = true;
-            return String.valueOf(chars[node]);
+    private int time = 0;
+
+    private void dfs(List<Integer>[] g, int node, StringBuilder sb, int[][] ranges) {
+        ranges[node][0] = time;
+        for (var next : g[node]) {
+            dfs(g, next, sb, ranges);
         }
 
-        var curr = new StringBuilder();
-        for (var sub : g.get(node)) {
-            curr.append(dfs(sub, ans));
-        }
-        curr.append(chars[node]);
-
-        ans[node] = isPalindrome(curr.toString().toCharArray());
-        return curr.toString();
-    }
-
-    private boolean isPalindrome(char[] chars) {
-        for (int l = 0, r = chars.length - 1; l < r; l++, r--) {
-            if (chars[l] != chars[r]) return false;
-        }
-        return true;
+        ranges[node][1] = time++;
+        sb.append(chars[node]);
     }
 
     public static void main(String[] args) {
+        assert Checker.check(new Solution().findAnswer(new int[]{-1,0,0,1,1,2}, "aababa"), new boolean[]{true,true,false,true,true,true});
     }
 
 }
