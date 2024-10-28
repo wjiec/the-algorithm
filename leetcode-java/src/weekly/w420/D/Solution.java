@@ -37,7 +37,7 @@ public class Solution {
 
     private char[] chars = null;
 
-    /** @noinspection unchecked*/
+    /** @noinspection unchecked, DuplicatedCode */
     public boolean[] findAnswer(int[] parent, String s) {
         int n = parent.length;
         chars = s.toCharArray();
