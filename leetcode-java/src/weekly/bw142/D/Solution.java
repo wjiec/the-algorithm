@@ -92,17 +92,17 @@ public class Solution {
             if (groups.size() >= k) return (int) perm;
 
             // dp[i] 表示当前长度为 i 的方案数量
-            int[] dp = new int[k + 1]; dp[1] = 1;
+            int[] dp = new int[k]; dp[0] = 1;
             for (var g : groups) {
                 // 计算 dp 的前缀和
-                for (int i = 2; i <= k; i++) {
+                for (int i = 1; i < k; i++) {
                     dp[i] = (dp[i] + dp[i - 1]) % MOD;
                 }
 
                 int[] next = new int[k + 1];
                 // 对于当前组, 可以从 dp[i - (g - 1), i - 1] 进行转移
                 for (int i = 1; i < k; i++) {
-                    next[i] = (next[i] + (dp[i - 1] - dp[Math.max(0, i - g + 1)])) % MOD;
+                    next[i] = dp[i - 1] - (i - g + 1 >= 0 ? dp[i - g + 1] : 0);
                 }
 
                 dp = next;
