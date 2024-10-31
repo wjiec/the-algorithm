@@ -1,7 +1,5 @@
 package weekly.bw142.D;
 
-import common.PrettyPrinter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +55,8 @@ public class Solution {
 
     // 当前在位置 i 且已保留的字符数为 c, 要求至多不超过 k
     private int dfs(List<Integer> groups, int i, int c, int k) {
-        if (i == groups.size()) return c < k ? 1 : 0;
+        if (c >= k) return 0;
+        if (i == groups.size()) return 1;
 
         long key = ((long) i << 32) | c;
         if (memo.containsKey(key)) return memo.get(key);
@@ -74,9 +73,8 @@ public class Solution {
 
     // dfs 中的循环实际上就是求前缀和, 这里可以改为迭代形式
     private static class DynamicProgramming {
-        private final int MOD = 1_000_000_007;
-
         public int possibleStringCount(String word, int k) {
+            final int MOD = 1_000_000_007;
             List<Integer> groups = new ArrayList<>();
             char prev = word.charAt(0); int count = 0;
             for (var c : word.toCharArray()) {
@@ -92,27 +90,24 @@ public class Solution {
             if (groups.size() >= k) return (int) perm;
 
             // dp[i] 表示当前长度为 i 的方案数量
-            int[] dp = new int[k]; dp[0] = 1;
+            long[] dp = new long[k]; dp[0] = 1;
             for (var g : groups) {
                 // 计算 dp 的前缀和
                 for (int i = 1; i < k; i++) {
                     dp[i] = (dp[i] + dp[i - 1]) % MOD;
                 }
 
-                int[] next = new int[k + 1];
+                long[] next = new long[k];
                 // 对于当前组, 可以从 dp[i - (g - 1), i - 1] 进行转移
                 for (int i = 1; i < k; i++) {
-                    next[i] = dp[i - 1] - (i - g + 1 >= 0 ? dp[i - g + 1] : 0);
+                    next[i] = dp[i - 1] - (i - g - 1 >= 0 ? dp[i - g - 1] : 0);
                 }
 
                 dp = next;
-                PrettyPrinter.println(dp);
             }
 
-            int mostK = 0;
+            long mostK = 0;
             for (var v : dp) mostK = (mostK + v) % MOD;
-            System.out.println(perm);
-            System.out.println(mostK);
             return (int) ((perm - mostK + MOD) % MOD);
         }
     }
@@ -122,6 +117,7 @@ public class Solution {
         assert new Solution().possibleStringCount("aabbccdd", 8) == 1;
         assert new Solution().possibleStringCount("aaabbb", 3) == 8;
 
+        assert new DynamicProgramming().possibleStringCount("dvvpssguuellxxdduuddggxyccqqookkhhoowwyssoobbtnnddfweeccmoqqjgleaazziijjzzbbjjkkkossllueexmiiyyodvvl", 88) == 135884609;
         assert new DynamicProgramming().possibleStringCount("aabbccdd", 7) == 5;
         assert new DynamicProgramming().possibleStringCount("aabbccdd", 8) == 1;
         assert new DynamicProgramming().possibleStringCount("aaabbb", 3) == 8;
