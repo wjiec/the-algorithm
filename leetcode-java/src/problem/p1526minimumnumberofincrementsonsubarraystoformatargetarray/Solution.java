@@ -1,6 +1,7 @@
 package problem.p1526minimumnumberofincrementsonsubarraystoformatargetarray;
 
 import ability.Benchmark;
+import common.Tag;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Solution {
 
+    @Tag({"最小值线段树", "线段树"})
     public int minNumberOperations(int[] target) {
         // {k, v} 记录区间 [k, v)
         TreeMap<Integer, Integer> map = new TreeMap<>();
@@ -53,6 +55,7 @@ public class Solution {
         return ans;
     }
 
+    /** @noinspection DuplicatedCode*/
     private static class DivideAndConquer {
         public int minNumberOperations(int[] target) {
             tree = new int[target.length * 4];
