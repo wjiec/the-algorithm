@@ -3,6 +3,8 @@ package weekly.bw144.C;
 import common.Tag;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * 3362. Zero Array Transformation III
@@ -114,9 +116,48 @@ public class Solution {
         }
     }
 
-    public static void main(String[] args) {
-        assert new Solution().maxRemoval(new int[]{2,1,1,5,4,2,5}, new int[][]{{5,6},{3,5},{3,6},{1,6},{1,4},{0,6},{2,3},{3,5},{0,3},{4,5},{0,6},{1,2},{4,4},{0,1},{6,6},{0,6},{4,6},{0,1},{1,3}}) == 14;
+    private static class UsePriorityQueue {
+        public int maxRemoval(int[] nums, int[][] queries) {
+            Arrays.sort(queries, Comparator.comparingInt(q -> q[0]));
+            // 贪心策略: 对于每个位置 i, 我们需要至少 nums[i] 个操作才能将当前位置减小到 0
+            // 且操作的右端点越远越好(减少后续位置的操作次数)
+            //  - 遍历 nums 中的每个位置, 计算到当前位置一共加了多少次
+            //  - 如果不够, 则需要从 queries[0, i] 中按右端点从大到小排序里选择 k 个使其能减小到 0
+            PriorityQueue<Integer> d = new PriorityQueue<>();
+            PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[1] - a[1]);
+            for (int i = 0, j = 0, curr = 0; i < nums.length; i++) {
+                // 把所有可以选择的操作加入到优先队列里
+                while (j < queries.length && queries[j][0] <= i) pq.add(queries[j++]);
+                // 检查某一个区间是否到达末尾了
+                while (!d.isEmpty() && d.peek() <= i) { d.remove(); curr--; }
 
+                // 检查当前是否可以让位置 i 的值减少到 0, 否则我们需要
+                // 从 pq 里选择出 k 个操作使得当前位置可以变为 0
+                while (!pq.isEmpty() && nums[i] - curr > 0) {
+                    var query = pq.remove();
+                    // 我们需要抛弃无法到达当前位置的所有操作
+                    if (query[1] < i) continue;
+
+                    curr++; d.add(query[1] + 1);
+                }
+                // 检查现在是否能够满足要求
+                if (nums[i] > curr) return -1;
+            }
+
+            // 最后剩下的就是可以被删除的操作
+            return pq.size();
+        }
+    }
+
+    public static void main(String[] args) {
+        assert new UsePriorityQueue().maxRemoval(new int[]{0, 0, 3}, new int[][]{{0, 2},{1, 1},{0, 0}, {0,0}}) == -1;
+        assert new UsePriorityQueue().maxRemoval(new int[]{2,1,1,5,4,2,5}, new int[][]{{5,6},{3,5},{3,6},{1,6},{1,4},{0,6},{2,3},{3,5},{0,3},{4,5},{0,6},{1,2},{4,4},{0,1},{6,6},{0,6},{4,6},{0,1},{1,3}}) == 14;
+        assert new UsePriorityQueue().maxRemoval(new int[]{1,3}, new int[][]{{1,1},{0,1},{1,1},{0,1}}) == 1;
+        assert new UsePriorityQueue().maxRemoval(new int[]{2,0,2}, new int[][]{{0, 2}, {0, 2}, {1, 1}}) == 1;
+        assert new UsePriorityQueue().maxRemoval(new int[]{1,1,1,1}, new int[][]{{1,3},{0,2},{1,3},{1,2}}) == 2;
+        assert new UsePriorityQueue().maxRemoval(new int[]{1,2,3,4}, new int[][]{{0, 3}}) == -1;
+
+        assert new Solution().maxRemoval(new int[]{2,1,1,5,4,2,5}, new int[][]{{5,6},{3,5},{3,6},{1,6},{1,4},{0,6},{2,3},{3,5},{0,3},{4,5},{0,6},{1,2},{4,4},{0,1},{6,6},{0,6},{4,6},{0,1},{1,3}}) == 14;
         assert new Solution().maxRemoval(new int[]{1,3}, new int[][]{{1,1},{0,1},{1,1},{0,1}}) == 1;
         assert new Solution().maxRemoval(new int[]{2,0,2}, new int[][]{{0, 2}, {0, 2}, {1, 1}}) == 1;
         assert new Solution().maxRemoval(new int[]{1,1,1,1}, new int[][]{{1,3},{0,2},{1,3},{1,2}}) == 2;
