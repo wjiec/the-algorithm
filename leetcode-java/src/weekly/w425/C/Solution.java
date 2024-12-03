@@ -62,7 +62,38 @@ public class Solution {
         return ans;
     }
 
+    private static class Iteration {
+        public int minArraySum(int[] nums, int k, int op1, int op2) {
+            // dp[i][j][k] 表示在 [0, i) 中使用 i 次 op1 和 k 次 op2 可以得到的最小数组和是多少
+            //  - 初始条件下, 如果没有任何数, 不管 op1 和 op2 是多少, dp[0][j][k] 的值都是 0
+            int[][][] dp = new int[nums.length + 1][op1 + 1][op2 + 1];
+            for (int i = 1; i <= nums.length; i++) {
+                int v = nums[i - 1];
+
+                for (int j = 0; j <= op1; j++) {
+                    for (int kk = 0; kk <= op2; kk++) {
+                        dp[i][j][kk] = dp[i - 1][j][kk] + v;
+                        if (j - 1 >= 0) dp[i][j][kk] = Math.min(dp[i][j][kk], dp[i - 1][j - 1][kk] + (v + 1) / 2);
+                        if (v >= k && kk - 1 >= 0) dp[i][j][kk] = Math.min(dp[i][j][kk], dp[i - 1][j][kk - 1] + (v - k));
+                        if (v >= k && j - 1 >= 0 && kk - 1 >= 0) dp[i][j][kk] = Math.min(dp[i][j][kk], dp[i - 1][j - 1][kk - 1] + (v - k + 1) / 2);
+                        // 如果两个都执行的话, 有以下可选的方案:
+                        //  - 先执行 op1, 再执行 op2: (v / 2) - k
+                        //  - 先执行 op2, 再执行 op1: (v - k) / 2, 实际上等于 v / 2 - k / 2
+                        // 这种情况下, 肯定是 [先执行 op1, 再执行 op2] 得到的值更小
+                        if ((v + 1) / 2 >= k && j - 1 >= 0 && kk - 1 >= 0) dp[i][j][kk] = Math.min(dp[i][j][kk], dp[i - 1][j - 1][kk - 1] + (v + 1) / 2 - k);
+                    }
+                }
+            }
+
+            return dp[nums.length][op1][op2];
+        }
+    }
+
     public static void main(String[] args) {
+        assert new Iteration().minArraySum(new int[]{2,8,3,19,3}, 3, 1, 1) == 23;
+        assert new Iteration().minArraySum(new int[]{2,4,3}, 3, 2, 1) == 3;
+        assert new Iteration().minArraySum(new int[]{6,8,3}, 8, 1, 3) == 6;
+
         assert new Solution().minArraySum(new int[]{2,8,3,19,3}, 3, 1, 1) == 23;
         assert new Solution().minArraySum(new int[]{2,4,3}, 3, 2, 1) == 3;
         assert new Solution().minArraySum(new int[]{6,8,3}, 8, 1, 3) == 6;

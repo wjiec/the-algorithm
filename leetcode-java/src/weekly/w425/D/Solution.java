@@ -29,57 +29,36 @@ public class Solution {
             g.computeIfAbsent(edge[1], node -> new HashMap<>()).put(edge[0], edge[2]);
         }
 
-        return dfs(0, -1, k, false);
+        return dfs(0, -1, k)[1];
     }
 
-    private final Map<Integer, Long> memo = new HashMap<>();
-
-    private long dfs(int curr, int parent, int k, boolean noParent) {
-        int key = ((noParent ? 1 : 0) << 30) | curr;
-        if (memo.containsKey(key)) return memo.get(key);
-
-        //  - 记录删除或不删除与子节点相连的边之后的结果值
-        Map<Integer, Long> keep = new HashMap<>(); // 保持这条边的值
-        Map<Integer, Long> delete = new HashMap<>(); // 删除边之后的值
+    // 返回值 [x, y] 表示当 curr 与 parent 连接时的答案为 x, 不连接时的答案为 y
+    private long[] dfs(int curr, int parent, int k) {
+        // 对于当前节点的所有子节点来说, 我们分别计算连接和不连接的值
+        //  - 由于我们最多只能连接 k 个节点, 所以我们需要从连接的取 k 个, 不连接的取 n - k 个
+        //  - 同时在连接父节点的情况下, 我们最多只能连接 k - 1 个, 计算方式同理
+        //  - 与 https://leetcode.cn/problems/mice-and-cheese/ 相同
+        long totalNotConnected = 0;
+        List<Long> increment = new ArrayList<>();
         for (var next : g.get(curr).entrySet()) {
             if (next.getKey() == parent) continue;
 
-            keep.put(next.getKey(), next.getValue() + dfs(next.getKey(), curr, k, false));
-            delete.put(next.getKey(), dfs(next.getKey(), curr, k, true));
+            long[] pair = dfs(next.getKey(), curr, k);
+            totalNotConnected += pair[1]; // 默认先都不连接
+
+            long currInc = pair[0] + next.getValue() - pair[1];
+            if (currInc > 0) increment.add(currInc); // 从不连接的变成连接的增量
         }
 
-        // 如果父节点保持与当前节点的边, 则需要全部统计, 否则可以减 1
-        int needDelete = (g.get(curr).size() - (noParent ? 1 : 0)) - k;
-        if (needDelete <= 0) { // 不需要在进行删除了
-            long ans = 0;
-            for (var v : keep.values()) ans += v;
-            memo.put(key, ans);
-            return ans;
-        }
+        increment.sort(Collections.reverseOrder());
+        long[] sum = new long[increment.size() + 1];
+        for (int i = 1; i <= increment.size(); i++) sum[i] = sum[i - 1] + increment.get(i - 1);
 
-        // 否则需要删除多余的边
-        long ans = deleteEdge(keep, delete, needDelete);
-        memo.put(key, ans);
-        return ans;
-    }
-
-    // 一个数要么从 keep 中出, 要么从 delete 中出, 同时 delete 中最多选 n 个, 求最大值
-    private long deleteEdge(Map<Integer, Long> keep, Map<Integer, Long> delete, int n) {
-        List<Integer> keys = new ArrayList<>(keep.keySet());
-        // dp[i][j] 表示从在 keys 的前 i 个中选择 j 个 delete 的方案和
-        long[][] dp = new long[keys.size() + 1][n + 1];
-        for (var row : dp) Arrays.fill(row, Integer.MIN_VALUE);
-        dp[0][0] = 0;
-
-        for (int i = 1; i <= keys.size(); i++) {
-            int key = keys.get(i - 1);
-
-            for (int j = 0; j <= n; j++) {
-                dp[i][j] = Math.max(dp[i - 1][j] + keep.get(key), j - 1 < 0 ? 0 : (dp[i - 1][j - 1] + delete.get(key)));
-            }
-        }
-
-        return dp[keys.size()][n];
+        // 连接时, 最多只能取 k - 1 个, 不连接时最多只能取 k 个
+        return new long[]{
+            totalNotConnected + sum[Math.min(sum.length - 1, k - 1)],
+            totalNotConnected + sum[Math.min(sum.length - 1, k)]
+        };
     }
 
     public static void main(String[] args) {
