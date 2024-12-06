@@ -1,95 +1,77 @@
 package weekly.w426.C;
 
 import common.Checker;
-import common.PrettyPrinter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * 3372. Maximize the Number of Target Nodes After Connecting Trees I
+ *
+ * https://leetcode.cn/contest/weekly-contest-426/problems/maximize-the-number-of-target-nodes-after-connecting-trees-i/
+ *
+ * There exist two undirected trees with n and m nodes, with distinct labels
+ * in ranges [0, n - 1] and [0, m - 1], respectively.
+ *
+ * You are given two 2D integer arrays edges1 and edges2 of lengths n - 1 and m - 1, respectively,
+ * where edges1[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the first
+ * tree and edges2[i] = [ui, vi] indicates that there is an edge between nodes ui and vi in the second tree.
+ *
+ * You are also given an integer k.
+ *
+ * Node u is target to node v if the number of edges on the path from u to v is less than or equal to k.
+ * Note that a node is always target to itself.
+ *
+ * Return an array of n integers answer, where answer[i] is the maximum possible number of nodes
+ * target to node i of the first tree if you have to connect one node from the first tree to
+ * another node in the second tree.
+ *
+ * Note that queries are independent from each other. That is, for every query you will remove
+ * the added edge before proceeding to the next query.
+ */
 
 /** @noinspection DuplicatedCode*/
 public class Solution {
 
     public int[] maxTargetNodes(int[][] edges1, int[][] edges2, int k) {
-        TreeMap<Integer, Integer> m2 = new TreeMap<>(findTarget(edges2));
-        int prev = 0;
-        for (var e : m2.entrySet()) m2.put(e.getKey(), prev += e.getValue());
+        // 对于 tree1 来说, 连接 tree2 的哪个节点其实是固定的, 我们需要找到 tree2 中的某个节点
+        //  - 从这个节点出发经过 k - 1 步可以到达最多的节点
+        //  - 枚举两棵树的所有节点, 找到每个节点在 k 步可以达到的节点数
 
-        int[] ans = new int[edges1.length + 1];
-        Map<Integer, Set<Integer>> g = new HashMap<>();
-        for (var edge : edges1) {
-            g.computeIfAbsent(edge[0], kk -> new HashSet<>()).add(edge[1]);
-            g.computeIfAbsent(edge[1], kk -> new HashSet<>()).add(edge[0]);
+        // 由于选择 tree2 的节点实际与 tree1 无关, 所以我们先算 tree2 的最多 k - 1 步能达到的节点数的最大值
+        buildTree(edges2); int maxNodes = 0;
+        for (int i = 0; i <= edges2.length; i++) maxNodes = Math.max(maxNodes, dfs(i, -1, k - 1));
+
+        // 枚举 tree1 中的所有节点
+        buildTree(edges1); int[] ans = new int[edges1.length + 1];
+        for (int i = 0; i <= edges1.length; i++) {
+            ans[i] = dfs(i, -1, k) + maxNodes;
         }
-
-        memo.clear();
-        dfs(g, 0, -1, ans, m2, k, 1);
 
         return ans;
     }
 
-    private void dfs(Map<Integer, Set<Integer>> g, int node, int parent, int[] ans, TreeMap<Integer, Integer> acc, int k, int depth) {
-        for (var next : g.get(node)) {
-            if (next == parent) continue;
+    private final Map<Integer, Set<Integer>> g = new HashMap<>();
 
-            TreeMap<Integer, Integer> sum = new TreeMap<>();
-            var curr = findTarget(g, node, parent);
-            var bottom = findTarget(g, next, node);
-            // 从父节点过来的都需要加 depth 条边, 同时需要扣除当前节点多加的
-            for (var e : bottom.entrySet()) curr.merge(e.getKey() + 1, -1, Integer::sum);
-            for (var e : curr.entrySet()) sum.merge(e.getKey() + 1, e.getValue(), Integer::max);
-
-            PrettyPrinter.println(next);
-            PrettyPrinter.println(sum);
-
-            int prev = 0;
-            for (var e : sum.entrySet()) sum.put(e.getKey(), prev += e.getValue());
-
-            ans[next] = sum.floorEntry(k).getValue() + acc.floorEntry(k - 1).getValue() + 1;
-            dfs(g, next, node, ans, acc, k, depth + 1);
-        }
-    }
-
-    // {k: v} 表示从某一个节点出发边数为 k 的最多节点数有 v 个
-    private Map<Integer, Integer> findTarget(int[][] edges) {
-        Map<Integer, Set<Integer>> g = new HashMap<>();
+    private void buildTree(int[][] edges) {
+        g.clear();
         for (var edge : edges) {
-            g.computeIfAbsent(edge[0], k -> new HashSet<>()).add(edge[1]);
-            g.computeIfAbsent(edge[1], k -> new HashSet<>()).add(edge[0]);
-        }
-
-        Map<Integer, Integer> ans = new HashMap<>(findTarget(g, 0, -1));
-        dfs(ans, g, 0, -1, 1);
-        return ans;
-    }
-
-    private void dfs(Map<Integer, Integer> ans, Map<Integer, Set<Integer>> g, int node, int parent, int depth) {
-        for (var next : g.get(node)) {
-            if (next == parent) continue;
-
-            var curr = findTarget(g, node, parent);
-            var bottom = findTarget(g, next, node);
-            // 从父节点过来的都需要加 depth 条边, 同时需要扣除当前节点多加的
-            for (var e : bottom.entrySet()) curr.merge(e.getKey() + 1, -1, Integer::sum);
-            for (var e : curr.entrySet()) ans.merge(e.getKey() + 1, e.getValue(), Integer::max);
-            dfs(ans, g, next, node, depth + 1);
+            g.computeIfAbsent(edge[0], x -> new HashSet<>()).add(edge[1]);
+            g.computeIfAbsent(edge[1], x -> new HashSet<>()).add(edge[0]);
         }
     }
 
-    private final Map<Integer, Map<Integer, Integer>> memo = new HashMap<>();
+    private int dfs(int curr, int parent, int k) {
+        if (k < 0) return 0;
 
-    // 找到当前子树的的多有边数
-    private Map<Integer, Integer> findTarget(Map<Integer, Set<Integer>> g, int node, int parent) {
-        if (memo.containsKey(node)) return new HashMap<>(memo.get(node));
-
-        Map<Integer, Integer> ans = new HashMap<>(); ans.put(0, 1);
-        for (var next : g.get(node)) {
+        int ans = 1;
+        for (var next : g.get(curr)) {
             if (next == parent) continue;
-
-            for (var e : findTarget(g, next, node).entrySet()) {
-                ans.merge(e.getKey() + 1, e.getValue(), Integer::sum);
-            }
+            ans += dfs(next, curr, k - 1);
         }
 
-        memo.put(node, ans);
         return ans;
     }
 
