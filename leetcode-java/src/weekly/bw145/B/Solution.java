@@ -1,5 +1,6 @@
 package weekly.bw145.B;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,7 +44,36 @@ public class Solution {
         return ans;
     }
 
+    private static class DynamicProgramming {
+        public int findMinimumTime(List<Integer> strength, int K) {
+            // 对于 8 把锁, 使用位图表示状态, 然后使用 dp 进行求解
+            return dfs(strength, (1 << strength.size()) - 1, K);
+        }
+
+        private final int[] memo = new int[1 << 8];
+        { Arrays.fill(memo, -1); }
+
+        private int dfs(List<Integer> strength, int mask, int k) {
+            if (mask == 0) return 0;
+            if (memo[mask] != -1) return memo[mask];
+
+            int ans = Integer.MAX_VALUE;
+            int unlocked = strength.size() - Integer.bitCount(mask);
+            for (int i = 0; i < strength.size(); i++) {
+                if ((mask & (1 << i)) == 0) continue;
+
+                int x = 1 + unlocked * k;
+                ans = Math.min(ans, dfs(strength, mask ^ (1 << i), k) + (strength.get(i) + x - 1) / x);
+            }
+
+            return memo[mask] = ans;
+        }
+    }
+
     public static void main(String[] args) {
+        assert new DynamicProgramming().findMinimumTime(List.of(3,4,1), 1) == 4;
+        assert new DynamicProgramming().findMinimumTime(List.of(2,5,4), 2) == 5;
+
         assert new Solution().findMinimumTime(List.of(3,4,1), 1) == 4;
         assert new Solution().findMinimumTime(List.of(2,5,4), 2) == 5;
     }
