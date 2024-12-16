@@ -22,6 +22,12 @@ public class Array {
         return ans;
     }
 
+    public static int[] slice(int[] t, int l, int r) {
+        int[] ans = new int[r - l];
+        System.arraycopy(t, l, ans, 0, r - l);
+        return ans;
+    }
+
     // 初始化一个数组并填充默认值为 fill
     public static int[] make(int len, int fill, int ...init) {
         int[] array = make(len, fill);
