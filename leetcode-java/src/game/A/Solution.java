@@ -1,7 +1,6 @@
 package game.A;
 
 import ability.Array;
-import common.PrettyPrinter;
 
 import javax.swing.*;
 import java.awt.*;
