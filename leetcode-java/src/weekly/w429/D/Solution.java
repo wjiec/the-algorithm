@@ -1,11 +1,12 @@
-package weekly.w429.C;
+package weekly.w429.D;
 
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 3398. Smallest Substring With Identical Characters I
+ * 3399. Smallest Substring With Identical Characters II
  *
- * https://leetcode.cn/contest/weekly-contest-429/problems/smallest-substring-with-identical-characters-i/
+ * https://leetcode.cn/contest/weekly-contest-429/problems/smallest-substring-with-identical-characters-ii/
  *
  * You are given a binary string s of length n and an integer numOps.
  *
@@ -31,30 +32,27 @@ public class Solution {
         if (numOps >= Math.min(xor, n - xor)) return 1;
 
         // 首先对字符串进行分组
-        // [section_len, section_count, len]
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
+        List<Integer> groups = new ArrayList<>();
         for (int i = 1, l = 0; i <= n; i++) {
             if (i == n || chars[i] != chars[l]) {
-                pq.add(new int[]{i - l, 1, i - l});
-                l = i;
+                groups.add(i - l); l = i;
             }
         }
 
-        // 接下来只需要对长度大于等于 2 的所有分段进行切分
-        //  - 分组之后对最大长度进行切分再加入最大堆是不正确的, 考虑长度为 10 切两次的情况
-        //      - 10 -> 4 |1| 5 -> 4 |1| (2 |1| 3)
-        //      - 10 -> 3 |1| 3 |1| 2
-        for (; !pq.isEmpty() && numOps > 0; numOps--) {
-            var curr = pq.remove();
-            // 如果最小长度已经是 2 了且我们已经检查过无法使其变为 1, 所以我们直接返回 2
-            if (curr[0] == 2) return 2;
-
-            // 对取出来的分组再切一刀, 要求尽可能均分的切
-            curr[0] = curr[2] / ++curr[1];
-            pq.add(curr);
+        // 使用二分检查是否能将所有的分组在 numOps 次之内使其最大分段为 mid
+        int l = 1, r = n; // 左边无法做到, 右边可以做到
+        while (l + 1 < r) {
+            int mid = l + (r - l) / 2;
+            if (split(groups, mid) <= numOps) r = mid;
+            else l = mid;
         }
+        return r;
+    }
 
-        return pq.remove()[0];
+    private int split(List<Integer> groups, int maxLength) {
+        int ans = 0;
+        for (var elem : groups) ans += elem / (maxLength + 1);
+        return ans;
     }
 
     public static void main(String[] args) {
