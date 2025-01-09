@@ -90,7 +90,34 @@ public class Solution {
         }
     }
 
+    private static class Optimization2 {
+        public int longestSubsequence(int[] nums) {
+            int mi = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
+            for (var v : nums) { mi = Math.min(mi, v); mx = Math.max(mx, v); }
+
+            // 计算得到数组中的最大绝对差
+            int mxa = mx - mi;
+
+            // 更进一步, 我们直接定义 dp[curr][j] 表示最后一个元素的值为 curr, 同时与前一个数 p 的绝对差 >= j 的方案数
+            int[][] dp = new int[mx + 1][mxa + 1]; int ans = 0;
+            for (var curr : nums) {
+                int maxLen = 1;
+                for (int j = mxa; j >= 0; j--) {
+                    if (curr - j >= 0) maxLen = Math.max(maxLen, dp[curr - j][j] + 1);
+                    if (curr + j <= mx) maxLen = Math.max(maxLen, dp[curr + j][j] + 1);
+                    ans = Math.max(ans, dp[curr][j] = maxLen);
+                }
+            }
+
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
+        assert new Optimization2().longestSubsequence(new int[]{16,6,3}) == 3;
+        assert new Optimization2().longestSubsequence(new int[]{6,5,3,4,2,1}) == 4;
+        assert new Optimization2().longestSubsequence(new int[]{10,20,10,19,10,20}) == 5;
+
         assert new Optimization1().longestSubsequence(new int[]{16,6,3}) == 3;
         assert new Optimization1().longestSubsequence(new int[]{6,5,3,4,2,1}) == 4;
         assert new Optimization1().longestSubsequence(new int[]{10,20,10,19,10,20}) == 5;
