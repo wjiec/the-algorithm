@@ -1,5 +1,7 @@
 package weekly.bw147.D;
 
+import common.Tag;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,7 @@ public class Solution {
         private long answer() { return tree[1].mSum; }
     }
 
+    @Tag({"最大子数组和", "线段树"})
     public long maxSubarraySum(int[] nums) {
         // 如果不删除元素, 就是求数组的最大子数组和, 即 https://leetcode.cn/problems/maximum-subarray
         // 使用分治的思想(即险段树)对最大子数组和进行求解, 对于删除操作我们将其变 0 操作实现.
