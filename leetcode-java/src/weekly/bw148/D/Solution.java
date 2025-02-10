@@ -2,6 +2,23 @@ package weekly.bw148.D;
 
 import static ability.Ability.Math.pow;
 
+/**
+ * 3426. Manhattan Distances of All Arrangements of Pieces
+ *
+ * https://leetcode.cn/contest/biweekly-contest-148/problems/manhattan-distances-of-all-arrangements-of-pieces/
+ *
+ * You are given three integers m, n, and k.
+ *
+ * There is a rectangular grid of size m × n containing k identical pieces. Return the sum of Manhattan
+ * distances between every pair of pieces over all valid arrangements of pieces.
+ *
+ * A valid arrangement is a placement of all k pieces on the grid with at most one piece per cell.
+ *
+ * Since the answer may be very large, return it modulo 109 + 7.
+ *
+ * The Manhattan Distance between two cells (xi, yi) and (xj, yj) is |xi - xj| + |yi - yj|.
+ */
+
 public class Solution {
 
     private static final int MAX_N = 100_001;
