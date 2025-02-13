@@ -98,7 +98,37 @@ public class Solution {
         }
     }
 
+    private static class DynamicProgramming {
+        public int maxFrequency(int[] nums, int k) {
+            // 使用状态机DP, 我们将数组分为 a0 a1 a2 三段, 其中 a1 是我们选中需要修改的子数组
+            // a0 和 a2 则是所选中左右子数组两侧的未选中子数组. 有以下转移方程:
+            //
+            //  a0_i = a0_(i - 1) + (nums[i] == k ? 1 : 0)
+            //
+            //  a1_i = a0_(i - 1) + (nums[i] == target ? 1 : 0)
+            //  a1_i = a1_(i - 1) + (nums[i] == target ? 1 : 0)
+            //
+            //  a2_i = a1_(i - 1) + (nums[i] == k ? 1 : 0)
+            //  a2_i = a2_(i - 1) + (nums[i] == k ? 1 : 0)
+            int ans = 0;
+            for (int target = 1; target <= 50; target++) {
+                int a0 = 0, a1 = -1, a2 = -1;
+                for (var v : nums) {
+                    a2 = Math.max(a1, a2) + (v == k ? 1 : 0);
+                    a1 = Math.max(a0, a1) + (v == target ? 1 : 0);
+                    a0 += (v == k ? 1 : 0);
+                }
+                ans = Math.max(ans, Math.max(Math.max(a0, a1), a2));
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
+        assert new DynamicProgramming().maxFrequency(new int[]{10,2,3,4,5,5,4,3,2,2}, 10) == 4;
+        assert new DynamicProgramming().maxFrequency(new int[]{10,2,3,4,5,5,4,3,2,2}, 10) == 4;
+        assert new DynamicProgramming().maxFrequency(new int[]{1,2,3,4,5,6}, 1) == 2;
+
         assert new Optimization().maxFrequency(new int[]{10,2,3,4,5,5,4,3,2,2}, 10) == 4;
         assert new Optimization().maxFrequency(new int[]{10,2,3,4,5,5,4,3,2,2}, 10) == 4;
         assert new Optimization().maxFrequency(new int[]{1,2,3,4,5,6}, 1) == 2;
