@@ -1,5 +1,26 @@
 package weekly.w435.B;
 
+/**
+ * 3443. Maximum Manhattan Distance After K Changes
+ *
+ * https://leetcode.cn/contest/weekly-contest-435/problems/maximum-manhattan-distance-after-k-changes/
+ *
+ * You are given a string s consisting of the characters 'N', 'S', 'E', and 'W', where s[i] indicates
+ * movements in an infinite grid:
+ *
+ * 'N' : Move north by 1 unit.
+ * 'S' : Move south by 1 unit.
+ * 'E' : Move east by 1 unit.
+ * 'W' : Move west by 1 unit.
+ *
+ * Initially, you are at the origin (0, 0). You can change at most k characters to any of the four directions.
+ *
+ * Find the maximum Manhattan distance from the origin that can be achieved
+ * at any time while performing the movements in order.
+ *
+ * The Manhattan Distance between two cells (xi, yi) and (xj, yj) is |xi - xj| + |yi - yj|.
+ */
+
 public class Solution {
 
     public int maxDistance(String s, int k) {
@@ -14,7 +35,7 @@ public class Solution {
                 case 'W' -> { x--; reverse = Math.min(++wc, ec); vertical = Math.min(nc, sc); }
             }
 
-            // 消除一个对向的移动可以带来 2 个效果, 否则只能消除垂直上的对向
+            // 消除一个对向的移动可以带来 2 个效果
             reverse = Math.min(reverse, k); vertical = Math.min(vertical, k - reverse);
             ans = Math.max(ans, Math.abs(x) + Math.abs(y) + reverse * 2 + vertical * 2);
         }
