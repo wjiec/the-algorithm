@@ -1,5 +1,7 @@
 package weekly.w436.C;
 
+import java.util.Arrays;
+
 /**
  * 3448. Count Substrings Divisible By Last Digit
  *
@@ -12,59 +14,82 @@ package weekly.w436.C;
  * Note: A substring may contain leading zeros.
  */
 
+/** @noinspection DuplicatedCode */
 public class Solution {
 
     public long countSubstrings(String s) {
-        // 以 1 2 3 4 5 6 7 8 9 结尾的数字, 同时要被结尾数字整除, 有什么条件?
-        long ans = 0;
-        char[] chars = s.toCharArray();
-        int[] mod3 = new int[3], mod9 = new int[9];
-        for (int i = 0, sum = 0; i < chars.length; i++) {
-            mod3[sum % 3]++; mod9[sum % 9]++;
+        // 对于一个以 s_i 结尾的数 v_i 来说, 对于每一个前缀都有:
+        //  v_i = v_{i-1} * 10 + s_i
+        //
+        // 对于每一个模数 m 有以下转换表达式:
+        //  v_i % m = (v_{i-1} * 10 + s_i) % m
+        //          = (v_{i-1} % m * 10 + s_i) % m
+        //
+        // 由此, 我们可以建立递推关系:
+        //  i - 1 : (v_{i-1} % m * 10 + s_{i-1}) % m = rem_{i-1}
+        //      -> i : (rem_{i-1} * 10 + s_i) = rem_i
+        //
+        // 使用 dp[i + 1][j][k] 表示使用以 s_{i-1} 结尾的数字对 j 取模余数为 k 的方案数
+        //
+        // 我们需要求的是 v_i % s_i == 0 的数(也就是子字符串)的数量:
+        //  ans += dp[i + 1][s_i][0]
 
-            switch (chars[i]) {
-                // 1, 2, 5 结尾的任意前缀都是可以的, 从 [0, i] 的所有任意子字符串
-                case '1', '2', '5' -> ans += i + 1;
-                // 数位和可以被 3 整除
-                case '3', '6' -> ans += mod3[sum % 3];
-                // 数位和可以被 9 整除
-                case '9' -> ans += mod9[sum % 9];
-                // 后缀是以 04 24 44 64 84 组成
-                case '4' -> {
-                    if (i - 1 >= 0 && in(chars[i - 1], '0', '2', '4', '6', '8')) ans += i + 1;
-                    else ans++;
-                }
-                case '7' -> {} // ???
-                // 后缀是以 004 048 088 168 组成
-                case '8' -> {
-                    if (i - 1 >= 0) {
-                        switch (chars[i - 1]) {
-                            case '0', '4', '8' -> {
-                                ans += 2;
-                                if (i - 2 >= 0 && chars[i - 2] == '0') ans += i - 2 + 1;
-                            }
-                            case '6' -> {
-                                ans += 2;
-                                if (i - 2 >= 0 && chars[i - 2] == '1') ans += i - 2 + 1;
-                            }
-                        }
-                    }
+        long ans = 0;
+        // 可以对数 v_i 取 [1, 9] 的模, 余数为 [0, 8]
+        long[][][] dp = new long[s.length() + 1][10][9];
+        for (int i = 1; i <= s.length(); i++) {
+            int curr = s.charAt(i - 1) - '0';
+            // 根据以上递推关系进行转移, 枚举每一个模数 m
+            for (int m = 1; m <= 9; m++) {
+                // 需要加上当前数作为一个单独数字的项
+                dp[i][m][curr % m] += 1;
+
+                // 枚举前一个位置的所有余数 rem
+                for (int rem = 0; rem < m; rem++) {
+                    dp[i][m][(rem * 10 + curr) % m] += dp[i - 1][m][rem];
                 }
             }
 
-            sum += chars[i] - '0';
+            // 叠加答案
+            ans += dp[i][curr][0];
         }
 
-        System.out.println(ans);
         return ans;
     }
 
-    private boolean in(char curr, char ...list) {
-        for (var v : list) if (curr == v) return true;
-        return false;
+    private static class RollingOptimization {
+        public long countSubstrings(String s) {
+            long ans = 0;
+            // 可以对数 v_i 取 [1, 9] 的模, 余数为 [0, 8]
+            long[][][] dp = new long[2][10][9];
+            for (int i = 0; i < s.length(); i++) {
+                int curr = s.charAt(i) - '0';
+                // 根据以上递推关系进行转移, 枚举每一个模数 m
+                for (int m = 1; m <= 9; m++) {
+                    Arrays.fill(dp[i & 1][m], 0);
+
+                    // 需要加上当前数作为一个单独数字的项
+                    dp[i & 1][m][curr % m] += 1;
+
+                    // 枚举前一个位置的所有余数 rem
+                    for (int rem = 0; rem < m; rem++) {
+                        dp[i & 1][m][(rem * 10 + curr) % m] += dp[(i & 1) ^ 1][m][rem];
+                    }
+                }
+
+                // 叠加答案
+                ans += dp[i & 1][curr][0];
+            }
+
+            return ans;
+        }
     }
 
     public static void main(String[] args) {
+        assert new RollingOptimization().countSubstrings("12936") == 11;
+        assert new RollingOptimization().countSubstrings("5701283") == 18;
+        assert new RollingOptimization().countSubstrings("1010101010") == 25;
+
         assert new Solution().countSubstrings("12936") == 11;
         assert new Solution().countSubstrings("5701283") == 18;
         assert new Solution().countSubstrings("1010101010") == 25;
