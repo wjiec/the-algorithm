@@ -5,6 +5,7 @@ import common.PrettyPrinter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -126,11 +127,118 @@ public class Solution {
         return sum >= area;
     }
 
-    public static void main(String[] args) {
-//        assert Checker.check(new Solution().separateSquares(new int[][]{{0,0,2}, {1,1,2}}), 1.00000);
+    private static class Optimization {
+        private static class SegmentTree {
+            private final int n;
+            private final int[] minCoverLen; // 区间内被矩形覆盖次数最少的底边长之和
+            private final int[] minCover; // 区间内被矩形覆盖的最小次数
+            private final int[] lazy; // 子树内所有节点的 minCover 需要增加的值
 
-        assert Checker.check(new Solution().separateSquares(new int[][]{{12,23,3}, {11,27,8}}), 30.4375);
-        assert Checker.check(new Solution().separateSquares(new int[][]{{15,21,2}, {19,21,3}}), 22.3);
+            public SegmentTree(int[] data) {
+                n = data.length - 1; // len(data) 个横坐标有 len(data) - 1 个 gap
+                int size = 2 << (32 - Integer.numberOfLeadingZeros(n - 1));
+                minCoverLen = new int[size];
+                minCover = new int[size];
+                lazy = new int[size];
+                build(data, 1, 0, n - 1);
+            }
+
+            private void build(int[] data, int curr, int l, int r) {
+                if (l == r) {
+                    minCoverLen[curr] = data[l + 1] - data[l];
+                    return;
+                }
+
+                int mid = l + (r - l) / 2;
+                build(data, curr * 2, l, mid);
+                build(data, curr * 2 + 1, mid + 1, r);
+                maintain(curr);
+            }
+
+            // 根据左右子节点的信息, 更新当前节点的信息
+            private void maintain(int curr) {
+                int v = Math.min(minCover[curr * 2], minCover[curr * 2 + 1]);
+                minCover[curr] = v;
+
+                minCoverLen[curr] = (minCover[curr * 2] == v ? minCoverLen[curr * 2] : 0) +
+                    (minCover[curr * 2 + 1] == v ? minCoverLen[curr * 2 + 1] : 0);
+            }
+
+            public void update(int l, int r, int v) { update(1, 0, n - 1, l, r, v); }
+            private void update(int curr, int s, int e, int l, int r, int v) {
+                if (l <= s && e <= r) {
+                    lazyUpdate(curr, v);
+                    return;
+                }
+
+                spread(curr);
+                int mid = s + (e - s) / 2;
+                if (l <= mid) update(curr * 2, s, mid, l, r, v);
+                if (mid < r) update(curr * 2 + 1, mid + 1, e, l, r, v);
+                maintain(curr);
+            }
+            private void spread(int curr) {
+                if (lazy[curr] != 0) {
+                    lazyUpdate(curr * 2, lazy[curr]);
+                    lazyUpdate(curr * 2 + 1, lazy[curr]);
+                    lazy[curr] = 0;
+                }
+            }
+            private void lazyUpdate(int curr, int v) { minCover[curr] += v; lazy[curr] += v; }
+
+            public int uncoveredLen() { return minCover[1] == 0 ? minCoverLen[1] : 0; }
+        }
+
+        private record Event(int y, int lx, int rx, int delta) {}
+        private record Record(long area, int len) {}
+
+        public double separateSquares(int[][] squares) {
+            int[] xs = new int[2 * squares.length];
+            Event[] events = new Event[2 * squares.length];
+            for (int i = 0, j = 0, k = 0; i < squares.length; i++) {
+                int x = squares[i][0], y = squares[i][1], l = squares[i][2];
+                xs[j++] = x; xs[j++] = x + l;
+                events[k++] = new Event(y, x, x + l, 1);
+                events[k++] = new Event(y + l, x, x + l, -1);
+            }
+
+            // 排序方便后续做离散化
+            Arrays.sort(xs);
+            // 模拟扫描线从下往上扫描
+            Arrays.sort(events, Comparator.comparingInt(e -> e.y));
+
+            long sumArea = 0;
+            SegmentTree st = new SegmentTree(xs);
+            Record[] records = new Record[xs.length];
+            for (int i = 0; i < xs.length - 1; i++) {
+                var e = events[i];
+
+                // 离散化
+                int l = Arrays.binarySearch(xs, e.lx);
+                int r = Arrays.binarySearch(xs, e.rx) - 1; // 对应 xs[r] 和 rx = xs[r + 1] 的差值
+
+                st.update(l, r, e.delta); // 更新覆盖次数
+                int sumLen = xs[xs.length - 1] - xs[0] - st.uncoveredLen(); // 减去没被矩阵覆盖的长度
+
+                records[i] = new Record(sumArea, sumLen);
+                // 新增面积 = 被至少一个矩形覆盖的底边长度之和乘以扫过的距离
+                sumArea += (long) sumLen * (events[i + 1].y - e.y);
+            }
+
+            int i = 0;
+            while (i < xs.length - 1 && records[i].area * 2 < sumArea) { i++; } i--;
+            return events[i].y + (sumArea - records[i].area * 2) / (records[i].len * 2.0);
+        }
+    }
+
+    public static void main(String[] args) {
+        assert Checker.check(new Optimization().separateSquares(new int[][]{{12,23,3}, {11,27,8}}), 30.4375);
+        assert Checker.check(new Optimization().separateSquares(new int[][]{{15,21,2}, {19,21,3}}), 22.3);
+        assert Checker.check(new Optimization().separateSquares(new int[][]{{0,0,2}, {1,1,1}}), 1.00000);
+        assert Checker.check(new Optimization().separateSquares(new int[][]{{0,0,1}, {2,2,1}}), 1.00000);
+
+//        assert Checker.check(new Solution().separateSquares(new int[][]{{12,23,3}, {11,27,8}}), 30.4375);
+//        assert Checker.check(new Solution().separateSquares(new int[][]{{15,21,2}, {19,21,3}}), 22.3);
         assert Checker.check(new Solution().separateSquares(new int[][]{{0,0,2}, {1,1,1}}), 1.00000);
         assert Checker.check(new Solution().separateSquares(new int[][]{{0,0,1}, {2,2,1}}), 1.00000);
     }
