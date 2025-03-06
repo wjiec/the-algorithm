@@ -2,6 +2,7 @@ package weekly.bw150.C;
 
 import common.Checker;
 import common.PrettyPrinter;
+import common.Tag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,6 +193,7 @@ public class Solution {
         private record Event(int y, int lx, int rx, int delta) {}
         private record Record(long area, int len) {}
 
+        @Tag({"矩形面积并"})
         public double separateSquares(int[][] squares) {
             int[] xs = new int[2 * squares.length];
             Event[] events = new Event[2 * squares.length];
