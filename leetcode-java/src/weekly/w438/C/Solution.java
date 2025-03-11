@@ -1,6 +1,7 @@
 package weekly.w438.C;
 
 import ability.Benchmark;
+import common.Tag;
 
 import static ability.Ability.Math.pow;
 
@@ -23,28 +24,41 @@ import static ability.Ability.Math.pow;
 /** @noinspection DuplicatedCode*/
 public class Solution {
 
+    private static final int MOD = 10;
     private static final int MAX_N = 100_001;
-    private static final int MOD = 1_000_000_007;
+    private static final int[] tri = new int[MAX_N];
     private static final long[] fac = new long[MAX_N];
+    private static final int[] factor2 = new int[MAX_N];
+    private static final int[] factor5 = new int[MAX_N];
     static {
-        fac[0] = fac[1] = 1;
-        for (int i = 2; i < MAX_N; i++) fac[i] = (fac[i - 1] * i) % MOD;
+        fac[0] = 1;
+        for (int i = 1; i < MAX_N; i++) {
+            int curr = i;
+            factor2[i] = factor2[i - 1];
+            factor5[i] = factor5[i - 1];
+            for (; curr % 2 == 0; curr /= 2) factor2[i]++;
+            for (; curr % 5 == 0; curr /= 5) factor5[i]++;
+
+            // 计算排除 2 和 5 因子之后剩余的阶乘
+            fac[i] = (fac[i - 1] * curr) % MOD;
+            tri[i] = curr;
+        }
     }
 
     private static final long[] inv = new long[MAX_N];
     static {
-        // 在 MOD 下的乘法逆元 inv_a = 1 / a = pow(a, MOD - 2, MOD)
-        //  - 对于阶乘 a * b * c 的逆元是 1 / (a * b * c) = pow(a * b * c, MOD - 2, MOD)
-        //      - 递推 a * b 的逆元是 1 / (a * b) = 1 / (a * b * c) * c
-        inv[MAX_N - 1] = pow(fac[MAX_N - 1], MOD - 2, MOD);
-        for (int i = MAX_N - 1; i > 0; i--) inv[i - 1] = (inv[i] * i) % MOD;
+        // 欧拉定理求逆元
+        inv[MAX_N - 1] = pow(fac[MAX_N - 1], 3, MOD);
+        for (int i = MAX_N - 1; i > 0; i--) inv[i - 1] = (inv[i] * tri[i]) % MOD;
     }
 
-    private int comb(int n, int k) {
-        if (n < k) return 0;
-        return (int) ((((fac[n] * inv[k]) % MOD) * inv[n - k]) % MOD);
+    private long comb(int n, int k) {
+        return fac[n] * inv[k] * inv[n - k] *
+            pow(2, factor2[n] - factor2[k] - factor2[n - k], MOD) *
+            pow(5, factor5[n] - factor5[k] - factor5[n - k], MOD);
     }
 
+    @Tag({"欧拉定理", "合数取模"})
     public boolean hasSameDigits(String s) {
         // 旧字符串     a               b           c           d           e       f       g
         // 第一轮      ab              bc          cd          de          ef      fg
