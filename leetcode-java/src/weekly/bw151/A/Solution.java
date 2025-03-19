@@ -27,6 +27,16 @@ public class Solution {
         return nums;
     }
 
+    private static class Optimization {
+        public int[] transformArray(int[] nums) {
+            int n = nums.length, odd = 0;
+            for (var v : nums) odd += v & 1;
+            for (int i = 0; i < n - odd; i++) nums[i] = 0;
+            for (int i = 0; i < odd; i++) nums[n - i - 1] = 1;
+            return nums;
+        }
+    }
+
     public static void main(String[] args) {
     }
 

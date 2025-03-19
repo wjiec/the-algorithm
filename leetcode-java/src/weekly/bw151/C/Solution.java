@@ -54,7 +54,42 @@ public class Solution {
         return ans;
     }
 
+    private static class Iteration {
+        public int minCost(int[] nums) {
+            int n = nums.length;
+            if (n == 1) return nums[0];
+            if (n == 2) return Math.max(nums[0], nums[1]);
+
+            // dp[i][j] 表示以 i 作为保留的元素加上 [j, n) 的最小消除代价是什么
+            int[][] dp = new int[n][n + 1];
+            // 初始条件, 如果保留 i 且从 n 开始, 则需要直接取 nums[i]
+            for (int i = 0; i < n; i++) dp[i][n] = nums[i];
+            // 初始条件, 如果保留 i 且从 n - 1 开始, 则需要直接取 max(nums[i], nums[n - 1])
+            for (int i = 0; i < n; i++) dp[i][n - 1] = Math.max(nums[i], nums[n - 1]);
+
+            // 从后往前枚举我们的保留位置 i, 上面已经处理了 n == 1 or n == 2 的情况
+            for (int i = n - 3; i >= 0; i--) {
+                // 每次我们都可以处理 nums[i], nums[j], nums[j + 1] 三个元素
+                for (int j = n - 2; j > i; j--) {
+                    // 选出头部两个元素
+                    dp[i][j] = Math.max(nums[i], nums[j]) + dp[j + 1][j + 2];
+                    // 选取头尾两个元素
+                    dp[i][j] = Math.min(dp[i][j], Math.max(nums[i], nums[j + 1]) + dp[j][j + 2]);
+                    // 选取后面两个元素
+                    dp[i][j] = Math.min(dp[i][j], Math.max(nums[j], nums[j + 1]) + dp[i][j + 2]);
+                }
+            }
+
+            return dp[0][1];
+        }
+    }
+
     public static void main(String[] args) {
+        Benchmark.benchmark("Iteration", () -> {
+            assert new Iteration().minCost(new int[]{6,2,8,4}) == 12;
+            assert new Iteration().minCost(new int[]{2,1,3,3}) == 5;
+        });
+
         Benchmark.benchmark("", () -> {
             assert new Solution().minCost(new int[]{6,2,8,4}) == 12;
             assert new Solution().minCost(new int[]{2,1,3,3}) == 5;

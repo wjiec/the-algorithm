@@ -34,6 +34,34 @@ public class Solution {
         return Math.max(down + up, 0);
     }
 
+    private static class Optimization {
+        public int countArrays(int[] original, int[][] bounds) {
+            // 对于 copy[i] - copy[i - 1] = original[i] - original[i - 1]
+            //  => copy_1 - copy_0 = original_1 - original_0
+            //  => copy_2 - copy_1 = original_2 - original_1
+            //  => ...
+            //  => copy_i - copy_{i - 1} = original_i - original_{i - 1}
+            //
+            // 我们把左右两侧的所有项加起来可得 copy_i - copy_0 = original_i - original_0
+            //  - copy_i = original_i - original_0 + copy_0
+            //
+            // 代入 u_i <= copy[i] <= v_i, 有以下不等式
+            //  - u_i <= original_i - original_0 + copy_0 <= v_i
+            //
+            // 设 d_i = original_i - original_0, 则有
+            //  - u_i - d_i <= copy_0 <= v_i - d_i
+            //
+            // 答案就是求得所有区间的交集
+            int l = Integer.MIN_VALUE, r = Integer.MAX_VALUE;
+            for (int i = 0; i < original.length; i++) {
+                int d = original[i] - original[0];
+                r = Math.min(r, bounds[i][1] - d);
+                l = Math.max(l, bounds[i][0] - d);
+            }
+            return Math.max(r - l + 1, 0);
+        }
+    }
+
     public static void main(String[] args) {
         assert new Solution().countArrays(new int[]{11,42}, new int[][]{{22,55},{72,110}}) == 15;
         assert new Solution().countArrays(new int[]{3,25}, new int[][]{{9,80},{16,35}}) == 5;
