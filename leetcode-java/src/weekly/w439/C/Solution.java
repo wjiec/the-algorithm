@@ -73,7 +73,56 @@ public class Solution {
         }
     }
 
+    private static class OptimizedIteration {
+        public int maxSum(int[] nums, int k, int m) {
+            final int n = nums.length, INF = (int) 1e9;
+
+            // 计算前缀和用于优化之后的迭代
+            int[] acc = new int[n + 1];
+            for (int i = 1; i <= n; i++) acc[i] = acc[i - 1] + nums[i - 1];
+
+            // dp[i][j] 表示使用 [0, j) 组成 i 个不重叠的子数组的最大和
+            int[][] dp = new int[k + 1][n + 1];
+
+            // 枚举所组成的子数组的数量
+            for (int i = 1; i <= k; i++) {
+                Arrays.fill(dp[i], -INF);
+
+                // 我们需要求解 dp[i][j], 考虑是否选择最后一位, 我们有以下转移方程:
+                //  - 不使用最后一位: dp[i][j] <- dp[i][j - 1]
+                //  - 使用最后一位: dp[i][j] <- dp[i - 1][x] 其中 x 需要以下条件:
+                //      - 满足最小长度为 m
+                //      - 需要保证剩下的至少有 (i - 1) * m 个
+                //      - 所以 x 需要考虑的范围是: [(i - 1) * m, j - m)
+                //
+                // 在使用最后一位的情况下, 我们有以下公式:
+                //  - max(dp[i - 1][x] + (acc[j] - acc[x]))     其中 x \in [(i - 1) * m, j - m)
+                //
+                // 由于 acc[j] 是个常量, 提取得到:
+                //  - acc[j] + max(dp[i - 1][x] - acc[x])
+                //
+                // 令 d = dp[i - 1][x] - acc[x], 则有 acc[j] + max_d
+                //
+                // 在枚举时, 我们左侧需要保留 (i - 1) * m 个位置, 同时我们当前数组需要至少 m 个元素
+                // 所以我们从 i * m 开始枚举
+                for (int j = i * m, maxD = -INF; j <= n; j++) {
+                    // 我们需要计算使用最后一位的情况
+                    maxD = Math.max(maxD, dp[i - 1][j - m] - acc[j - m]);
+                    // 计算转移
+                    dp[i][j] = Math.max(dp[i][j - 1], acc[j] + maxD);
+                }
+            }
+
+            return dp[k][n];
+        }
+    }
+
     public static void main(String[] args) {
+        Benchmark.benchmark("OptimizedIteration", () -> {
+            assert new OptimizedIteration().maxSum(new int[]{-10,3,-1,-2}, 4, 1) == -10;
+            assert new OptimizedIteration().maxSum(new int[]{1,2,-1,3,3,4}, 2, 2) == 13;
+        });
+
         Benchmark.benchmark("Iteration", () -> {
             assert new Iteration().maxSum(new int[]{-10,3,-1,-2}, 4, 1) == -10;
             assert new Iteration().maxSum(new int[]{1,2,-1,3,3,4}, 2, 2) == 13;

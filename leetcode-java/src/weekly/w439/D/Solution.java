@@ -24,43 +24,52 @@ public class Solution {
 
     public String generateString(String str1, String str2) {
         int n = str1.length(), m = str2.length();
-        char[] chars2 = str2.toCharArray();
+        char[] target = str2.toCharArray();
 
-        char[] ans = new char[n + m - 1];
+        char[] pattern = new char[n + m - 1];
+        // 先填充所有需要相同的的位置
         for (int i = 0; i < n; i++) {
             if (str1.charAt(i) == 'T') {
-                // 从 i 开始填充 ans, 内容为 str2
+                // 从 i 开始填充 pattern, 内容为 str2
                 for (int j = 0; j < m; j++) {
-                    if (ans[i + j] != 0 && ans[i + j] != chars2[j]) return "";
-                    ans[i + j] = chars2[j];
+                    if (pattern[i + j] == 0) pattern[i + j] = target[j];
+                    // 如果已经填充过的位置且内容不相同, 则返回错误
+                    if (pattern[i + j] != target[j]) return "";
                 }
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            if (str1.charAt(i) == 'F') {
-                // 检查空白位置可以填入什么, 如果在 m 长度内已经有一个字符不一样了
-                boolean unmatched = false, useA = false; int last = -1;
-                for (int j = 0; j < m; j++) {
-                    unmatched = unmatched || ans[i + j] != 0 && ans[i + j] != chars2[j];
-                    useA = useA || ans[i + j] == 0 && chars2[j] != 'a';
-                    if (ans[i + j] == 0) last = j;
-                }
-                if (!unmatched && last == -1) return "";
+        char[] ans = new char[pattern.length];
+        System.arraycopy(pattern, 0, ans, 0, pattern.length);
+        // 我们先把所有的空位都填上 a, 之后遇到不匹配的再填上 b
+        for (int i = 0; i < ans.length; i++) if (ans[i] == 0) ans[i] = 'a';
 
-                // 如果已经有不一样的字符了, 那么剩下的都可以填 a
-                // 否则我们将这个范围内的空格的最后一个空位填成不等于 chars[j] 的字母, 其他填a
-                if (!unmatched && !useA) ans[i + last] = chars2[last] == 'a' ? 'b' : 'a';
-                for (int j = 0; j < m; j++) if (ans[i + j] == 0) ans[i + j] = 'a';
+        // 再逐个填充所有需要不同的位置, 为了使字典序最小需要优先填 a
+        for (int i = 0; i < n; i++) {
+            if (str1.charAt(i) == 'T') continue;
+            if (!equals(ans, i, target)) continue;
+
+            // 此时意味着从位置 i 开始的子字符串等于 target 了
+            // 我们需要找到最后一个位置并将其修改为 b
+            boolean ok = false;
+            for (int j = i + m - 1; j >= i; j--) {
+                if (pattern[j] == 0) { ans[j] = 'b'; ok = true; break; }
             }
+            if (!ok) return "";
         }
 
         return new String(ans);
     }
 
+    private boolean equals(char[] ans, int i, char[] target) {
+        for (int j = 0; j < target.length; j++) {
+            if (ans[i + j] != target[j]) return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
-        // b a b _ b a b _ _ _
-        //   b a ^ 这里不能为 a 因为 i = 2 时要求
+        assert new Solution().generateString("FFTFFF", "a").equals("bbabbb");
         assert new Solution().generateString("TFFFTFFF", "bab").equals("babbbabaaa");
         assert new Solution().generateString("FT", "wvxyy").equals("awvxyy");
 
