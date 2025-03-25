@@ -1,5 +1,7 @@
 package weekly.w440.C;
 
+import ability.Benchmark;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -136,10 +138,63 @@ public class Solution {
         return r;
     }
 
+    @SuppressWarnings("DuplicatedCode")
+    private static class Optimization {
+        private static class MaxSegmentTree {
+            private final int[] tree;
+            public MaxSegmentTree(int[] data) {
+                tree = new int[data.length * 4];
+                build(data, 1, 0, data.length - 1);
+            }
+            private void build(int[] data, int p, int l, int r) {
+                if (l == r) { tree[p] = data[l]; return; }
+
+                int mid = l + (r - l) / 2;
+                build(data, p * 2, l, mid);
+                build(data, p * 2 + 1, mid + 1, r);
+                tree[p] = Math.max(tree[p * 2], tree[p * 2 + 1]);
+            }
+            public int query(int p, int l, int r, int v) {
+                // 在当前树中找不到大于等于 v 的数则直接返回错误
+                if (tree[p] < v) return -1;
+                // 如果 l == r 则说明我们找到了一个叶子结点且大于等于 v
+                if (l == r) { tree[p] = 0; return l; }
+
+                // 否则我们优先找左侧的树, 之后再找右侧的树
+                int mid = l + (r - l) / 2;
+                int ans = query(p * 2, l, mid, v);
+                if (ans < 0) ans = query(p * 2 + 1, mid + 1, r, v);
+                // 如果我们找到了一个数, 那么就需要进行更新操作
+                tree[p] = Math.max(tree[p * 2], tree[p * 2 + 1]);
+
+                return ans;
+            }
+        }
+
+        public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
+            // 直接使用最大值线段树找到大于等于 target 的第一个位置
+            MaxSegmentTree st = new MaxSegmentTree(baskets);
+
+            int ans = 0, n = baskets.length;
+            for (var fruit : fruits) {
+                if (st.query(1, 0, n - 1, fruit) < 0) ans++;
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
-        assert new Solution().numOfUnplacedFruits(new int[]{31}, new int[]{6}) == 1;
-        assert new Solution().numOfUnplacedFruits(new int[]{3,6,1}, new int[]{6,4,7}) == 0;
-        assert new Solution().numOfUnplacedFruits(new int[]{4,2,5}, new int[]{3,5,4}) == 1;
+        Benchmark.benchmark("Optimization", () -> {
+            assert new Optimization().numOfUnplacedFruits(new int[]{31}, new int[]{6}) == 1;
+            assert new Optimization().numOfUnplacedFruits(new int[]{3,6,1}, new int[]{6,4,7}) == 0;
+            assert new Optimization().numOfUnplacedFruits(new int[]{4,2,5}, new int[]{3,5,4}) == 1;
+        });
+
+        Benchmark.benchmark("", () -> {
+            assert new Solution().numOfUnplacedFruits(new int[]{31}, new int[]{6}) == 1;
+            assert new Solution().numOfUnplacedFruits(new int[]{3,6,1}, new int[]{6,4,7}) == 0;
+            assert new Solution().numOfUnplacedFruits(new int[]{4,2,5}, new int[]{3,5,4}) == 1;
+        });
     }
 
 }
