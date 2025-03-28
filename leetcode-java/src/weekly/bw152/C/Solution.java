@@ -1,7 +1,9 @@
 package weekly.bw152.C;
 
 import common.Checker;
-import common.PrettyPrinter;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * 3485. Longest Common Prefix of K Strings After Removal
@@ -20,79 +22,43 @@ import common.PrettyPrinter;
 
 public class Solution {
 
-    private static class Trie {
-        private final int[] count = new int[26];
-        private final Trie[] subtree = new Trie[26];
-        public void set(char[] chars) {
-            Trie curr = this;
-            for (var c : chars) {
-                curr.count[c - 'a']++;
-                if (curr.subtree[c - 'a'] == null) {
-                    curr.subtree[c - 'a'] = new Trie();
-                }
-                curr = curr.subtree[c - 'a'];
-            }
-        }
-    }
-
     public int[] longestCommonPrefix(String[] words, int k) {
-        int m = words.length, n = words[0].length();
-        // 使用字典树保存所有的字符串, 如果不删除某个字符串, 则就是找到最长的
-        // Trie 节点, 其中每个节点的次数需要大于等于 k
-        //
-        // 如果将每一层字典树的最大值抽出来得到一个非递增数组, 就变成了找 >= k 的最大位置
-        //
-        // 如果需要删除一个第 i 个字符串, 则可能会导致最大值发生变化, 进而影响后续的所有数
-        //  - 由于只删除一个字符串, 所以每一个层级最多只会减少 1
-        //  - 如果最大值受到了影响, 则可以从最大值 - 1 和次大值中选较大的那个
-        //      - 只有次大和最大相等才有取次大的意义
-        Trie root = new Trie();
-        for (var word : words) root.set(word.toCharArray());
+        // 如果我们将 words 排序, 那么 k 个字符串的 LCP 实际上就是相邻的字符串
+        //  - 对于连续子数组的 LCP, 实际上就等于第一个和最后一个的 LCP (因为排序后, 相同的前缀是逐渐变少的)
+        // 所以找到最大的一组 LCP, 如果删除的元素不在最大的 LCP 对应的子数组里, 那么就是取最大的
+        // 否则删除的元素在最大的 LCP 对应的子数组里, 分类讨论:
+        //  - 如果次大的 LCP 子数组和最大的没有重叠, 那么就是取次大的 LCP
+        //  - 如果次大的 LCP 子数组和最大的 LCP 数组有重叠
+        //      - 那么就意味着次大的 LCP 子数组中有一部分是在最大的 LCP 子数组中
+        //      - 最大的 LCP 子数组是的第一个元素 A, 最后一个元素 B, 次大的 LCP 子数组中的第一个元素 C, 最后一个元素 D
+        //          - 我们有 LCP(A, B) = FIRST, LCP(C, D) = SECONDARY
+        //          - 因为有重叠, 且 C 在 A 和 B 之间, 所以 LCP(A, D) = SECONDARY
+        //      - 从最大的 LCP 子数组中移除一个, 那必然可以从次大的子数组中取一个到次大的中, 最终答案还是次大的 LCP
+        Integer[] sorted = new Integer[words.length];
+        for (int i = 0; i < words.length; i++) sorted[i] = i;
+        Arrays.sort(sorted, Comparator.comparing(i -> words[i]));
 
-        int[][] max = new int[n + 1][2];
-        char[][] used = new char[n + 1][2];
-        dfs(root, max, used, 0);
+        // 找到最大和次大的 LCP 以及最大 LCP 的对应位置
+        int first = 0, secondary = 0, firstIndex = 0;
+        for (int i = 0; i + k - 1 < words.length; i++) {
+            int curr = lcp(words[sorted[i]].toCharArray(), words[sorted[i + k - 1]].toCharArray());
+            if (curr > first) { secondary = first; first = curr; firstIndex = i; }
+            else if (curr > secondary) { secondary = curr; }
+        }
 
         int[] ans = new int[words.length];
-        for (int i = 0; i < words.length; i++) {
-            int first = binarySearch(max, k);
-            if (first < words[i].length() && words[i].charAt(first) == used[first][0]) {
-                ans[i] = Math.max(max[first][0], max[first][1] + 1);
-                if (first > 0) ans[i] = Math.max(ans[i], max[first - 1][0] + 1);
-            } else ans[i] = max[first][0] + 1;
-        }
+        Arrays.fill(ans, first);
 
-        PrettyPrinter.println(ans);
+        // 然后将在最大 LCP 中的元素改成次大的 LCP
+        for (int i = 0; i < k; i++) ans[sorted[firstIndex + i]] = secondary;
         return ans;
     }
 
-    private int binarySearch(int[][] array, int target) {
-        int l = 0, r = array.length;
-        while (l + 1 < r) {
-            int mid = l + (r - l) / 2;
-            if (array[mid][0] < target) r = mid;
-            else l = mid;
+    private int lcp(char[] a, char[] b) {
+        for (int i = 0; i < a.length && i < b.length; i++) {
+            if (a[i] != b[i]) return i;
         }
-        return l;
-    }
-
-    private void dfs(Trie curr, int[][] max, char[][] used, int depth) {
-        for (int i = 0; i < 26; i++) {
-            int v = curr.count[i]; char c = (char) ('a' + i);
-            if (v > max[depth][0]) {
-                max[depth][1] = max[depth][0];
-                max[depth][0] = v;
-                used[depth][1] = used[depth][0];
-                used[depth][0] = c;
-            } else if (v > max[depth][1]) {
-                max[depth][1] = v;
-                used[depth][1] = c;
-            }
-        }
-
-        for (var subtree : curr.subtree) {
-            if (subtree != null) dfs(subtree, max, used, depth + 1);
-        }
+        return Math.min(a.length, b.length);
     }
 
     public static void main(String[] args) {
