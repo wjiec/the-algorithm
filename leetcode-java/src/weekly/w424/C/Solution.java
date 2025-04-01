@@ -15,6 +15,7 @@ package weekly.w424.C;
  *
  * Return the minimum possible non-negative value of k, such that after processing
  * the first k queries in sequence, nums becomes a Zero Array. If no such k exists, return -1.
+ * @noinspection DuplicatedCode
  */
 
 public class Solution {
