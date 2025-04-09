@@ -2,6 +2,7 @@ package weekly.bw153.C;
 
 import ability.Array;
 import ability.Benchmark;
+import common.Tag;
 
 import java.util.Arrays;
 
@@ -86,7 +87,7 @@ public class Solution {
         }
     }
 
-    private static class Iteration1 {
+    private static class Optimization {
         /** @noinspection DuplicatedCode*/
         public long minimumCost(int[] nums, int[] cost, int k) {
             int n = nums.length;
@@ -94,55 +95,77 @@ public class Solution {
             for (int i = 1; i <= n; i++) acc1[i] = acc1[i - 1] + nums[i - 1];
             for (int i = 1; i <= n; i++) acc2[i] = acc2[i - 1] + cost[i - 1];
 
-            long[][] dp = new long[2][n + 1];
-            Arrays.fill(dp[0], Long.MAX_VALUE >> 1); dp[0][0] = 0;
+            // (acc1[r + 1] + k * i) * (acc2[r + 1] - acc2[l])
+            //  = acc1[r + 1] * (acc2[r + 1] - acc2[l]) + (k * i) + (acc2[r + 1] - acc2[l])
+            //
+            // 如果将数组分为三段, 分别是 A, B, C, 则后面 (k * i) + (acc2[r + 1] - acc2[l]) 可以
+            // 使用 A + 2B + 3C 来表示, 我们也可以对这个式子做如下变形:
+            //  - A + B + C
+            //  -     B + C
+            //  -         C
+            //
+            // 也就是可以将上述的 i 变量去掉, 变成 k * (acc2[n] - acc2[l]), 变成前后缀分解乘积最小值
+            //  = acc1[r + 1] * (acc2[r + 1] - acc2[l]) + k * (acc2[n] - acc2[l])
 
-            long ans = Long.MAX_VALUE;
-            for (int j = 1; j <= n; j++) {
-                long[] curr = dp[j & 1], prev = dp[(j & 1) ^ 1];
-                Arrays.fill(curr, Long.MAX_VALUE >> 1);
-
-//                for (int r = 1; r <= n; r++) {
-//                    for (int l = j - 1; l < r; l++) {
-//                        curr[r] = Math.min(curr[r], prev[l] + (acc1[r] + (long) k * j) * (acc2[r] - acc2[l]));
-//                    }
-//                }
-
-                // 需要优化上面的循环, 使得以下的值最小
-                //  = prev[l] + (acc1[r + 1] + k * i) * (acc2[r + 1] - acc2[l])
-                //
-                // 当 r 确定时 acc1[r + 1], k, i, acc2[r + 1] 都是常数, 令 d = acc1[r + 1] + k * i
-                //  = prev[l] + d * (acc2[r + 1] - acc2[l])
-                //  = acc2[r + 1] * d + prev[l] - acc2[l] * d
-                //
-                // 令 e = acc2[r + 1] * d
-                //  = e + prev[l] - acc2[l] * d
-                //
-                // 也就是求得 prev[l] - acc2[l] * d 的最大值
-
-                long max = 0;
-                for (int r = 1; r <= n; r++) {
-                    long d = acc1[r] + (long) k * j, e = acc2[r] * d;
-
-                    for (int l = j - 1; l < r; l++) {
-                        curr[r] = Math.min(curr[r], prev[l] + (acc1[r] + (long) k * j) * (acc2[r] - acc2[l]));
-                    }
+            // dp[i] 表示使用 [0, i) 作为边界的最大值是多少
+            long[] dp = new long[n + 1];
+            for (int r = 1; r <= n; r++) {
+                dp[r] = Long.MAX_VALUE;
+                for (int l = 0; l < r; l++) {
+                    dp[r] = Math.min(dp[r], dp[l] + acc1[r] * (acc2[r] - acc2[l]) + k * (acc2[n] - acc2[l]));
                 }
-
-                ans = Math.min(ans, curr[n]);
             }
 
-            return ans;
+            return dp[n];
+        }
+    }
+
+    @Tag({"带权子数组最值", "k个子数组与k的关系"})
+    private static class Optimization1 {
+        /** @noinspection DuplicatedCode*/
+        public long minimumCost(int[] nums, int[] cost, int k) {
+            int n = nums.length;
+            long[] acc2 = new long[n + 1];
+            for (int i = 1; i <= n; i++) acc2[i] = acc2[i - 1] + cost[i - 1];
+
+            // (acc1[r + 1] + k * i) * (acc2[r + 1] - acc2[l])
+            //  = acc1[r + 1] * (acc2[r + 1] - acc2[l]) + (k * i) + (acc2[r + 1] - acc2[l])
+            //
+            // 如果将数组分为三段, 分别是 A, B, C, 则后面 (k * i) + (acc2[r + 1] - acc2[l]) 可以
+            // 使用 A + 2B + 3C 来表示, 我们也可以对这个式子做如下变形:
+            //  - A + B + C
+            //  -     B + C
+            //  -         C
+            //
+            // 也就是可以将上述的 i 变量去掉, 变成 k * (acc2[n] - acc2[l]), 变成前后缀分解乘积最小值
+            //  = acc1[r + 1] * (acc2[r + 1] - acc2[l]) + k * (acc2[n] - acc2[l])
+
+            // dp[i] 表示使用 [0, i) 作为边界的最大值是多少
+            long[] dp = new long[n + 1];
+            for (int r = 1, acc1 = 0; r <= n; r++) {
+                dp[r] = Long.MAX_VALUE; acc1 += nums[r - 1];
+                for (int l = 0; l < r; l++) {
+                    dp[r] = Math.min(dp[r], dp[l] + acc1 * (acc2[r] - acc2[l]) + k * (acc2[n] - acc2[l]));
+                }
+            }
+
+            return dp[n];
         }
     }
 
     public static void main(String[] args) {
         int[] list = Array.make(1000, 1000);
 
-        Benchmark.benchmark("Iteration1", () -> {
-            assert new Iteration1().minimumCost(list, list, 1) == 501000500000L;
-            assert new Iteration1().minimumCost(new int[]{3,1,4}, new int[]{4,6,6}, 1) == 110;
-            assert new Iteration1().minimumCost(new int[]{4,8,5,1,14,2,2,12,1}, new int[]{7,2,8,4,2,2,1,1,2}, 7) == 985;
+        Benchmark.benchmark("Optimization1", () -> {
+            assert new Optimization1().minimumCost(list, list, 1) == 501000500000L;
+            assert new Optimization1().minimumCost(new int[]{3,1,4}, new int[]{4,6,6}, 1) == 110;
+            assert new Optimization1().minimumCost(new int[]{4,8,5,1,14,2,2,12,1}, new int[]{7,2,8,4,2,2,1,1,2}, 7) == 985;
+        });
+
+        Benchmark.benchmark("Optimization", () -> {
+            assert new Optimization().minimumCost(list, list, 1) == 501000500000L;
+            assert new Optimization().minimumCost(new int[]{3,1,4}, new int[]{4,6,6}, 1) == 110;
+            assert new Optimization().minimumCost(new int[]{4,8,5,1,14,2,2,12,1}, new int[]{7,2,8,4,2,2,1,1,2}, 7) == 985;
         });
 
         Benchmark.benchmark("Iteration", () -> {
