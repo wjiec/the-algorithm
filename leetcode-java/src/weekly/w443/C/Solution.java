@@ -116,6 +116,13 @@ public class Solution {
         return ans;
     }
 
+    private static class DynamicProgramming {
+        public int longestPalindrome(String s, String t) {
+            // dp[i][j] 表示以 s[i] 开头, t[j] 结尾的字符串最长回文串长度
+            return 1;
+        }
+    }
+
     public static void main(String[] args) {
         var s = "a".repeat(1000);
 
