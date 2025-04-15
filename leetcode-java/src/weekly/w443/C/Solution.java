@@ -150,9 +150,7 @@ public class Solution {
                 char sc = s[i - 1];
 
                 for (int j = 0; j < t.length; j++) {
-                    if (sc == t[j]) {
-                        dp[i][j] = Math.max(0, dp[i - 1][j + 1]) + 1;
-                    }
+                    if (sc == t[j]) dp[i][j] = dp[i - 1][j + 1] + 1;
                 }
             }
 
@@ -191,8 +189,9 @@ public class Solution {
     @TODO
     private static class Optimization {
         public int longestPalindrome(String s, String t) {
-            // 根据上述内容, 可以使用 Manacher 算法优化查找 s 中回文子串问题, 复杂度为 O(n)
+            // 根据上述内容, 有以下优化方案
             // 使用后缀数组优化计算 dp 的过程, 复杂度为 O(n)
+            // 可以使用 Manacher 算法优化查找 s 中回文子串问题, 复杂度为 O(n)
             // 最终可以得到线性时间复杂度的解法
 
             return 1;
