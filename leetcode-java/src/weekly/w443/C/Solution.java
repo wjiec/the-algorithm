@@ -1,6 +1,7 @@
 package weekly.w443.C;
 
 import ability.Benchmark;
+import common.TODO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,13 +119,100 @@ public class Solution {
 
     private static class DynamicProgramming {
         public int longestPalindrome(String s, String t) {
-            // dp[i][j] 表示以 s[i] 开头, t[j] 结尾的字符串最长回文串长度
+            char[] ss = s.toCharArray(), tt = t.toCharArray();
+
+            int ans = longest(ss, tt);
+            // 将 s 和 t 反转之后传入, 得到 len(s') < len(t') 的情况
+            for (int l = 0, r = ss.length - 1; l < r; l++, r--) {
+                char temp = ss[l]; ss[l] = ss[r]; ss[r] = temp;
+            }
+            for (int l = 0, r = tt.length - 1; l < r; l++, r--) {
+                char temp = tt[l]; tt[l] = tt[r]; tt[r] = temp;
+            }
+
+            return Math.max(ans, longest(tt, ss));
+        }
+
+        private int longest(char[] s, char[] t) {
+            // 从 s 取前缀拼接上从 t 取的后缀使得拼接后的字符串是个回文串, 有以下情况
+            //  - 从 s 中取的长度为 len(s') == 从 t 中取的长度为 len(t')
+            //  - 从 s 中取的长度为 len(s') > 从 t 中取的长度为 len(t')
+            //  - 从 s 中取的长度为 len(s') < 从 t 中取的长度为 len(t')
+            //
+            // 对于相等的情况, 也就是找到在 s 和 t 中找到镜像对称的最长子串
+            //  - 可以将 t 反转, 此时也就是求最长相同子串问题
+            //      - 使用 dp 进行求解, 枚举 s 中的位置 i, 尝试从 t 的任意 j 进行转移
+            //  - 如果不进行反转, 定义 dp[i][j] 表示以 s[i] 结尾 t[j] 开头的最长镜像子串长度
+            //      - 如果 s[i] == t[j], 则取 s[i - 1][j + 1] + 1
+            //      - 如果 s[i] != t[j], 则取 0
+            int[][] dp = new int[s.length + 1][t.length + 1];
+            for (int i = 1; i <= s.length; i++) {
+                char sc = s[i - 1];
+
+                for (int j = 0; j < t.length; j++) {
+                    if (sc == t[j]) {
+                        dp[i][j] = Math.max(0, dp[i - 1][j + 1]) + 1;
+                    }
+                }
+            }
+
+            // 此时考虑 len(s') == len(t') 的情况, 则是 dp[i][j] 的最大值 * 2
+            //
+            // 同时对于 len(s') > len(t') 的情况, 也就是
+            //  - 在 s 中有 [seg_1][seg_2], 在 t 中有 [seg_3]
+            //      - 其中 seg_1 和 seg_3 互为镜像, 且 seg_2 是回文的
+            //
+            // 通过在 s 中找到所有的回文串 (l, r), 将其长度加上以 l 为结尾的最长镜像子字符串也就是 max(dp[l])
+            // 就得到了最长的跨 s 和 t 的回文子串
+            int ans = 0;
+            int[] max = new int[s.length + 1];
+            for (int i = 0; i <= s.length; i++) {
+                for (int j = 0; j <= t.length; j++) {
+                    ans = Math.max(ans, dp[i][j] * 2);
+                    max[i] = Math.max(max[i], dp[i][j]);
+                }
+            }
+
+            // 接下来枚举 s 中的所有回文子串, 我们使用枚举 i = [0, 2 * n - 1) 的形式来枚举所有的回文中心
+            //  - i / 2 作为左侧回文中心, (i + 1) / 2 作为右侧的回文中心
+            //  - 在 i 为偶数是枚举的是奇数长度的回文串, i 为奇数时, 枚举的是偶数长度的回文串
+            for (int i = 0; i < 2 * s.length - 1; i++) {
+                int l = i / 2, r = (i + 1) / 2;
+                while (l >= 0 && r < s.length && s[l] == s[r]) { l--; r++; }
+                // 此时回文子串的范围是 (l, r), 还需要额外判断是否是有效的回文子串
+                if (r - l - 1 <= 0) continue;
+                ans = Math.max(ans, r - l - 1 + 2 * max[l + 1]);
+            }
+
+            return ans;
+        }
+    }
+
+    @TODO
+    private static class Optimization {
+        public int longestPalindrome(String s, String t) {
+            // 根据上述内容, 可以使用 Manacher 算法优化查找 s 中回文子串问题, 复杂度为 O(n)
+            // 使用后缀数组优化计算 dp 的过程, 复杂度为 O(n)
+            // 最终可以得到线性时间复杂度的解法
+
             return 1;
         }
     }
 
     public static void main(String[] args) {
         var s = "a".repeat(1000);
+
+        Benchmark.benchmark("DynamicProgramming", () -> {
+            assert new DynamicProgramming().longestPalindrome(s, s) == 2000;
+            assert new DynamicProgramming().longestPalindrome("abcde", "ecdba") == 5;
+            assert new DynamicProgramming().longestPalindrome("rtk", "hrgpgt") == 5;
+            assert new DynamicProgramming().longestPalindrome("b", "ajbbx") == 3;
+
+            assert new DynamicProgramming().longestPalindrome("a", "a") == 2;
+            assert new DynamicProgramming().longestPalindrome("abc", "def") == 1;
+            assert new DynamicProgramming().longestPalindrome("b", "aaaa") == 4;
+            assert new DynamicProgramming().longestPalindrome("abcde", "ecdba") == 5;
+        });
 
         Benchmark.benchmark("", () -> {
             assert new Solution().longestPalindrome(s, s) == 2000;
