@@ -1,6 +1,6 @@
 package weekly.w445.C;
 
-import java.math.BigInteger;
+import common.Tag;
 
 /**
  * 3518. Smallest Palindromic Rearrangement II
@@ -19,10 +19,8 @@ import java.math.BigInteger;
 
 public class Solution {
 
+    @Tag({"阶乘转组合数", "试填法"})
     public String smallestPalindrome(String s, int k) {
-        int[] cnt = new int[128];
-        for (var c : s.toCharArray()) cnt[c]++;
-
         // 我们要找到第 k 小的回文排列
         //  - 如果长度为奇数, 中间的字母是不可变的, 剩下的情况和偶数长度的一致
         //  - 如果长度是偶数, 由于前一半和后一半必须一样, 实际上就是找前一半的最小第 k 个排列
@@ -30,61 +28,79 @@ public class Solution {
         //
         // 如果第一个位置选择填 a, 那么剩下的 n - 1 个位置有多少种填法?
         //  - 每个位置可以填一个 char, 但是不能填重复的, 也就是 n! / a! * b! * ... * z!
+        //
+        // 我们只需要枚举前一半的第 k 排列
+        int[] cnt = new int[26]; int n = s.length() / 2;
+        for (int i = 0; i < n; i++) cnt[s.charAt(i) - 'a']++;
 
-        // 中间位
-        char middle = '\0';
-        if (s.length() % 2 != 0) {
-            for (var c = 'a'; c <= 'z'; c++) {
-                if (cnt[c] % 2 == 1) middle = c;
-                cnt[c] /= 2;
+        // 对于计算 n! / a! * b! * ... * z!
+        //  - 我们可以将其转换为组合数的计算方式
+        //  - 也就是有 n 个空位, 先填 a 的 c1 个, 即 C^n_c1
+        //  - 后续我们剩下 n - c1 - ... - c_n 个空位, 需要填入 c_n+1 个元素
+        //  - 也就是计算 C^n1_c1 * C^n2_c2 * ... * C^nk_ck
+        //      - 这个计算可以使用 n / 1 * (n - 1) / 2 * (n - 3) / 3 * (n - 4) / 4 来避免大数问题
+        //      - 从 [n, n - k] 共有 k 个数, 肯定是可以被 k 整除的
+        if (perm(cnt, n, k) < k) return "";
+
+        // 接下来枚举每一位应该填什么
+        char[] left = new char[n];
+        for (int i = 0; i < n; i++) {
+            // 尝试填入字符 c - 'a'
+            for (char c = 0; c < 26; c++) {
+                if (cnt[c] == 0) continue;
+
+                cnt[c]--; // 假设使用当前字符
+                // 还剩下 n - i - 1 个位置需要填入剩下的字符
+                int p = perm(cnt, n - i - 1, k);
+                // 如果填入当前字符, 剩下的排列数可以覆盖 k, 则说明可以这么填
+                if (p >= k) {
+                    left[i] = (char) ('a' + c);
+                    break;
+                }
+
+                // 否则我们无法凑到足够的 k 个数量, 得填下一个字母
+                k -= p; cnt[c]++;
             }
         }
 
-        // 递归计算每个位置应该填什么
-        char[] ans = new char[s.length()];
-        dfs(ans, cnt, 0, s.length() / 2, k);
-        if (middle != '\0') ans[s.length() / 2] = middle;
-        for (int i = 0, j = s.length() - 1; i < j; i++, j--) ans[j] = ans[i];
+        StringBuilder sb = new StringBuilder();
+        sb.append(left);
+        // 检查是否需要加入中间位置
+        if ((s.length() & 1) == 1) sb.append(s.charAt(n));
+        // 补充右边的位置
+        for (int i = n - 1; i >= 0; i--) sb.append(left[i]);
 
-        return new String(ans);
+        return sb.toString();
     }
 
-    // 枚举第 i 位应该填什么
-    private boolean dfs(char[] ans, int[] cnt, int i, int len, int k) {
-        if (i == len) return true;
+    private int perm(int[] cnt, int n, int k) {
+        long ans = 1;
+        for (var c : cnt) {
+            if (c == 0) continue;
 
-        // 后面还剩下多少种填的可能
-        for (char c = 'a'; c <= 'z'; c++) {
-            if (cnt[c] == 0) continue;
+            // 从 n 里选择 c 个位置填充
+            ans *= comb(n, c, k);
+            if (ans >= k) return k;
 
-            long remain = countPossible(cnt, c, len - i - 1);
-            if (remain >= k) {
-                ans[i] = c;
-                cnt[i]--;
-                return dfs(ans, cnt, i + 1, len, k);
-            } else k -= remain;
+            // 移除已填的位置
+            n -= c;
+        }
+        return (int) ans;
+    }
+
+    // 使用 c 个字符填充 n 个位置不同的方案数, 如果超过 k 则返回 k
+    private int comb(int n, int c, int k) {
+        long ans = 1; c = Math.min(c, n - c);
+        for (int i = 1; i <= c; i++) {
+            ans = ans * (n - i + 1) / i;
+            if (ans >= k) return k;
         }
 
-        return false;
-    }
-
-    private long countPossible(int[] cnt, char c, int len) {
-        BigInteger bi = fac(len);
-        for (var i = 'a'; i <= 'z'; i++) {
-            int x = cnt[i] - (i == c ? 1 : 0);
-            if (x != 0) bi = bi.divide(fac(x));
-        }
-
-        return bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) >= 0 ? Integer.MAX_VALUE : bi.longValue();
-    }
-
-    private BigInteger fac(int n) {
-        BigInteger bi = BigInteger.ONE;
-        for (int i = 2; i <= n; i++) bi = bi.multiply(BigInteger.valueOf(i));
-        return bi;
+        return (int) ans;
     }
 
     public static void main(String[] args) {
+        assert new Solution().smallestPalindrome("dmtmd", 3).equals("");
         assert new Solution().smallestPalindrome("abba", 2).equals("baab");
         assert new Solution().smallestPalindrome("aa", 2).equals("");
         assert new Solution().smallestPalindrome("bacab", 1).equals("abcba");
