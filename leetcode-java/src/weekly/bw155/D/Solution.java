@@ -1,9 +1,6 @@
 package weekly.bw155.D;
 
-import ability.Ability.UnionFind;
-import common.PrettyPrinter;
-
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * 3530. Maximum Profit from Valid Topological Order in DAG
@@ -29,99 +26,37 @@ import java.util.*;
 public class Solution {
 
     // 拓扑排序之后的节点分数乘以索引的和的最大值
-    //  - 有可能有多个集合
     public int maxProfit(int n, int[][] edges, int[] score) {
-        UnionFind uf = new UnionFind(n);
-        for (var edge : edges) uf.union(edge[0], edge[1]);
-
-        Map<Integer, Set<Integer>> groups = new HashMap<>();
-        for (int i = 0; i < n; i++) {
-            groups.computeIfAbsent(uf.find(i), k -> new HashSet<>()).add(i);
+        if (edges.length == 0) {
+            Arrays.sort(score);
+            int ans = 0;
+            for (int i = 0; i < n; i++) ans += score[i] * (i + 1);
+            return ans;
         }
 
-        // 每一组里都需要进行拓扑排序并找到每一组的最佳顺序
-        List<List<Integer>> sortedGroups = new ArrayList<>();
-        for (var group : groups.values()) {
-            sortedGroups.add(sortGroup(n, edges, group, score));
-        }
+        // 由于元素数量较少, 直接枚举所有排列配合记忆化枚举
+        //  - 对于第 i 个位置所选择的节点, 需要满足拓扑排序的要求
 
-        PrettyPrinter.println(sortedGroups);
-
-        return dfs(sortedGroups, new boolean[sortedGroups.size()], 1);
-    }
-
-    private int dfs(List<List<Integer>> groups, boolean[] seen, int idx) {
-        int ans = 0;
-        for (int i = 0; i < groups.size(); i++) {
-            if (!seen[i]) {
-                int curr = 0, x = idx;
-                for (var v : groups.get(i)) {
-                    curr += v * x++;
-                }
-
-                seen[i] = true;
-                ans = Math.max(ans, curr + dfs(groups, seen, x));
-                seen[i] = false;
-            }
-        }
-
-        return ans;
-    }
-
-    /** @noinspection unchecked*/
-    private List<Integer> sortGroup(int n, int[][] edges, Set<Integer> group, int[] score) {
-        int[] indegree = new int[n];
-        for (int i = 0; i < n; i++) {
-            if (!group.contains(i)) {
-                indegree[i] = -1;
-            }
-        }
-
-        List<Integer>[] g = new List[n];
-        Arrays.setAll(g, i -> new ArrayList<>());
+        // 记录每个节点的直接前驱节点
+        int[] pre = new int[n];
         for (var edge : edges) {
-            if (group.contains(edge[0])) {
-                g[edge[0]].add(edge[1]);
-                indegree[edge[1]]++;
+            pre[edge[1]] |= 1 << edge[0];
+        }
+
+        return dfs(0, pre, score, new int[1 << n]);
+    }
+
+    private int dfs(int mask, int[] pre, int[] score, int[] memo) {
+        if (memo[mask] > 0) return memo[mask];
+
+        int ans = 0, i = Integer.bitCount(mask);
+        for (int j = 0; j < score.length; j++) {
+            // 检查当前是否能用 j 这个节点, 也就是 j 的直接前驱节点都是完成状态
+            if ((mask & (1 << j)) == 0 && (pre[j] & mask) == pre[j]) {
+                ans = Math.max(ans, dfs(mask | 1 << j, pre, score, memo) + score[j] * (i + 1));
             }
         }
-
-        int[] level = new int[n];
-        Queue<Integer> q = new ArrayDeque<>();
-        for (int i = 0; i < n; i++) {
-            if (indegree[i] == 0) {
-                level[i] = 1;
-                q.add(i);
-            }
-        }
-
-        int maxLevel = 1;
-        while (!q.isEmpty()) {
-            int curr = q.remove();
-            for (var next : g[curr]) {
-                if (--indegree[next] == 0) {
-                    q.add(next);
-                    level[next] = level[curr] + 1;
-                    maxLevel = Math.max(maxLevel, level[next]);
-                }
-            }
-        }
-
-        List<Integer>[] levelScore = new List[maxLevel + 1];
-        Arrays.setAll(levelScore, i -> new ArrayList<>());
-        for (int i = 0; i < n; i++) {
-            if (level[i] > 0) {
-                levelScore[level[i]].add(score[i]);
-            }
-        }
-
-
-        List<Integer> ans = new ArrayList<>();
-        for (var elem : levelScore) {
-            elem.sort(Integer::compare);
-            ans.addAll(elem);
-        }
-        return ans;
+        return memo[mask] = ans;
     }
 
     public static void main(String[] args) {
