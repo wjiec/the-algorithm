@@ -1,12 +1,8 @@
 package weekly.w447.C;
 
 import common.Checker;
-import common.PrettyPrinter;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 3533. Concatenated Divisibility
@@ -28,56 +24,46 @@ public class Solution {
     // 1 <= nums.length <= 13
     // 1 <= nums[i] <= 1e5
     public int[] concatenatedDivisibility(int[] nums, int k) {
-        // 找到拼接之后可以被 k 整除的排列的最小字典序
-        //  - 最长的长度为 6 * 13 = 78 位
-        int total = 0, n = nums.length;
-        for (var v : nums) total += String.valueOf(v).length();
+        Arrays.sort(nums);
 
-        var ans = dfs(nums, (1 << n) - 1, total, k, 0);
-        PrettyPrinter.println(ans);
-        return ans == null ? new int[0] : ans.stream().mapToInt(i -> i).toArray();
-    }
+        // 找到以十进制拼接之后可以被 k 整除的排列的最小字典序(在 nums 上的最小字典序)
+        int n = nums.length;
+        int[] pow10 = new int[n];
+        for (int i = 0; i < n; i++) pow10[i] = base(nums[i]);
 
-    private final static BigInteger[] base = new BigInteger[78];
-    static {
-        base[0] = BigInteger.ONE;
-        for (int i = 1; i < base.length; i++) {
-            base[i] = base[i - 1].multiply(BigInteger.valueOf(10));
+        List<Integer> ans = new ArrayList<>();
+        if (dfs(nums, (1 << n) - 1, 0, k, ans, pow10)) {
+            return ans.stream().mapToInt(i -> i).toArray();
         }
+        return new int[0];
     }
 
-    private List<Integer> dfs(int[] nums, int mask, int shift, int k, int mod) {
-        if (mask == 0) return mod == 0 ? Collections.emptyList() : null;
+    private final Set<Integer> seen = new HashSet<>();
 
-        List<Integer> ans = null;
+    private boolean dfs(int[] nums, int mask, int mod, int k, List<Integer> ans, int[] pow10) {
+        if (mask == 0) return mod == 0;
+        if (!seen.add((mask << 8) | mod)) return false;
+
         for (int i = 0; i < nums.length; i++) {
-            if ((mask & (1 << i)) != 0) {
-                int n = String.valueOf(nums[i]).length();
-                int currMod = BigInteger.valueOf(nums[i]).multiply(base[shift - n]).mod(BigInteger.valueOf(k)).intValue();
-                currMod = (currMod + mod) % k;
-                var currAns = dfs(nums, mask ^ (1 << i), shift - n, k, currMod);
-                if (currAns != null) {
-                    currAns = new ArrayList<>(currAns);
-                    currAns.add(0, nums[i]);
-                    if (less(currAns, ans)) ans = currAns;
-                }
+            // 得到下一个数实际上就是 mod * 10 ^ len(nums[i]) + nums[i]
+            int next = (mod * pow10[i] + nums[i]) % k;
+            if ((mask & (1 << i)) != 0 && dfs(nums, mask ^ (1 << i), next, k, ans, pow10)) {
+                //noinspection SequencedCollectionMethodCanBeUsed
+                ans.add(0, nums[i]);
+                return true;
             }
         }
 
-        return ans;
+        return false;
     }
 
-    private boolean less(List<Integer> curr, List<Integer> ans) {
-        if (ans == null) return true;
-        if (curr == null) return false;
-
-        return build(curr).compareTo(build(ans)) < 0;
-    }
-
-    private String build(List<Integer> array) {
-        StringBuilder sb = new StringBuilder();
-        for (var v : array) sb.append(v);
-        return sb.toString();
+    private int base(int v) {
+        if (v < 10) return 10;
+        else if (v < 100) return 100;
+        else if (v < 1000) return 1000;
+        else if (v < 10000) return 10000;
+        else if (v < 100000) return 100000;
+        else return 1000000;
     }
 
     public static void main(String[] args) {
