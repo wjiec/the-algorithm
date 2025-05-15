@@ -97,6 +97,8 @@ public class PrettyPrinter {
     }
 
     public static String toString(Object object) {
+        if (object == null) return "null";
+
         Class<?> cl = object.getClass();
         if (!cl.isArray()) {
             if (object instanceof Boolean) {
