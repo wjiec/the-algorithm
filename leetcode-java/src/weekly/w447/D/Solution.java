@@ -1,7 +1,6 @@
 package weekly.w447.D;
 
 import common.Checker;
-import common.PrettyPrinter;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,9 +38,6 @@ public class Solution {
         // 然后再将 i -> sorted[i] 建立映射, 也就是记录 i 位置的是第几小
         int[] ranking = new int[n];
         for (int i = 0; i < n; i++) ranking[sorted[i]] = i;
-        PrettyPrinter.println(nums);
-        PrettyPrinter.println(sorted);
-        PrettyPrinter.println(ranking);
 
         // 先使用双指针找到每一个位置可以到达的最远距离
         int bits = 32 - Integer.numberOfLeadingZeros(n);
