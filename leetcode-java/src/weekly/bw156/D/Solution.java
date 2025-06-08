@@ -1,5 +1,9 @@
 package weekly.bw156.D;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Q4. Subtree Inversion Sum
  *
@@ -32,8 +36,49 @@ package weekly.bw156.D;
 
 public class Solution {
 
+    private List<Integer>[] g = null;
+
+    // 可以反转一个子树, 即将这个子树的节点值乘以 -1, 每次反转的节点必须离他已反转的祖先节点至少间隔 k 条边
+    @SuppressWarnings("unchecked")
     public long subtreeInversionSum(int[][] edges, int[] nums, int k) {
-        return 1;
+        g = new List[nums.length];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for (var edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+
+        memo = new long[3][k][nums.length];
+        for (var m : memo) for (var r : m) Arrays.fill(r, -1);
+        return dfs(0, -1, 0, 1, nums, k);
+    }
+
+    private long[][][] memo = null;
+
+    // 当前位于 curr 节点, 父节点是 parent, 当前还需要等待 wait 次移动才可以进行反转, 当前子树的正负为 base
+    private long dfs(int curr, int parent, int wait, int base, int[] nums, int k) {
+        if (memo[base + 1][wait][curr] != -1) return memo[base + 1][wait][curr];
+
+        // 首先不反转当前节点
+        long ans = (long) base * nums[curr];
+        for (var next : g[curr]) {
+            if (next != parent) {
+                ans += dfs(next, curr, wait - (wait > 0 ? 1 : 0), base, nums, k);
+            }
+        }
+
+        // 如果满足条件, 则可以反转当前节点
+        if (wait == 0) {
+            long inversion = base * -1L * nums[curr];
+            for (var next : g[curr]) {
+                if (next != parent) {
+                    inversion += dfs(next, curr, k - 1, base * -1, nums, k);
+                }
+            }
+            ans = Math.max(ans, inversion);
+        }
+
+        return memo[base + 1][wait][curr] = ans;
     }
 
     public static void main(String[] args) {

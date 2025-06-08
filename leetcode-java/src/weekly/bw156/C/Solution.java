@@ -31,47 +31,28 @@ public class Solution {
     // 在 DAG 中找到边数为 k 且边权之和 < t 的最大边权和
     public int maxWeight(int n, int[][] edges, int k, int t) {
         g = new Map[n]; Arrays.setAll(g, i -> new HashMap<>());
-        boolean[] in = new boolean[n];
         for (var edge : edges) {
-            in[edge[1]] = true; // 有入的边
             g[edge[0]].put(edge[1], edge[2]);
         }
 
-        // 枚举所有只有出边的节点作为起点, 进行树上滑动窗口
-        int ans = -1;
-        for (int i = 0; i < n; i++) {
-            if (!in[i] && maxEdges(i) >= k) {
-                ans = Math.max(ans, dfs(i, k, t, 0, 1));
-            }
-        }
-        System.out.println(ans);
+        memo = new boolean[n][k + 1][t + 1];
+        for (int i = 0; i < n; i++) dfs(i, 0, 0, k, t);
         return ans;
     }
 
-    private final int[] dMemo = new int[301];
-    { Arrays.fill(dMemo, -1); }
+    private int ans = -1;
+    private boolean[][][] memo = null;
 
-    private int maxEdges(int curr) {
-        if (dMemo[curr] != -1) return dMemo[curr];
+    // 当前在节点 node 处, 且当前已经有 n 条边, 总和为 s,
+    private void dfs(int node, int n, int s, int k, int t) {
+        if (n == k) { if (s < t) ans = Math.max(ans, s); return; };
+        if (memo[node][n][s]) return;
 
-        int ans = 0;
-        for (var next : g[curr].keySet()) {
-            ans = Math.max(ans, maxEdges(next) + 1);
+        for (var next : g[node].entrySet()) {
+            int nextSum = s + next.getValue();
+            if (nextSum < t) dfs(next.getKey(), n + 1, nextSum, k, t);
         }
-        return dMemo[curr] = ans;
-    }
-
-    private final int[] weight = new int[301];
-
-    private int dfs(int curr, int k, int t, int sum, int r) {
-        int ans = r - 1 >= k && sum < t ? sum : -1;
-        for (var next : g[curr].entrySet()) {
-            weight[r] = next.getValue();
-            int nextSum = sum - (r >= k ? weight[r - k] : 0) + next.getValue();
-            ans = Math.max(ans, dfs(next.getKey(), k, t, nextSum, r + 1));
-        }
-
-        return ans;
+        memo[node][n][s] = true;
     }
 
     public static void main(String[] args) {

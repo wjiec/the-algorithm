@@ -101,6 +101,25 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        public int minOperations(int[] nums) {
+            // 当发现一个数字必须要操作时才去进行操作
+            int ans = 0, top = -1;
+            for (var v : nums) {
+                // 当发现一个数小于栈顶元素时, 此时我们必须要将这个栈顶元素进行操作
+                while (top >= 0 && v < nums[top]) {
+                    top--; ans++;
+                }
+
+                // 否则如何这个元素等于栈顶元素, 那么这个元素可以等之后在某次和栈顶一起进行操作
+                if (top < 0 || v != nums[top]) nums[++top] = v;
+            }
+
+            // 栈顶元素如果大于 0 的话, 需要将其变为 0
+            return ans + top + (nums[0] > 0 ? 1 : 0);
+        }
+    }
+
     public static void main(String[] args) {
         assert new Solution().minOperations(new int[]{1,2,3}) == 3;
         assert new Solution().minOperations(new int[]{4,4,0}) == 1;
@@ -108,6 +127,12 @@ public class Solution {
         assert new Solution().minOperations(new int[]{1,2,1,2,1,2}) == 4;
         assert new Solution().minOperations(new int[]{0, 2}) == 1;
         assert new Solution().minOperations(new int[]{3,1,2,1}) == 3;
+
+        assert new Optimization().minOperations(new int[]{1,2,3}) == 3;
+        assert new Optimization().minOperations(new int[]{4,4,0}) == 1;
+        assert new Optimization().minOperations(new int[]{1,2,1,2,1,2}) == 4;
+        assert new Optimization().minOperations(new int[]{0, 2}) == 1;
+        assert new Optimization().minOperations(new int[]{3,1,2,1}) == 3;
     }
 
 }
