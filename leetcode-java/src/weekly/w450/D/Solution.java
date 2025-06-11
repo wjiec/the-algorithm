@@ -1,8 +1,11 @@
 package weekly.w450.D;
 
+import common.Checker;
 import common.Tag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Q4. Minimum Weighted Subgraph With the Required Paths II
@@ -32,6 +35,7 @@ public class Solution {
         private final int[] distance;
         private final int[][] table;
 
+        @SuppressWarnings("DuplicatedCode")
         public LowestCommonAncestor(int[][] edges) {
             int n = edges.length + 1;
             int logN = 32 - Integer.numberOfLeadingZeros(n);
@@ -49,8 +53,8 @@ public class Solution {
             dfs(g, 0, -1);
 
             // 开始倍增向上 2 ^ j 次可以到达的节点
-            for (int i = 0; i < n; i++) {
-                for (int j = 1; j < logN; j++) {
+            for (int j = 1; j < logN; j++) {
+                for (int i = 0; i < n; i++) {
                     // i 向上走 2 ^ (j - 1) 可以到达的地方是 p = table[i][j - 1]
                     // 再向上走 2 ^ (j - 1) 可以到达的地方是 table[p][j - 1]
                     int p = table[i][j - 1];
@@ -134,6 +138,9 @@ public class Solution {
     }
 
     public static void main(String[] args) {
+        assert Checker.check(new Solution().minimumWeight(new int[][]{
+            {0, 3, 7}, {4, 1, 7}, {4, 2, 8}, {3, 4, 5}, {4, 5, 8}
+        }, new int[][]{{3,5,1}}), new int[]{20});
     }
 
 }
