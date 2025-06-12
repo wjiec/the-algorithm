@@ -1,4 +1,4 @@
-package weekly.w245.p0p5784redistributecharacterstomakeallstringsequal;
+package weekly.w245.A;
 
 public class Solution {
 

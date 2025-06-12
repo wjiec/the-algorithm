@@ -1,32 +1,51 @@
-package weekly.w450.D;
+package weekly.bw157.D;
 
 import common.Checker;
-import common.Tag;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static ability.Ability.Math.pow;
 
 /**
- * Q4. Minimum Weighted Subgraph With the Required Paths II
+ * Q4. Number of Ways to Assign Edge Weights II
  *
- * https://leetcode.cn/contest/weekly-contest-450/problems/minimum-weighted-subgraph-with-the-required-paths-ii
+ * https://leetcode.cn/contest/biweekly-contest-157/problems/number-of-ways-to-assign-edge-weights-ii
  *
- * You are given an undirected weighted tree with n nodes, numbered from 0 to n - 1.
+ * There is an undirected tree with n nodes labeled from 1 to n, rooted at node 1.
+ * The tree is represented by a 2D integer array edges of length n - 1,
+ * where edges[i] = [ui, vi] indicates that there is an edge between nodes ui and vi.
  *
- * It is represented by a 2D integer array edges of length n - 1, where
- * edges[i] = [ui, vi, wi] indicates that there is an edge between nodes ui and vi with weight wi.
+ * Initially, all edges have a weight of 0. You must assign each edge a weight of either 1 or 2.
  *
- * Additionally, you are given a 2D integer array queries, where queries[j] = [src1j, src2j, destj].
+ * The cost of a path between any two nodes u and v is the total weight of all edges in the path connecting them.
  *
- * Return an array answer of length equal to queries.length, where answer[j] is the minimum total
- * weight of a subtree such that it is possible to reach destj from both src1j and src2j
- * using edges in this subtree.
+ * You are given a 2D integer array queries. For each queries[i] = [ui, vi], determine
+ * the number of ways to assign weights to edges in the path such that the cost of the
+ * path between ui and vi is odd.
  *
- * A subtree here is any connected subset of nodes and edges of the original tree forming a valid tree.
+ * Return an array answer, where answer[i] is the number of valid assignments for queries[i].
+ *
+ * Since the answer may be large, apply modulo 109 + 7 to each answer[i].
+ *
+ * Note: For each query, disregard all edges not in the path between node ui and vi.
  */
 
 public class Solution {
+
+    private static final int MAX_N = 100_001;
+    private static final int MOD = 1_000_000_007;
+
+    private static final long[] fac = new long[MAX_N];
+    static {
+        fac[0] = fac[1] = 1;
+        for (int i = 2; i < MAX_N; i++) fac[i] = (fac[i - 1] * i) % MOD;
+    }
+
+    private static final long[] inv = new long[MAX_N];
+    static {
+        inv[MAX_N - 1] = pow(fac[MAX_N - 1], MOD - 2, MOD);
+        for (int i = MAX_N - 1; i > 0; i--) inv[i - 1] = (inv[i] * i) % MOD;
+    }
 
     // LCA 可以通过树上倍增算法实现
     @SuppressWarnings({"unchecked", "DuplicatedCode"})
@@ -36,7 +55,7 @@ public class Solution {
         private final int[][] table;
 
         public LowestCommonAncestor(int[][] edges) {
-            int n = edges.length + 1;
+            int n = edges.length + 2;
             int logN = 32 - Integer.numberOfLeadingZeros(n);
 
             depth = new int[n];
@@ -46,10 +65,10 @@ public class Solution {
             List<int[]>[] g = new List[n];
             Arrays.setAll(g, i -> new ArrayList<>());
             for (var edge : edges) {
-                g[edge[0]].add(new int[]{edge[1], edge[2]});
-                g[edge[1]].add(new int[]{edge[0], edge[2]});
+                g[edge[0]].add(new int[]{edge[1], 1});
+                g[edge[1]].add(new int[]{edge[0], 1});
             }
-            dfs(g, 0, -1);
+            dfs(g, 1, 0);
 
             // 开始倍增向上 2 ^ j 次可以到达的节点
             for (int j = 1; j < logN; j++) {
@@ -108,38 +127,31 @@ public class Solution {
         }
     }
 
-    // 对每个查询 {src1, src2, dest} 需要找到一个最小的子树(任意节点和边组成的连通子集)权重和
-    // 使得可以从 src1 和 src2 到达 dest
-    //  - 节点数 3 <= n <= 1e5
-    //  - 查询数 1 <= queries.length <= 1e5
-    @Tag({"LCA", "最近公共祖先", "包含给定节点的最小子树"})
-    public int[] minimumWeight(int[][] edges, int[][] queries) {
-        // 对于三个节点, 通过求 |A -> B| + |B -> C| + |C -> A| 的路径和, 此时恰好
-        // 每条路径走过两次, 将此路径和除以 2 就是答案.
-        //
-        // 求 |A -> B| 的路径和是通过求 |Root -> A| + |Root -> B| - 2 * |Root -> <LCA>| 的方式实现
-        //  - LCA 即 A 和 B 的最近公共祖先
-        //
-        // 扩展: 如果有 k 个点, 则为了保证每条路径经过两次, 需要使用 DFN 来保证遍历顺序
-        //  - 如果 Root -> A -> {B, C}, 在 B 子树中有 x 个点, C 子树中有 y 个点
-        //      - 按照 B 子树取一个, C 子树取一个的走法, |A -> B| 和 |A -> C| 会走至少 max(x, y) 次
-        //  - DFN: 也就是按照先序或者后序的方式遍历树时, 每个节点的遍历进入时间戳
-        //
-        // 三个节点的情况不需要应用 DFN, 因为三个节点是最小的两两关系的情况, 不管怎么走路径都是相同的
+    public int[] assignEdgeWeights(int[][] edges, int[][] queries) {
         LowestCommonAncestor lca = new LowestCommonAncestor(edges);
 
         int[] ans = new int[queries.length];
+        Map<Integer, Integer> memo = new HashMap<>();
         for (int i = 0; i < queries.length; i++) {
-            int a = queries[i][0], b = queries[i][1], c = queries[i][2];
-            ans[i] = (lca.distance(a, b) + lca.distance(b, c) + lca.distance(c, a)) / 2;
+            int a = queries[i][0], b = queries[i][1];
+            if (a == b) continue;
+
+            int k = lca.distance(a, b);
+            if (!memo.containsKey(k)) {
+                int curr = 0;
+                for (int x = 1; x <= k; x += 2) {
+                    curr = (int) ((curr + ((((fac[k] * inv[x]) % MOD) * inv[k - x]) % MOD)) % MOD);
+                }
+                memo.put(k, curr);
+            }
+            ans[i] = memo.get(k);
         }
+
         return ans;
     }
 
     public static void main(String[] args) {
-        assert Checker.check(new Solution().minimumWeight(new int[][]{
-            {0, 3, 7}, {4, 1, 7}, {4, 2, 8}, {3, 4, 5}, {4, 5, 8}
-        }, new int[][]{{3,5,1}}), new int[]{20});
+        assert Checker.check(new Solution().assignEdgeWeights(new int[][]{{1,2}}, new int[][]{{1,1},{1,2}}), new int[]{0,1});
     }
 
 }

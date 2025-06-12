@@ -41,10 +41,10 @@ public class Prime {
     };
 
     // Miller-Rabin 素数测试, 返回 n 是否是质数
-    public static boolean isPrime(int n) {
+    public static boolean isPrime(long n) {
         if (n < 3 || n % 2 == 0) return n == 2;
 
-        int a = n - 1, b = 0;
+        long a = n - 1, b = 0;
         while (a % 2 == 0) { a /= 2; b++; }
 
         for (int i = 0, j; i < PRIME_TESTS.length; i++) {
@@ -65,14 +65,14 @@ public class Prime {
 
     // Miller-Rabin 素数测试, 对 n 进行 k 轮测试, 以检查
     // 其是否为质数(建议是不少于 8 轮, 且不宜过大, 推荐 12 轮)
-    public static boolean isPrime(int n, int k) {
+    public static boolean isPrime(long n, int k) {
         if (n < 3 || n % 2 == 0) return n == 2;
 
-        int a = n - 1, b = 0;
+        long a = n - 1, b = 0;
         while (a % 2 == 0) { a /= 2; b++; }
 
         for (int i = 0, j; i < k; i++) {
-            long r = new Random().nextInt(n - 2) + 2;
+            long r = new Random().nextLong(n - 2) + 2;
             long v = Ability.Math.pow(r, a, n);
             if (v == 1) continue;
 
@@ -87,12 +87,12 @@ public class Prime {
     }
 
     // 朴素解法, 可适用于较小的数据范围
-    private static class Simple {
+    public static class Simple {
         // 朴素解法: 枚举 2 到 sqrt(n) 之间的所有实数, 判断
         // 其是否是 n 的约数
-        public static boolean isPrime(int n) {
+        public static boolean isPrime(long n) {
             if (n < 3 || n % 2 == 0) return n == 2;
-            for (int i = 2; i * i <= n; i++) {
+            for (long i = 2; i * i <= n; i++) {
                 if (n % i == 0) return false;
             }
             return true;
