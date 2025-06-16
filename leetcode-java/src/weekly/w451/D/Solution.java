@@ -2,8 +2,6 @@ package weekly.w451.D;
 
 import ability.Benchmark;
 
-import java.util.*;
-
 /**
  * Q4. Lexicographically Smallest String After Adjacent Removals
  *
@@ -25,57 +23,45 @@ import java.util.*;
 
 public class Solution {
 
-    /** @noinspection unchecked*/
     public String lexicographicallySmallestString(String s) {
-        // 尽量全部移除, 如果无法全部移除则保留尽可能短, 或者是保留字典序最小的
-        //  - 如果当前答案的第 i 个字符为 c, 则如果想找到小于等于当前答案字典序的新答案需要这一位 j 为 <= c
-        //      - 也就是需要将 [i, j) 都删掉
-
-        char[] chars = s.toCharArray();
-        List<Integer>[] g = new List[128];
-        Arrays.setAll(g, i -> new ArrayList<>());
-        for (int i = 0; i < chars.length; i++) g[chars[i]].add(i);
-
-        for (int l = 0; l < s.length(); l++) {
-            char curr = s.charAt(l);
-            // 尝试找到能将当前位变得最小的方案
-            for (char c = 'a'; c < curr; c++) {
-                // 将当前字符替换成 r, 也就是删除 [l, r) 的区域
-                for (var r : g[c]) {
-                    if (r > l && removable(chars, l, r)) {
-                        return lexicographicallySmallestString(s.substring(0, l) + s.substring(r));
-                    }
-                }
-            }
-            if (removable(chars, l, chars.length)) return s.substring(0, l);
-        }
-
-        return s;
+        return dfs(s.toCharArray(), 0, new String[s.length()]);
     }
 
-    // 检查 [l, r) 范围内是否都能消除
+    // 在 chars 中从 [i, n) 的最小字典序
+    private String dfs(char[] chars, int i, String[] memo) {
+        if (i == chars.length) return "";
+        if (memo[i] != null) return memo[i];
+
+        // 保留当前字符的话
+        String ans = chars[i] + dfs(chars, i + 1, memo);
+        // 否则不保留当前字符, 需要找一段可以全消除的包括 i 的子字符串
+        for (int j = i + 1; j < chars.length; j++) {
+            if (removable(chars, i, j)) {
+                String curr = dfs(chars, j + 1, memo);
+                if (curr.compareTo(ans) < 0) ans = curr;
+            }
+        }
+        return memo[i] = ans;
+    }
+
+    private final Boolean[] memo = new Boolean[1 << 16];
+
+    // 考虑 chars 在 [l, r] 范围内是否可以完全消除, 等价于求是否一个合法的括号序列
     private boolean removable(char[] chars, int l, int r) {
-        if ((r - l) % 2 == 1) return false; // 必须都要偶数长度
-        return removable(new String(chars, l, r - l));
-    }
+        int key = (l << 8) | r;
+        if (memo[key] != null) return memo[key];
 
-    private final Map<String, Boolean> memo = new HashMap<>();
+        // 空字符串
+        if (r < l) return memo[key] = true;
+        // 前后组合的形式 (()) 形式
+        if (consecutive(chars[l], chars[r]) && removable(chars, l + 1, r - 1)) return memo[key] = true;
 
-    private boolean removable(String s) {
-        if (s.length() == 0) return true;
-        if (memo.containsKey(s)) return memo.get(s);
-
-        int n = s.length();
-        boolean ans = false;
-        for (int i = 1; i < n; i++) {
-            if (consecutive(s.charAt(i - 1), s.charAt(i))) {
-                ans = removable(s.substring(0, i-1) + s.substring(i + 1));
-                if (ans) break;
-            }
+        // 分成 () () 这种形式
+        for (int i = l + 1; i < r; i++) {
+            if (removable(chars, l, i) && removable(chars, i + 1, r)) return memo[key] = true;
         }
 
-        memo.put(s, ans);
-        return ans;
+        return memo[key] = false;
     }
 
     private boolean consecutive(char a, char b) {

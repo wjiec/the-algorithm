@@ -1,8 +1,10 @@
 package weekly.w451.C;
 
+import common.Tag;
+
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 /**
  * Q3. Maximum Profit from Trading Stocks with Discounts
@@ -36,36 +38,64 @@ import java.util.TreeSet;
 public class Solution {
 
     /** @noinspection unchecked*/
-    private final Set<Integer>[] g = new Set[161];
-    { Arrays.setAll(g, i -> new TreeSet<>()); }
+    private final List<Integer>[] g = new List[160];
+    { Arrays.setAll(g, i -> new ArrayList<>()); }
 
+    @Tag("树上01背包")
     public int maxProfit(int n, int[] present, int[] future, int[][] hierarchy, int budget) {
-        int[] p1 = new int[n + 1], p2 = new int[n + 1];
-        for (int i = 1; i <= n; i++) {
-            p1[i] = future[i - 1] - present[i - 1]; // 原价买的情况下可以获得的收益
-            p2[i] = future[i - 1] - (present[i - 1] / 2); // 折扣价情况下可以获得的收益
-        }
+        for (var edge : hierarchy) g[edge[0] - 1].add(edge[1] - 1);
+        return dfs(0, present, future, budget)[budget][0];
+    }
 
-        // 如果 1 原价购买, 则所有子节点都可以获得折扣优惠(背包大小为 budget - present[1], 求 01 背包最大值)
-        // dp[i][j] 表示从 [0, i] 使用最多使用 j 预算可以获得的最大利润
-        int budget1 = budget - present[0];
-        int[][] dp = new int[n + 1][budget1 + 1];
-        for (int i = 2; i <= n; i++) {
-            int cost = present[i - 1] / 2; // 购买当前节点所需要的花费
-            System.arraycopy(dp[i - 1], 0, dp[i], 0, budget1 + 1);
-            for (int j = cost; j <= budget1; j++) {
-                dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - cost] + p2[i]);
+    // 计算当前位于 curr 节点的结果值
+    private int[][] dfs(int curr, int[] present, int[] future, int budget) {
+        // 首先需要计算从 curr 的所有子节点中能得到的最大利润之和
+        //  - step[i][j] 表示前 x 个子节点在 j 情况下(0 = 不购买 curr, 1 = 购买 curr)的最大值
+        int[][] step = new int[budget + 1][2];
+        // 枚举并计算所有子节点的叠加之后的最佳分配方式
+        for (var next : g[curr]) {
+            // 我们把之前所有子节点作为一组保存在 step 中, 还需要计算当前子节点自己作为一组的情况
+            // 此时就是两个子节点的情况, 我们枚举给前一个分配 lb = [0, budget], 另一个则是 budget - lb
+            var nextStep = dfs(next, present, future, budget);
+            // 枚举计算所有可能的预算 j
+            for (int j = budget; j >= 0; j--) {
+                // 枚举在当前子节点左边的一组子节点的预算为 lb
+                //  - 则当前子节点分配到的预算就是 budget - lb
+                for (int lb = j; lb >= 0; lb--) {
+                    // 枚举使用当前节点以及不使用当前节点 curr
+                    for (int k = 0; k < 2; k++) {
+                        // 此时当子节点分配 j 时, 最大值为左边子节点组的和加上当前子节点的分配之和
+                        //  - 我们当前计算的是 j, 会不断从 [0, j] 进行转移, 所以我们对于 lb 需要从大到小进行计算
+                        step[j][k] = Math.max(step[j][k], step[lb][k] + nextStep[j - lb][k]);
+                    }
+                }
             }
         }
-        int ans1 = p1[1] + dp[n][budget1];
 
-        // 剩下的就是在树上购买的情况(1 不购买), 如果父节点购买, 则子节点获得优惠
-        for (var edge : hierarchy) g[edge[0]].add(edge[1]);
+        // 接下来考虑 curr 买还是不买
+        int[][] ans = new int[budget + 1][2];
+        for (int j = 0; j <= budget; j++) {
+            for (int k = 0; k < 2; k++) {
+                // 如果 k == 0 不买的话, 代价就等于 present[curr]
+                // 如果买的话 k == 1, 代价就等于 present[curr] / 2
+                int cost = present[curr] / (k + 1);
+                if (j >= cost) {
+                    // 如果不买 curr, 则需要从 step[j][0] 进行转移
+                    // 如果买 curr, 则需要从 step[j - cost][1] 进行转移
+                    ans[j][k] = Math.max(step[j][0], step[j - cost][1] + future[curr] - cost);
+                } else {
+                    // 我们的额度不够, 无法购买 curr
+                    ans[j][k] = step[j][0];
+                }
+            }
+        }
 
-        return ans1;
+        return ans;
     }
 
     public static void main(String[] args) {
+        assert new Solution().maxProfit(4, new int[]{42,9,1,12}, new int[]{35,41,18,46}, new int[][]{{1,3},{1,4},{1,2}}, 94) == 88;
+
         assert new Solution().maxProfit(2, new int[]{1,2}, new int[]{4,3}, new int[][]{{1,2}}, 3) == 5;
         assert new Solution().maxProfit(2, new int[]{3,4}, new int[]{5,8}, new int[][]{{1,2}}, 4) == 4;
         assert new Solution().maxProfit(3, new int[]{4,6,8}, new int[]{7,9,11}, new int[][]{{1,2},{1,3}}, 10) == 10;
