@@ -30,34 +30,48 @@ import java.util.*;
 
 public class Solution {
 
-    private static final int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private final List<int[]> points = new ArrayList<>();
+    private final List<Integer> id = new ArrayList<>();
 
     public int minMoves(String[] classroom, int energy) {
         int m = classroom.length, n = classroom[0].length();
-        char[][] grid = new char[m][];
+        grid = new char[m][];
         for (int i = 0; i < m; i++) grid[i] = classroom[i].toCharArray();
 
-        int sx = 0, sy = 0, cnt = 0;
-        List<Integer> id = new ArrayList<>();
-        List<int[]> points = new ArrayList<>();
+        int sx = 0, sy = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 switch (grid[i][j]) {
-                    case 'L' -> { points.add(new int[]{i, j}); id.add(cnt++); }
-                    case 'R' -> { points.add(new int[]{i, j}); id.add(-1); }
+                    case 'L', 'R' -> points.add(new int[]{i, j});
                     case 'S' -> { sx = i; sy = j; }
                 }
             }
         }
+        points.sort(Comparator.comparingInt(ij -> grid[ij[0]][ij[1]]));
+
+        int cnt = 0, pl = points.size();
+        for (int[] point : points) {
+            switch (grid[point[0]][point[1]]) {
+                case 'L' -> id.add(cnt++);
+                case 'R' -> id.add(-1);
+            }
+        }
         if (cnt == 0) return 0; // 没有垃圾
 
-        int pl = points.size();
-        // [index, energy, mask, step]
-        Queue<int[]> queue = new ArrayDeque<>();
+        // dis[i][j] 表示从 point[i] 走到 point[j] 的最短距离
+        dis = new int[pl][];
+        for (int i = 0; i < pl; i++) {
+            dis[i] = distance(grid, points.get(i)[0], points.get(i)[1], points);
+        }
+
+        this.energy = energy; this.allMask = (1 << cnt) - 1;
+        // 记忆化 seen[i][j][k] 表示当前在 i 点, 剩余能量为 j, 且当前已收集的垃圾为 k 是否已经遍历过
+        seen = new int[pl][energy + 1][1 << cnt];
+        for (int i = 0; i < pl; i++) {
+            for (var row : seen[i]) Arrays.fill(row, Integer.MAX_VALUE);
+        }
         // 尝试从起点看看到每个垃圾点或者补给点的最短距离
         int[] fromStart = distance(grid, sx, sy, points);
-        // 记忆化 seen[i][j][k] 表示当前在 i 点, 剩余能量为 j, 且当前已收集的垃圾为 k 是否已经遍历过
-        int[][][] seen = new int[pl][energy + 1][1 << cnt];
         for (int i = 0; i < pl; i++) {
             for (var row : seen[i]) Arrays.fill(row, Integer.MAX_VALUE);
             // 如果可以从起点走到当前垃圾点或者补给点, 就将其加入队列
@@ -68,52 +82,50 @@ public class Solution {
                     case 'R' -> pEnergy = energy;
                 }
 
+                // 开始枚举所有可能的走法
                 seen[i][pEnergy][pMask] = fromStart[i];
-                queue.add(new int[]{i, pEnergy, pMask, fromStart[i]});
-            }
-        }
-
-        // dis[i][j] 表示从 point[i] 走到 point[j] 的最短距离
-        int[][] dis = new int[pl][];
-        for (int i = 0; i < pl; i++) {
-            dis[i] = distance(grid, points.get(i)[0], points.get(i)[1], points);
-        }
-
-        // 开始枚举所有可能的走法
-        int ans = Integer.MAX_VALUE, allMask = (1 << cnt) - 1;
-        while (!queue.isEmpty()) {
-            var curr = queue.remove();
-            int i = curr[0], cEnergy = curr[1], cMask = curr[2], cStep = curr[3];
-            if ((cMask ^ allMask) == 0) { ans = Math.min(ans, cStep); continue; }
-
-            // 尝试从这个点走到其他的点, 最终完成遍历
-            for (int j = 0; j < pl; j++) {
-                int pEnergy = cEnergy - dis[i][j], pMask = cMask;
-                if (pEnergy < 0 || j == i) continue; // 无法走到或者相同的点
-
-                // 检查是否需要更新下一步的 mask 以及 energy
-                switch (grid[points.get(j)[0]][points.get(j)[1]]) {
-                    case 'L' -> {
-                        // 已经收集过了就没必要再收集了
-                        if ((pMask & (1 << id.get(j))) != 0) {
-                            continue;
-                        }
-                        // 收集一个垃圾
-                        pMask |= 1 << id.get(j);
-                    }
-                    case 'R' -> pEnergy = energy; // 恢复能量
-                }
-
-                int pStep = cStep + dis[i][j];
-                if (pStep < seen[j][pEnergy][pMask]) {
-                    seen[j][pEnergy][pMask] = pStep;
-                    queue.add(new int[]{j, pEnergy, pMask, pStep});
-                }
+                dfs(i, pEnergy, pMask, fromStart[i]);
             }
         }
 
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
+
+    private int[][] dis = null;
+    private char[][] grid = null;
+    private int[][][] seen = null;
+    private int energy = 0, allMask = 0;
+    private int ans = Integer.MAX_VALUE;
+
+    private void dfs(int i, int energy, int mask, int step) {
+        if (mask == allMask) { ans = Math.min(ans, step); return; }
+
+        for (int j = 0; j < points.size(); j++) {
+            int nextEnergy = energy - dis[i][j], nextMask = mask;
+            if (nextEnergy < 0 || j == i) continue; // 无法走到或者相同的点
+
+            // 检查是否需要更新下一步的 mask 以及 energy
+            switch (grid[points.get(j)[0]][points.get(j)[1]]) {
+                case 'L' -> {
+                    // 已经收集过了就没必要再收集了
+                    if ((nextMask & (1 << id.get(j))) != 0) {
+                        continue;
+                    }
+                    // 收集一个垃圾
+                    nextMask |= 1 << id.get(j);
+                }
+                case 'R' -> nextEnergy = this.energy; // 恢复能量
+            }
+
+            int nextStep = step + dis[i][j];
+            if (nextStep < seen[j][nextEnergy][nextMask] && nextStep < ans) {
+                seen[j][nextEnergy][nextMask] = nextStep;
+                dfs(j, nextEnergy, nextMask, nextStep);
+            }
+        }
+    }
+
+    private static final int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
     // 计算从 (x, y) 到 points 中每个点的最短距离
     private int[] distance(char[][] grid, int x, int y, List<int[]> points) {
