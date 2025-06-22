@@ -32,6 +32,7 @@ package weekly.w446.D;
 
 public class Solution {
 
+    @SuppressWarnings("DuplicatedCode")
     private static class SegmentTree {
         private static class Item {
             private final int mul;
