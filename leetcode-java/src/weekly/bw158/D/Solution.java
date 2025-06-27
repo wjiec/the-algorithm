@@ -1,5 +1,7 @@
 package weekly.bw158.D;
 
+import ability.Benchmark;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,53 +37,78 @@ public class Solution {
     private final List<Integer>[] g = new List[501];
     { Arrays.setAll(g, i -> new ArrayList<>()); }
 
-    public int goodSubtreeSum(int[] vals, int[] par) {
-        for (int i = 1; i < par.length; i++) g[par[i]].add(i);
-
-        int ans = 0;
-        for (var v : dfs(0, vals)) ans = (ans + v) % MOD;
-        System.out.println(ans);
-        return ans;
+    /** @noinspection unchecked*/
+    private static final List<Integer>[] xor = new List[MASK]; // sum(xor) = 57002
+    static {
+        Arrays.setAll(xor, i -> new ArrayList<>());
+        for (int i = 1; i < MASK; i++) {
+            for (int j = 1; j < MASK; j++) {
+                if ((i & j) == 0) xor[i].add(j);
+            }
+        }
     }
 
-    private int[] dfs(int curr, int[] vals) {
-        int[] ans = new int[MASK];
+    public int goodSubtreeSum(int[] vals, int[] par) {
+        for (int i = 1; i < par.length; i++) g[par[i]].add(i);
+        dfs(0, vals);
+        return (int) ans;
+    }
 
-        int digitSet = 0;
-        boolean[] seen = new boolean[10];
-        for (int v = vals[curr]; v != 0; v /= 10) {
-            int digit = v % 10;
-            if (seen[digit]) { digitSet = -1; break; }
-            seen[digit] = true; digitSet |= 1 << (digit);
-        }
-        if (digitSet > 0) {
-            ans[digitSet] = vals[curr];
+    private long ans = 0;
+
+    private long[] dfs(int curr, int[] vals) {
+        int v = vals[curr], mask = digitMask(v);
+
+        long[] dp = new long[MASK];
+        if (mask > 0) dp[mask] = v;
+        if (g[curr].isEmpty()) {
+            if (mask > 0) ans = (ans + v) % MOD;
+            return mask > 0 ? dp : null;
         }
 
         for (var next : g[curr]) {
-            int[] all = dfs(next, vals);
-            for (int i = 0; i < MASK; i++) {
-                ans[i] = (ans[i] + all[i]) % MOD;
-            }
-
-            // 此时可以进行组合
-            if (digitSet > 0) {
-                for (int j = 1; j < MASK; j++) {
-                    if ((digitSet & j) == 0) {
-                        ans[digitSet] = (ans[digitSet] + all[j]) % MOD;
-                    }
-                }
+            var x = dfs(next, vals);
+            if (x == null) continue;
+            for (int i = 1; i < MASK; i++) {
+                dp[i] = Math.max(dp[i], x[i]);
+                for (int j : xor[i]) dp[i | j] = Math.max(dp[i | j], dp[i] + x[j]);
             }
         }
 
+        long max = 0;
+        for (int i = 1; i < MASK; i++) {
+            if (mask > 0 && (i & mask) == 0) {
+                dp[i | mask] = Math.max(dp[i | mask], dp[i] + v);
+            }
+            max = Math.max(max, dp[i]);
+        }
+
+        ans = (ans + max) % MOD;
+        return max == 0 ? null : dp;
+    }
+
+    private int digitMask(int val) {
+        int ans = 0;
+        for (; val != 0; val /= 10) {
+            int digit = val % 10;
+            if ((ans & (1 << digit)) != 0) return 0;
+            ans |= 1 << digit;
+        }
         return ans;
     }
 
     public static void main(String[] args) {
-        assert new Solution().goodSubtreeSum(new int[]{2, 3}, new int[]{-1, 0}) == 8;
-        assert new Solution().goodSubtreeSum(new int[]{1, 5, 2}, new int[]{-1, 0, 0}) == 15;
-        assert new Solution().goodSubtreeSum(new int[]{34, 1, 2}, new int[]{-1, 0, 1}) == 42;
-        assert new Solution().goodSubtreeSum(new int[]{3, 22, 5}, new int[]{-1, 0, 1}) == 18;
+        Benchmark.benchmark("", () -> {
+            assert new Solution().goodSubtreeSum(new int[]{
+                846213,357140,87350,56497,134265,401732,297081
+            }, new int[]{-1,3,1,0,2,6,4}) == 3256605;
+            assert new Solution().goodSubtreeSum(new int[]{9787, 1916}, new int[]{-1, 0}) == 0;
+
+            assert new Solution().goodSubtreeSum(new int[]{2, 3}, new int[]{-1, 0}) == 8;
+            assert new Solution().goodSubtreeSum(new int[]{1, 5, 2}, new int[]{-1, 0, 0}) == 15;
+            assert new Solution().goodSubtreeSum(new int[]{34, 1, 2}, new int[]{-1, 0, 1}) == 42;
+            assert new Solution().goodSubtreeSum(new int[]{3, 22, 5}, new int[]{-1, 0, 1}) == 18;
+        });
     }
 
 }
