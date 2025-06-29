@@ -2,9 +2,7 @@ package weekly.bw158.D;
 
 import ability.Benchmark;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Q4. Maximum Good Subtree Score
@@ -28,6 +26,7 @@ import java.util.List;
  * Since the answer may be large, return it modulo 1e9 + 7.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private static final int MASK = 1 << 10;
@@ -97,7 +96,71 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        /** @noinspection unchecked*/
+        private final List<Integer>[] g = new List[501];
+        { Arrays.setAll(g, i -> new ArrayList<>()); }
+
+        public int goodSubtreeSum(int[] vals, int[] par) {
+            for (int i = 1; i < par.length; i++) g[par[i]].add(i);
+
+            dfs(0, vals);
+            return (int) ans;
+        }
+
+        private long ans = 0;
+
+        private Map<Integer, Integer> dfs(int curr, int[] vals) {
+            int v = vals[curr], mask = digitMask(v);
+
+            Map<Integer, Integer> dp = new HashMap<>();
+            if (mask > 0) dp.put(mask, v);
+
+            for (var next : g[curr]) {
+                var dp1 = new HashMap<>(dp);
+                var dp2 = dfs(next, vals);
+                for (var e2 : dp2.entrySet()) {
+                    int k2 = e2.getKey(), v2 = e2.getValue();
+                    dp1.merge(k2, v2, Integer::max);
+                    for (var e1 : dp.entrySet()) {
+                        int k1 = e1.getKey(), v1 = e1.getValue();
+                        if ((k1 & k2) != 0) continue;
+                        dp1.merge(k1 | k2, v1 + v2, Integer::max);
+                    }
+                }
+                dp = dp1;
+            }
+
+            int max = 0;
+            for (var x : dp.values()) max = Math.max(max, x);
+            ans = (ans + max) % 1_000_000_007;
+            return dp;
+        }
+
+        private int digitMask(int val) {
+            int ans = 0;
+            for (; val != 0; val /= 10) {
+                int digit = val % 10;
+                if ((ans & (1 << digit)) != 0) return 0;
+                ans |= 1 << digit;
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
+        Benchmark.benchmark("Optimization", () -> {
+//            assert new Optimization().goodSubtreeSum(new int[]{
+//                846213,357140,87350,56497,134265,401732,297081
+//            }, new int[]{-1,3,1,0,2,6,4}) == 3256605;
+//            assert new Optimization().goodSubtreeSum(new int[]{9787, 1916}, new int[]{-1, 0}) == 0;
+//
+//            assert new Optimization().goodSubtreeSum(new int[]{2, 3}, new int[]{-1, 0}) == 8;
+//            assert new Optimization().goodSubtreeSum(new int[]{1, 5, 2}, new int[]{-1, 0, 0}) == 15;
+//            assert new Optimization().goodSubtreeSum(new int[]{34, 1, 2}, new int[]{-1, 0, 1}) == 42;
+            assert new Optimization().goodSubtreeSum(new int[]{3, 22, 5}, new int[]{-1, 0, 1}) == 18;
+        });
+
         Benchmark.benchmark("", () -> {
             assert new Solution().goodSubtreeSum(new int[]{
                 846213,357140,87350,56497,134265,401732,297081

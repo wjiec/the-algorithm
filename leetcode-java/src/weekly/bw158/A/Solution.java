@@ -1,6 +1,7 @@
 package weekly.bw158.A;
 
 import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -43,6 +44,24 @@ public class Solution {
         int u = all.size() - seen.size();
         if (u >= remain) return sum + remain * curr.getKey();
         return dfs(m, curr.getKey(), remain - u, sum + u * curr.getKey(), all);
+    }
+
+    private static class Optimization {
+        public int maxSumDistinctTriplet(int[] x, int[] y) {
+            TreeMap<Integer, Integer> m1 = new TreeMap<>();
+            for (int i = 0; i < x.length; i++) m1.merge(x[i], y[i], Integer::max);
+            if (m1.size() < 3) return -1;
+
+            PriorityQueue<Integer> pq = new PriorityQueue<>();
+            for (var v : m1.values()) {
+                pq.add(v);
+                if (pq.size() > 3) pq.remove();
+            }
+
+            int ans = 0;
+            while (!pq.isEmpty()) ans += pq.remove();
+            return ans;
+        }
     }
 
     public static void main(String[] args) {

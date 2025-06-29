@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static ability.Ability.Math.gcd;
+
 /**
  * Q3. Maximize Subarray GCD Score
  *
@@ -110,6 +112,28 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        public long maxGCDScore(int[] nums, int k) {
+            int[] fac2 = new int[nums.length];
+            for (int i = 0; i < nums.length; i++) {
+                fac2[i] = Integer.numberOfTrailingZeros(nums[i]);
+                nums[i] >>= fac2[i];
+            }
+
+            long ans = 0;
+            for (int l = 0; l < nums.length; l++) {
+                int g = 0; int[] f2 = new int[32]; int x = 31;
+                for (int r = l; r < nums.length; r++) {
+                    g = gcd(g, nums[r]);
+                    f2[fac2[r]]++;
+                    x = Math.min(x, fac2[r]);
+                    ans = Math.max(ans, ((r - l + 1L) * g) << (x + (f2[x] <= k ? 1 : 0)));
+                }
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
         assert new Solution().maxGCDScore(new int[]{
             524692812,996985597,19176074,628687465,965627687,975892415,582472842,44634185,
@@ -134,6 +158,10 @@ public class Solution {
         assert new Solution().maxGCDScore(new int[]{2, 4}, 1) == 8;
         assert new Solution().maxGCDScore(new int[]{3, 5, 7}, 2) == 14;
         assert new Solution().maxGCDScore(new int[]{5, 5, 5}, 1) == 15;
+
+        assert new Optimization().maxGCDScore(new int[]{2, 4}, 1) == 8;
+        assert new Optimization().maxGCDScore(new int[]{3, 5, 7}, 2) == 14;
+        assert new Optimization().maxGCDScore(new int[]{5, 5, 5}, 1) == 15;
     }
 
 }
