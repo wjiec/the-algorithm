@@ -55,14 +55,15 @@ public class Solution {
                 for (int p = l; p <= r; p++) {
                     // 如果反转 [l, r] 范围内的字符, 对于在范围内的索引 p 我们将其表示为 l + i 的相对形式
                     //  - 对于位置 p 的相对索引 i, 它反转之后相对位置在 rev = n - i - 1 处
-                    //      -> n = (r - l)
+                    //      -> n = r - l + 1
                     //      -> p = l + i
                     //          => i = p - l
+                    //
                     //      => rev = n - i - 1
-                    //             = (r - l) - (p - l) - 1
-                    //             = r - l - p + l - 1
-                    //             = r - p - 1
-                    //  - 也就是在 l + (r - p) - 1 位置
+                    //             = (r - l + 1) - (p - l) - 1
+                    //             = r - l  + 1- p + l - 1
+                    //             = r - p
+                    //  - 也就是在 l + (r - p) 位置
                     a = chars1[l + (r - p)] - 'a'; b = chars2[p] - 'a';
                     if (a != b) {
                         if (revCorrect[b][a] == 0) {
