@@ -1,6 +1,8 @@
 package weekly.w454.D;
 
+import ability.trees.LowestCommonAncestor;
 import common.Checker;
+import common.Tag;
 
 import java.util.*;
 
@@ -92,6 +94,36 @@ public class Solution {
             dfs(next.getKey(), curr, newSum, newSlow);
 
             path.remove(path.size() - 1);
+        }
+    }
+
+    @Tag("LCA 最近公共祖先")
+    private static class Optimization {
+        public int[] findMedian(int n, int[][] edges, int[][] queries) {
+            LowestCommonAncestor lca = new LowestCommonAncestor(edges);
+
+            int[] ans = new int[queries.length];
+            for (int i = 0; i < queries.length; i++) {
+                int u = queries[i][0], v = queries[i][1];
+                if (u == v) { ans[i] = u; continue; }
+
+                // 找到两个节点的最近公共祖先
+                int ancestor = lca.query(u, v);
+                // 我们至少要达到一半的距离
+                long dis = lca.distance(u, v), half = (dis + 1) / 2;
+
+                // 如果从 lca 到 u 的距离大于等于 half, 则说明答案在 lca -> u 这一侧
+                if (lca.distance(u) - lca.distance(ancestor) >= half) {
+                    // 先往上跳至多 half - 1, 然后再多跳一步就是至少 half 了
+                    int target = lca.jumpTo(u, half - 1);
+                    ans[i] = lca.kthAncestor(target, 1);
+                } else { // 否则就是在 lca -> v 这一侧
+                    // 从 v 向上至多 dis - half, 就是从 u 出发至少 half
+                    ans[i] = lca.jumpTo(v, dis - half);
+                }
+            }
+
+            return ans;
         }
     }
 

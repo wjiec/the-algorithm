@@ -42,6 +42,19 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        public long maximumProduct(int[] nums, int m) {
+            // 枚举右, 维护左
+            long ans = Long.MIN_VALUE, mi = Long.MAX_VALUE, mx = Long.MIN_VALUE;
+            for (int i = m - 1; i < nums.length; i++) {
+                mi = Math.min(mi, nums[i - m + 1]);
+                mx = Math.max(mx, nums[i - m + 1]);
+                ans = Math.max(ans, Math.max(nums[i] * mi, nums[i] * mx));
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
         assert new Solution().maximumProduct(new int[]{-9,-9,-1,2,-8,10,3,10,0}, 7) == 0;
         assert new Solution().maximumProduct(new int[]{-5,9,4,0,10,-8,-3,9}, 8) == -45;
