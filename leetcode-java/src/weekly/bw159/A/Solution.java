@@ -1,9 +1,6 @@
 package weekly.bw159.A;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Q1. Minimum Adjacent Swaps to Alternate Parity
@@ -62,6 +59,42 @@ public class Solution {
             }
         }
         return ans;
+    }
+
+    private static class Optimization {
+        public int minSwaps(int[] nums) {
+            int n = nums.length;
+            // 记录所有的 1 的位置, 然后枚举 1 的位置放在 0 2 4 ... 还是放在 1 3 5 ...
+            //  - 可以枚举将每个 1 移动到应该要去的位置, 则剩下的空位肯定都是 0 满足要求的
+            List<Integer> ones = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                if ((nums[i] & 1) == 1) ones.add(i);
+            }
+
+            // 奇数的数量是 odd, 偶数的数量是 n - odd, 两者的差的绝对值
+            // 不能超过 1, 也就是 |odd - (n - odd)| <= 1
+            //  = |n -  2 * odd| <= 1
+            if (Math.abs(nums.length - 2 * ones.size()) > 1) return -1;
+
+            return Math.min(minSwaps(ones, 0, n), minSwaps(ones, 1, n));
+        }
+
+        private int minSwaps(List<Integer> ones, int start, int n) {
+            // 计算当所有的奇数位于 start, start + 2, start + 4, ... 位置时的最小移动步数
+            //  - 也就是从 start 位置开始计算, 能分出多少个相邻组, 每个相邻组就有 1 个位置
+            //  - 只有一个元素的组也是符合要求的
+            //
+            // 对于 start 开始的位置, 我们可以将 start 之前的裁切掉, 此时就从 start 位置为 0 开始了
+            //  - 剩下的长度时 n - start, 计算二元组的数量, 单独的也算
+            //  - 也就是 (n - start + 1) / 2
+            if ((n - start + 1) / 2 != ones.size()) return Integer.MAX_VALUE;
+
+            int ans = 0;
+            for (int i = start, j = 0; j < ones.size(); i += 2, j++) {
+                ans += Math.abs(ones.get(j) - i);
+            }
+            return ans;
+        }
     }
 
     public static void main(String[] args) {
