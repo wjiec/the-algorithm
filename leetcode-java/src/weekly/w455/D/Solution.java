@@ -1,8 +1,11 @@
 package weekly.w455.D;
 
+import ability.Benchmark;
 import common.Checker;
 
 import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -73,6 +76,7 @@ public class Solution {
         record Step(int mask, int stage, double ans) {}
         Queue<Step> q1 = new ArrayDeque<>();
         q1.add(new Step(MASK, 0, 0));
+        Map<Integer, Double> seen = new HashMap<>();
         while (!q1.isEmpty()) {
             var curr = q1.remove();
             if (curr.mask == 0) { ans = Math.min(ans, curr.ans); continue; }
@@ -84,10 +88,11 @@ public class Solution {
                 if (bitCount[i] <= k && (curr.mask & i) == i) {
                     // 过河时间
                     double d = maxTime[i] * mul[curr.stage];
+                    if (curr.ans + d > ans) break;
                     // 如果没人留在营地了, 那么就可以直接过了
                     if ((curr.mask ^ i) == 0) {
                         q1.add(new Step(0, 0, curr.ans + d));
-                        continue;
+                        break;
                     }
 
                     // 否则还需要找一个人回来继续接人, 已经过去了 ~curr.mask | i 个人, 从他们里找一个回去
@@ -98,7 +103,12 @@ public class Solution {
                             int moveStage = (curr.stage + (int) (d)) % m;
                             double returnTime = time[j] * mul[moveStage];
                             // 现在还剩下的人是刚回来的 returnMember 和剩余的人
-                            q1.add(new Step((curr.mask ^ i) | (1 << j), (moveStage + (int) returnTime) % m, curr.ans + d + returnTime));
+                            int newMask = (curr.mask ^ i) | (1 << j), newStage = (moveStage + (int) returnTime) % m;
+                            int key = (newMask << 3) | newStage; double newAns = curr.ans + d + returnTime;
+                            if (!seen.containsKey(key) || seen.get(key) > newAns) {
+                                seen.put(key, newAns);
+                                q1.add(new Step(newMask, newStage, newAns));
+                            }
                         }
                     }
                 }
@@ -109,11 +119,13 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        assert Checker.check(new Solution().minTime(3, 5, 5, new int[]{83,2,53}, new double[]{1.98,0.75,1.28,0.57,1.88}), 161.14);
+        Benchmark.benchmark("", () -> {
+            assert Checker.check(new Solution().minTime(10, 2, 3, new int[]{86,30,83,17,34,87,22,47,14,88}, new double[]{1.72,0.94,1.55}), 509.97000);
+        });
 
+        assert Checker.check(new Solution().minTime(3, 5, 5, new int[]{83,2,53}, new double[]{1.98,0.75,1.28,0.57,1.88}), 161.14);
         assert Checker.check(new Solution().minTime(3, 2, 4, new int[]{57,80,46}, new double[]{1.37,1.81,0.52,1.66}), 240.53);
         assert new Solution().minTime(1, 3, 4, new int[]{63}, new double[]{1.88,1.78,1.54,1.77}) == 118.44;
-
         assert new Solution().minTime(1, 1, 2, new int[]{5}, new double[]{1.0,1.3}) == 5.0;
         assert new Solution().minTime(3, 2, 3, new int[]{2,5,8}, new double[]{1.0,1.5,0.75}) == 14.5;
         assert new Solution().minTime(2, 1, 2, new int[]{10,10}, new double[]{2.0,2.0}) == -1.0;
