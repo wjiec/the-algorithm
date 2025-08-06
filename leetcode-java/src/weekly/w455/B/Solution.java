@@ -3,6 +3,7 @@ package weekly.w455.B;
 import common.PrettyPrinter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -82,7 +83,32 @@ public class Solution {
         return dp[target];
     }
 
+    private static class Optimization {
+        public List<Integer> findCoins(int[] numWays) {
+            int max = 0;
+            for (var v : numWays) max = Math.max(max, v);
+
+            List<Integer> ans = new ArrayList<>();
+            int[] dp = new int[numWays.length + 1]; dp[0] = 1;
+            for (int i = 0, j = 1; i < numWays.length; i++, j++) {
+                if (dp[j] == numWays[i]) continue; // 在 coins 中没有 i
+                if (numWays[i] - 1 != dp[j]) return Collections.emptyList(); // 无解
+
+                ans.add(j);
+                // 现在我们得到了一个面值为 j 的硬币, 计算完全背包
+                for (int k = j; k <= numWays.length; k++) {
+                    if ((dp[k] += dp[k - j]) > max) return Collections.emptyList();
+                }
+            }
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
+        PrettyPrinter.println(new Optimization().findCoins(new int[]{0,1,0,2,0,3,0,4,0,5}));
+        PrettyPrinter.println(new Optimization().findCoins(new int[]{1,2,2,3,4}));
+        PrettyPrinter.println(new Optimization().findCoins(new int[]{1,2,3,4,15}));
+
         PrettyPrinter.println(new Solution().findCoins(new int[]{0,1,0,2,0,3,0,4,0,5}));
         PrettyPrinter.println(new Solution().findCoins(new int[]{1,2,2,3,4}));
         PrettyPrinter.println(new Solution().findCoins(new int[]{1,2,3,4,15}));

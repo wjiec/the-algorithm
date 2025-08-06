@@ -3,10 +3,7 @@ package weekly.w455.D;
 import ability.Benchmark;
 import common.Checker;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Q4. Minimum Time to Transport All Individuals
@@ -118,7 +115,86 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        public double minTime(int n, int k, int m, int[] time, double[] mul) {
+            final int MAX_N = 1 << n;
+            // 我们将 {stage, mask} 作为图中的一个节点, 从这个节点可以到达 {stage', mask'}
+            //  - 此时这就构成了一个有向图, 此时可以通过 dijkstra 算法进行求解
+
+            // 预处理每个子集的 time 最大值
+            int[] maxTime = new int[MAX_N];
+            for (int i = 0; i < n; i++) {
+                int bitset = 1 << i, val = time[i];
+                // 其实就是枚举在之前的所有情况下加上当前这一个人的情况
+                //  - 1 [a, b, c, d] (a, b, c, d 表示由之前人组成的所有可能性)
+                //    ^ curr
+                for (int mask = 0; mask < bitset; mask++) {
+                    maxTime[bitset | mask] = Math.max(maxTime[mask], val);
+                    // 如果人数超过 k 了, 那么就是不允许的
+                    if (Integer.bitCount(bitset | mask) > k) {
+                        maxTime[bitset | mask] = Integer.MAX_VALUE;
+                    }
+                }
+            }
+
+            double[][] dis = new double[m][MAX_N];
+            for (var row : dis) Arrays.fill(row, Double.MAX_VALUE);
+
+            record Step(int stage, int mask, double dis) {}
+            PriorityQueue<Step> pq = new PriorityQueue<>(Comparator.comparingDouble(v -> v.dis));
+            pq.add(new Step(0, MAX_N - 1, 0));
+
+            while (!pq.isEmpty()) {
+                var curr = pq.remove();
+                if (curr.mask == 0) return curr.dis;
+                if (curr.dis > dis[curr.stage][curr.mask]) continue;
+
+                // 枚举接下来哪些人坐这个船过去(枚举 curr.mask 的子集)
+                for (int subset = curr.mask; subset > 0; subset = (subset - 1) & curr.mask) {
+                    if (maxTime[subset] == Integer.MAX_VALUE) continue;
+
+                    // 这批人过河的代价以及过河之后新的阶段
+                    double cost1 = maxTime[subset] * mul[curr.stage];
+                    int stage1 = (curr.stage + (int) cost1) % m;
+
+                    // 如果所有人都过河了, 那就不需要再找一个人回来了
+                    if (subset == curr.mask) {
+                        if (curr.dis + cost1 < dis[stage1][0]) {
+                            dis[stage1][0] = curr.dis + cost1;
+                            pq.add(new Step(stage1, 0, curr.dis + cost1));
+                        }
+                        continue;
+                    }
+
+                    // 所有人是 (MAX_N - 1), 当前人是 curr.mask, 过去的人是 subset
+                    //  - 已经过去的人就是 ((MAX_N - 1) ^ curr.mask) | subset
+                    for (int s = (MAX_N - 1) ^ curr.mask ^ subset, lb = 0; s > 0; s ^= lb) {
+                        lb = s & -s; // 取到最小位置的 1
+
+                        double cost2 = maxTime[lb] * mul[stage1];
+                        int stage2 = (stage1 + (int) cost2) % m;
+                        if (curr.dis + cost1 + cost2 < dis[stage2][curr.mask ^ subset ^ lb]) {
+                            dis[stage2][curr.mask ^ subset ^ lb] = curr.dis + cost1 + cost2;
+                            pq.add(new Step(stage2, curr.mask ^ subset ^ lb, curr.dis + cost1 + cost2));
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+    }
+
     public static void main(String[] args) {
+        Benchmark.benchmark("Optimization", () -> {
+            assert Checker.check(new Optimization().minTime(10, 2, 3, new int[]{86,30,83,17,34,87,22,47,14,88}, new double[]{1.72,0.94,1.55}), 509.97000);
+            assert Checker.check(new Optimization().minTime(3, 5, 5, new int[]{83,2,53}, new double[]{1.98,0.75,1.28,0.57,1.88}), 161.14);
+            assert Checker.check(new Optimization().minTime(3, 2, 4, new int[]{57,80,46}, new double[]{1.37,1.81,0.52,1.66}), 240.53);
+            assert new Optimization().minTime(1, 3, 4, new int[]{63}, new double[]{1.88,1.78,1.54,1.77}) == 118.44;
+            assert new Optimization().minTime(1, 1, 2, new int[]{5}, new double[]{1.0,1.3}) == 5.0;
+            assert new Optimization().minTime(3, 2, 3, new int[]{2,5,8}, new double[]{1.0,1.5,0.75}) == 14.5;
+            assert new Optimization().minTime(2, 1, 2, new int[]{10,10}, new double[]{2.0,2.0}) == -1.0;
+        });
+
         Benchmark.benchmark("", () -> {
             assert Checker.check(new Solution().minTime(10, 2, 3, new int[]{86,30,83,17,34,87,22,47,14,88}, new double[]{1.72,0.94,1.55}), 509.97000);
         });
