@@ -2,6 +2,8 @@ package weekly.w456.C;
 
 import ability.Benchmark;
 
+import java.util.Arrays;
+
 /**
  * Q3. Partition Array to Minimize XOR
  *
@@ -61,9 +63,57 @@ public class Solution {
         return dp[nums.length][k];
     }
 
+    private static class Optimization {
+        public int minXor(int[] nums, int k) {
+            return dfs(nums, k, nums.length - 1);
+        }
+
+        private final int[] memo = new int[1 << 16];
+        { Arrays.fill(memo, -1); }
+
+        // 将 [0, r] 分成 k 段的最小异或值
+        private int dfs(int[] nums, int k, int r) {
+            // 如果不需要分段的情况下, 我们需要保证数组的长度必须为 0
+            if (k == 0) return r < 0 ? 0 : Integer.MAX_VALUE;
+            if (memo[(k << 8) | r] != -1) return memo[(k << 8) | r];
+
+            int ans = Integer.MAX_VALUE;
+            // 从右往左枚举当前正在划分的左端点 l, 区间为 [l, r]
+            //  - 我们需要为左边至少保留 k - 1 个数字
+            //      - 也就是下标 l 必须要大于 k - 2 (共有 (k - 2) + 1 个数字)
+            for (int xor = 0, l = r; l > k - 2; l--) {
+                xor ^= nums[l];
+                ans = Math.min(ans, Math.max(xor, dfs(nums, k - 1, l - 1)));
+            }
+            return memo[(k << 8) | r] = ans;
+        }
+    }
+
+    private static class Iteration {
+        public int minXor(int[] nums, int k) {
+            // dp[i][j] 表示将 [0, j) 分成 i 段的最小异或值
+            int[][] dp = new int[k + 1][nums.length + 1];
+            // 对于分成 0 段, 只有 [0, 0) 是合法的, 其他情况都无法做到
+            Arrays.fill(dp[0], Integer.MAX_VALUE); dp[0][0] = 0;
+            // 枚举分成多少段
+            for (int i = 1; i <= k; i++) {
+                Arrays.fill(dp[i], Integer.MAX_VALUE);
+                // 枚举当前最右边的端点 j, 至少要在位置 i - 1 (也就是要有 i 个数), 右边至少要保留 k - i 个数
+                for (int j = i - 1; j < nums.length - (k - i); j++) {
+                    // 还需要枚举左边的端点 l, 组成区间 [l, j]
+                    for (int l = j, xor = 0; l > i - 2; l--) {
+                        xor ^= nums[l];
+                        dp[i][j + 1] = Math.min(dp[i][j + 1], Math.max(xor, dp[i - 1][l]));
+                    }
+                }
+            }
+            return dp[k][nums.length];
+        }
+    }
+
     public static void main(String[] args) {
         Benchmark.benchmark("", () -> {
-            assert new Solution().minXor(new int[]{
+            assert new Iteration().minXor(new int[]{
                 402812614,594053513,374931791,966905619,324922400,487860861,543071456,190580767,
                 491346731,340697620,23978457,921525569,256400484,67466780,779986522,913819918,
                 637472497,493972831,453655164,472288578,361157715,154544305,57376456,62083851,

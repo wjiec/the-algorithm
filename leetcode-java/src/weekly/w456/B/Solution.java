@@ -19,24 +19,8 @@ import java.util.TreeMap;
  * if none share a common prefix, then answer[i] should be 0.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
-
-    private static class Trie {
-        private int v1 = -99, v2 = -99;
-        private final Trie[] tries = new Trie[26];
-        public static int[] walk(Trie root, char[] chars, int i) {
-            int d1 = 0, d2 = 0;
-            for (int j = 0; j < chars.length; j++) {
-                int c = chars[j] - 'a';
-                if (root.tries[c] == null) root.tries[c] = new Trie();
-
-                if (root.v1 == i - 1 || root.v2 == i - 1) d1 = j + 1;
-                if (root.v1 == i - 2 || root.v2 == i - 2) d2 = j + 1;
-                if (root.v1 < root.v2) root.v1 = i; else root.v2 = i;
-            }
-            return new int[]{d1, d2};
-        }
-    }
 
     public int[] longestCommonPrefix(String[] words) {
         int n = words.length;
@@ -48,37 +32,76 @@ public class Solution {
         //  - 对于相邻对, 则会删除 j, j - 1
         //  - 但是会新增一个 (i - 1, i + 1)
 
-        Trie trie = new Trie();
-        int[][] dp = new int[words.length - 1][2];
-        TreeMap<Integer, Integer> cnt = new TreeMap<>(); cnt.put(0, 1);
-        for (int i = 0; i < words.length; i++) {
-            var curr = Trie.walk(trie, words[i].toCharArray(), i);
-            if (i >= 1) {
-                dp[i - 1] = curr;
-                cnt.merge(curr[0], 1, Integer::sum);
-            }
+        int[] cp = new int[n - 1];
+        TreeMap<Integer, Integer> m = new TreeMap<>(); m.put(0, 1);
+        for (int i = 0; i < n - 1; i++) {
+            cp[i] = longestCommonPrefix(words, i, i + 1);
+            m.merge(cp[i], 1, Integer::sum);
         }
 
         int[] ans = new int[n];
         for (int i = 0; i < n; i++) {
-            // 移除当前位置 i, 会使得 i - 1, i + 1 相邻
-            //  - 移除 i - 1 和 i 的 d1 位置
-            //  - 新增 i + 1 的 d2 位置
-            if (i > 0) cnt.merge(dp[i - 1][0], -1, (a, b) -> (a + b == 0) ? null : (a + b));
-            if (i < dp.length) cnt.merge(dp[i][0], -1, (a, b) -> (a + b == 0) ? null : (a + b));
-
-            // 计算最大值
-            ans[i] = Math.max(cnt.lastKey(), i < dp.length ? dp[i][1] : 0);
-
-            // 恢复位置 i
-            if (i > 0) cnt.merge(dp[i - 1][0], 1, Integer::sum);
-            if (i < dp.length) cnt.merge(dp[i][0], 1, Integer::sum);
-
+            // 移除 cp[i] 和 cp[i - 1]
+            if (i < cp.length) m.merge(cp[i], -1, (a, b) -> (a + b == 0) ? null : (a + b));
+            if (i - 1 >= 0) m.merge(cp[i - 1], -1, (a, b) -> (a + b == 0) ? null : (a + b));
+            ans[i] = Math.max(m.lastKey(), longestCommonPrefix(words, i - 1, i + 1));
+            // 恢复 cp[i] 和 cp[i - 1]
+            if (i < cp.length) m.merge(cp[i], 1, Integer::sum);
+            if (i - 1 >= 0) m.merge(cp[i - 1], 1, Integer::sum);
         }
         return ans;
     }
 
+    private int longestCommonPrefix(String[] words, int i, int j) {
+        if (i < 0 || j >= words.length) return 0;
+        int minLen = Math.min(words[i].length(), words[j].length());
+        for (int k = 0; k < minLen; k++) {
+            if (words[i].charAt(k) != words[j].charAt(k)) {
+                return k;
+            }
+        }
+        return minLen;
+    }
+
+    private static class Optimization {
+        int[] longestCommonPrefix(String[] words) {
+            int[] cp = new int[words.length - 1];
+            for (int i = 1; i < words.length; i++) {
+                cp[i - 1] = lcp(words, i - 1, i);
+            }
+
+            // prefix[i] 表示在原字符串中 [0, i] 的相邻对的最大公共长度
+            int[] prefix = new int[cp.length + 1];
+            for (int i = 0; i < cp.length; i++) prefix[i + 1] = Math.max(prefix[i], cp[i]);
+
+            // suffix[i] 表示在原字符串中 [i, n) 的相邻对的最大公共长度
+            int[] suffix = new int[cp.length + 1];
+            for (int i = cp.length - 1; i >= 0; i--) {
+                suffix[i] = Math.max(suffix[i + 1], cp[i]);
+            }
+
+            int[] ans = new int[words.length];
+            for (int i = 0; i < words.length; i++) {
+                ans[i] = Math.max(Math.max(i > 0 ? prefix[i - 1] : 0, i + 1 < words.length ? suffix[i + 1] : 0), lcp(words, i - 1, i + 1));
+            }
+
+            return ans;
+        }
+
+        private int lcp(String[] words, int i, int j) {
+            if (i < 0 || j >= words.length) return 0;
+            int minLen = Math.min(words[i].length(), words[j].length());
+            for (int k = 0; k < minLen; k++) {
+                if (words[i].charAt(k) != words[j].charAt(k)) return k;
+            }
+            return minLen;
+        }
+    }
+
     public static void main(String[] args) {
+        assert Checker.check(new Optimization().longestCommonPrefix(new String[]{"jump","run","run","jump","run"}), new int[]{3,0,0,3,3});
+        assert Checker.check(new Optimization().longestCommonPrefix(new String[]{"dog","racer","car"}), new int[]{0,0,0});
+
         assert Checker.check(new Solution().longestCommonPrefix(new String[]{"jump","run","run","jump","run"}), new int[]{3,0,0,3,3});
         assert Checker.check(new Solution().longestCommonPrefix(new String[]{"dog","racer","car"}), new int[]{0,0,0});
     }
