@@ -21,6 +21,7 @@ import java.util.*;
  * Return the minimum time required to reach node n - 1. If it is impossible, return -1.
  */
 
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     public int minTime(int n, int[][] edges) {
@@ -50,6 +51,34 @@ public class Solution {
             }
         }
         return seen[n - 1] == Integer.MAX_VALUE ? -1 : seen[n - 1];
+    }
+
+    private static class Optimization {
+        @SuppressWarnings("unchecked")
+        public int minTime(int n, int[][] edges) {
+            List<int[]>[] g = new List[n];
+            Arrays.setAll(g, i -> new ArrayList<>());
+            for (var edge : edges) g[edge[0]].add(edge);
+
+            int[] seen = new int[n]; Arrays.fill(seen, Integer.MAX_VALUE);
+            PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(v -> v[1]));
+
+            pq.add(new int[]{0, 0}); seen[0] = 0;
+            while (!pq.isEmpty()) {
+                var curr = pq.remove();
+                int node = curr[0], time = curr[1];
+                if (time > seen[node]) continue;
+                if (node == n - 1) return time;
+
+                for (var next : g[node]) {
+                    int arrivedTime = Math.max(time, next[2]) + 1;
+                    if (time <= next[3] && arrivedTime < seen[next[1]]) {
+                        pq.add(new int[]{next[1], seen[next[1]] = arrivedTime});
+                    }
+                }
+            }
+            return -1;
+        }
     }
 
     public static void main(String[] args) {

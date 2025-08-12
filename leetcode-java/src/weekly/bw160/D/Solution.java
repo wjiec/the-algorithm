@@ -1,5 +1,12 @@
 package weekly.bw160.D;
 
+import ability.Ability;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static ability.Ability.Math.gcd;
+
 /**
  * Q4. Minimum Stability Factor of Array
  *
@@ -25,7 +32,49 @@ package weekly.bw160.D;
 public class Solution {
 
     public int minStable(int[] nums, int maxC) {
-        return 1;
+        int l = -1, r = nums.length / (maxC + 1);
+        while (l + 1 < r) {
+            int mid = l + (r - l) / 2;
+            if (check(nums, maxC, mid)) r = mid;
+            else l = mid;
+        }
+        return r;
+    }
+
+    private boolean check(int[] nums, int maxC, int maxLen) {
+        // [子数组 GCD, 最小的左端点]
+        List<int[]> intervals = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int v = nums[i];
+
+            // 计算以 i 为右端点的子数组 GCD
+            for (var interval : intervals) {
+                interval[0] = gcd(interval[0], v);
+            }
+            // nums[i] 单独作为一个数组
+            intervals.add(new int[]{v, i});
+
+            int len = 1;
+            // 合并 GCD 相同的区域
+            for (int j = 1; j < intervals.size(); j++) {
+                if (intervals.get(j)[0] != intervals.get(j - 1)[0]) {
+                    intervals.set(len++, intervals.get(j));
+                }
+            }
+            intervals.subList(len, intervals.size()).clear();
+
+            // 此时在 intervals 中, 越靠左边 GCD 越小
+            //  - 我们只关心 GCD >= 2 的子数组
+            if (intervals.get(0)[0] == 1) intervals.remove(0);
+
+            // 此时 intervals[0] 的 GCD >= 2 且最长, 取区间左端点作为子数组的最小左端点
+            if (!intervals.isEmpty() && i - intervals.get(0)[1] + 1 > maxLen) {
+                if (maxC-- == 0) return false;
+                // 修改当前数为 1, 此时所有 GCD 都为 1
+                intervals.clear();
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {
