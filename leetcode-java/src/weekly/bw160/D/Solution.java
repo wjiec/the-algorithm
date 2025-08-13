@@ -1,7 +1,5 @@
 package weekly.bw160.D;
 
-import ability.Ability;
-
 import java.util.ArrayList;
 import java.util.List;
 
