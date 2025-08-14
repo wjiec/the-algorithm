@@ -1,10 +1,8 @@
 package weekly.w458.D;
 
-import ability.Ability.UnionFind;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Q4. Longest Palindromic Path in Graph
@@ -22,85 +20,67 @@ import java.util.Set;
  * visiting a set of unique nodes along a valid path.
  */
 
-/** @noinspection unchecked*/
+/** @noinspection unchecked, DuplicatedCode */
 public class Solution {
 
     // 找到图中一条重复点的路径, 使得组成的回文串最长
     //  1 <= n <= 14
     public int maxLen(int n, int[][] edges, String label) {
-        Set<Integer>[] g = new Set[n];
-        Arrays.setAll(g, i -> new HashSet<>());
-        for (var edge : edges) { g[edge[0]].add(edge[1]); g[edge[1]].add(edge[0]); }
-
-        // 只有最多 14 个节点, 枚举所有可能性, 检查是否对应的节点是否能组成一条路径且是回文串
-        int ans = 1;
+        // 枚举回文中心计算找到可能的最大值
         char[] chars = label.toCharArray();
-        for (int i = 1; i < (1 << n); i++) {
-            if (check(n, g, i, chars)) {
-                ans = Math.max(ans, Integer.bitCount(i));
+        int[] count = new int[26];
+        for (var c : chars) count[c - 'a']++;
+
+        // 计算奇数对的数量
+        int oddPair = 0;
+        for (var v : count) oddPair += v & 1;
+
+        // 我们可以选择一个奇数对放在中心, 丢弃其他的奇数对, 然后将偶数对拼在两边
+        int limited = n - Math.max(oddPair - 1 /* 丢弃掉的奇数对 */, 0);
+        // 如果图中的节点两两相联的话, 那么可以得到理论最大数量
+        if (edges.length == n * (n - 1) / 2) return limited;
+
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for (var edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+
+        int[][][] memo = new int[n][n][1 << n];
+        for (var a : memo) for (var b : a) Arrays.fill(b, -1);
+
+        int ans = 0;
+        for (int l = 0; l < n; l++) {
+            // 计算奇数长度的回文串
+            ans = Math.max(ans, dfs(l, l, 1 << l, g, chars, memo) + 1);
+            if (ans == limited) return ans;
+
+            // 计算偶数长度的回文串, 保证 l < r, 因为 (l, r) 和 (r, l) 实际计算出来的结果是一样的
+            for (var r : g[l]) {
+                if (l < r && chars[l] == chars[r]) {
+                    ans = Math.max(ans, dfs(l, r, 1 << l | 1 << r, g, chars, memo) + 2);
+                    if (ans == limited) return ans;
+                }
             }
         }
         return ans;
     }
 
-    // 检查是否能构成回文串
-    private boolean check(int n, Set<Integer>[] g, int mask, char[] chars) {
-        int b = Integer.bitCount(mask);
-        byte[] group = new byte[128];
-        boolean[] bitset = new boolean[n];
-        for (int i = 0; i < n; i++) {
-            if ((mask & (1 << i)) != 0) {
-                group[chars[i]]++;
-                bitset[i] = true;
+    private int dfs(int l, int r, int mask, List<Integer>[] g, char[] chars, int[][][] memo) {
+        if (memo[l][r][mask] != -1) return memo[l][r][mask];
+
+        int ans = 0;
+        for (int ll : g[l]) {
+            // ll 这个点已存在在路径中
+            if ((mask & (1 << ll)) != 0) continue;
+            for (int rr : g[r]) {
+                // rr 这个点已存在在路径中, 或者 rr == ll, 或者字符不同
+                if ((mask & (1 << rr)) != 0 || ll == rr || chars[ll] != chars[rr]) continue;
+                ans = Math.max(ans, dfs(Math.min(ll, rr), Math.max(ll, rr), mask | (1 << ll) | (1 << rr), g, chars, memo) + 2);
             }
         }
-
-        // 检查字符是否能构成回文序列
-        int odd = 0;
-        for (var v : group) odd += v & 1;
-        if (odd > 1 || (odd & 1) != (b & 1)) return false;
-
-        // 连接所有 bitset 的节点
-        UnionFind uf = new UnionFind(n);
-        for (int i = 0; i < n; i++) {
-            if (!bitset[i]) continue;
-            for (var j : g[i]) {
-                if (bitset[j]) uf.union(i, j);
-            }
-        }
-
-        // 检查所有节点是否都连接了
-        int root = -1;
-        for (int i = 0; i < n; i++) {
-            if (bitset[i]) {
-                if (root < 0) root = uf.find(i);
-                else if (uf.find(i) != root) return false;
-            }
-        }
-
-        // 检查能否构成回文串, 枚举中心节点
-        if (odd == 1) {
-            for (int i = 0; i < n; i++) {
-                if (bitset[i] && (group[chars[i]] & 1) == 1) {
-                    return connectivity(g, chars, bitset, i, i);
-                }
-            }
-            return false;
-        }
-
-        // 偶数长度需要枚举双中心
-        for (int i = 0; i < n; i++) {
-            if (!bitset[i]) continue;
-            for (int j = i + 1; j < n; j++) {
-                if (!bitset[j] || !g[i].contains(j) || chars[i] != chars[j]) continue;
-                if (connectivity(g, chars, bitset, i, j)) return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean connectivity(Set<Integer>[] g, char[] chars, boolean[] bitset, int l, int r) {
-        return true;
+        return memo[l][r][mask] = ans;
     }
 
     public static void main(String[] args) {
