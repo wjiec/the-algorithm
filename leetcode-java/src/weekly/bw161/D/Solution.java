@@ -47,11 +47,10 @@ public class Solution {
 
         // 接下来就是枚举所有 depth[i] = k 的所有可选 1 的位数, 填入到 logN 个空位里, 检查有多少种填法
         long ans = 0;
+        for (var row : memo) Arrays.fill(row, -1);
         for (int i = 1; i <= logN; i++) {
             if (depth[i] != k) continue;
-
             // 我们需要在 logN 个空位里填入 i 个 1, 且数值不能超过 n, 使用数位 dp 来解决
-            for (var row : memo) Arrays.fill(row, -1);
             ans += dp(bits, 0, i, true);
         }
         return ans;
