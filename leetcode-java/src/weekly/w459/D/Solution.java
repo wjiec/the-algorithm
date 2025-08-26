@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ability.Ability.Math.gcd;
-
 /**
  * Q4. Count Number of Trapezoids II
  *
@@ -27,8 +25,6 @@ public class Solution {
     // 4 <= points.length <= 500
     // –1000 <= xi, yi <= 1000
     public int countTrapezoids(int[][] points) {
-        int n = points.length;
-        Arrays.sort(points, Comparator.comparingInt(p -> p[0]));
         // 枚举两个点组成一条线, 再枚举两条线平行组成一个梯形
         //  - 不同的两点有 499 * (1 + 499) / 2 = 124750 条边
         //  - 将所有边按照斜率进行分组, 并计算组合数
@@ -36,46 +32,55 @@ public class Solution {
         // 枚举的两条边不能在同一条直线上
         //  - 特殊情况下, 如果所有的点都在同一条直线上, 判断是否能构成四边形会很复杂
         //      - 计算按照这个斜率当 x = 0 时, y 落在哪里来判断是否共线
-        Map<Frac, Map<Frac, Integer>> g = new HashMap<>();
+        //
+        // 如果是个平行四边形, 两条对边也需要进行去重
+        //  - 按照中点去重
+        int n = points.length;
+        Arrays.sort(points, Comparator.comparingInt(p -> p[0]));
+
+        // {k: {b: c}} 表示斜率为 k 且截距为 b 的直线个数
+        Map<Double, Map<Double, Integer>> m1 = new HashMap<>();
+        // {m: {k: c}} 表示直线的中点为 m 且斜率为 k 的直线个数
+        Map<Integer, Map<Double, Integer>> m2 = new HashMap<>();
         for (int i = 0; i < n; i++) {
             int x1 = points[i][0], y1 = points[i][1];
             for (int j = i + 1; j < n; j++) {
                 int x2 = points[j][0], y2 = points[j][1];
-                Frac slope = slope(x1, y1, x2, y2);
-                g.computeIfAbsent(slope, k -> new HashMap<>())
-                    .merge(intercept(slope, x1, y1), 1, Integer::sum);
+
+                double dx = x2 - x1, dy = y2 - y1;
+                // 求斜率 k = dy / dx, 如果 dx = 0 也就是直线垂直于 x 轴, 我们使用 INF 表示
+                double k = dx == 0 ? Double.MAX_VALUE : (dy / dx);
+                // 求截距 b = y - kx = y - dy / dx * x = y - (dy * x) / dx = (y * dx - x * dy) / dx
+                //  - 如果直线垂直于 x 轴, 则直接使用 x 值作为截距
+                double b = dx == 0 ? x1 : ((y1 * dx - x1 * dy) / dx);
+                // 计算直线的中点并压缩
+                int mid = (x1 + x2 + 2500) << 16 | (y1 + y2 + 2500);
+
+                // 归一化 k 和 b
+                if (k == -0) k = 0;
+                if (b == -0) b = 0;
+
+                m1.computeIfAbsent(k, kk -> new HashMap<>()).merge(b, 1, Integer::sum);
+                m2.computeIfAbsent(mid, kk -> new HashMap<>()).merge(k, 1, Integer::sum);
             }
         }
 
         int ans = 0;
-        for (var groups : g.values()) {
-            int total = 0;
-            for (var v : groups.values()) total += v;
-            for (var v : groups.values()) {
-                total -= v;
-                ans += v * total;
+        for (var group : m1.values()) {
+            int sum = 0;
+            for (var v : group.values()) {
+                ans += sum * v; sum += v;
+            }
+        }
+
+        // 去掉平行四边形的重复统计
+        for (var group : m2.values()) {
+            int sum = 0;
+            for (var v : group.values()) {
+                ans -= sum * v; sum += v;
             }
         }
         return ans;
-    }
-
-    private record Frac(int numerator, int denominator) {}
-
-    private Frac slope(int x1, int y1, int x2, int y2) {
-        return frac(y2 - y1, x2 - x1);
-    }
-
-    private Frac intercept(Frac slope, int x1, int y1) {
-        if (slope.denominator == 0) return new Frac(x1, 0);
-        return frac(slope.denominator * y1 - slope.numerator * x1, slope.denominator);
-    }
-
-    private Frac frac(int dy, int dx) {
-        if (dy == 0) return new Frac(0, Integer.MAX_VALUE);
-        if (dx == 0) return new Frac(Integer.MAX_VALUE, 0);
-
-        int gcd = gcd(Math.abs(dy), Math.abs(dx));
-        return new Frac(dy / gcd, dx / gcd);
     }
 
     public static void main(String[] args) {

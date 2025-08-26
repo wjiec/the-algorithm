@@ -103,9 +103,10 @@ public class PrettyPrinter {
         if (!cl.isArray()) {
             if (object instanceof Boolean) {
                 return (Boolean) object ? "T" : "F";
-            }
-            if (object instanceof Collection<?>) {
+            } else if (object instanceof Collection<?>) {
                 return toString(((Collection<?>) object).toArray(), new Indent());
+            } else if (object instanceof Map<?,?>) {
+                return toString((Map<?,?>) object, new Indent());
             }
             return object.toString();
         }
@@ -120,20 +121,33 @@ public class PrettyPrinter {
         }
 
         StringBuilder sb = new StringBuilder();
-        if (object.getClass().getComponentType().isArray()) {
+        if (object.getClass().getComponentType() != null && object.getClass().getComponentType().isArray()) {
             sb.append(indent).append("[\n");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
                 sb.append(toString(Array.get(object, i), indent.next()))
                     .append(i == l - 1 ? "" : ", ").append("\n");
             }
             sb.append(indent).append("]");
-        } else {
+        } else if (object.getClass().isArray()) {
             sb.append(indent).append("[");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
                 sb.append(toString(Array.get(object, i)))
                     .append(i == l - 1 ? "" : ", ");
             }
             sb.append("]");
+        } else if (object instanceof Map<?,?>) {
+            sb.append("{\n");
+            for (var kv : ((Map<?, ?>) object).entrySet()) {
+                sb.append(toString(kv.getKey(), indent.next())).append(": ");
+                if (kv.getValue().getClass().isPrimitive()) {
+                    sb.append(toString(kv.getValue())).append(",\n");
+                } else {
+                    sb.append(toString(kv.getValue(), indent.next())).append(",\n");
+                }
+            }
+            sb.append(indent).append("}");
+        } else {
+            sb.append(indent).append(object);
         }
         return sb.toString();
     }
