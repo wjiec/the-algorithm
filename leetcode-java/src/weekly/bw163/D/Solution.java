@@ -129,7 +129,55 @@ public class Solution {
         }
     }
 
+    private static class Optimization2 {
+        public int minCost(int[][] grid, int k) {
+            int m = grid.length, n = grid[0].length, maxValue = 0;
+            for (var row : grid) {
+                for (var v : row) maxValue = Math.max(maxValue, v);
+            }
+
+            int[] prevMin = new int[maxValue + 2];
+            Arrays.fill(prevMin, Integer.MAX_VALUE);
+            int[][][] dp = new int[k + 1][m + 1][n + 1];
+            for (int i = 0; i <= k; i++) {
+                int[] currMin = new int[maxValue + 2];
+                Arrays.fill(currMin, Integer.MAX_VALUE);
+                for (var row : dp[i]) Arrays.fill(row, Integer.MAX_VALUE / 2);
+
+                dp[i][1][0] = dp[i][0][1] = -grid[0][0];
+                for (int x = 1; x <= m; x++) {
+                    for (int y = 1; y <= n; y++) {
+                        int v = grid[x - 1][y - 1];
+
+                        // 直接移动一步进行转移
+                        dp[i][x][y] = Math.min(dp[i][x - 1][y], dp[i][x][y - 1]) + grid[x - 1][y - 1];
+                        // 从 >= grid[x - 1][y - 1] 的位置转移
+                        dp[i][x][y] = Math.min(dp[i][x][y], prevMin[v]);
+
+                        currMin[grid[x - 1][y - 1]] = Math.min(currMin[v], dp[i][x][y]);
+                    }
+                }
+
+                // 计算后缀最小值
+                for (int x = maxValue; x >= 0; x--) {
+                    prevMin[x] = Math.min(prevMin[x + 1], currMin[x]);
+                }
+            }
+
+            int ans = Integer.MAX_VALUE;
+            for (int i = 0; i <= k; i++) ans = Math.min(ans, dp[i][m][n]);
+            return ans;
+        }
+    }
+
     public static void main(String[] args) {
+        Benchmark.benchmark("Optimization2", () -> {
+            assert new Optimization2().minCost(new int[][]{{19,10}, {23,13}, {16,32}, {38,41}, {30,36}, {53,31}}, 1) == 55;
+            assert new Optimization2().minCost(new int[][]{{3,1},{10,4}}, 7) == 4;
+            assert new Optimization2().minCost(new int[][]{{1,3,3},{2,5,4},{4,3,5}}, 2) == 7;
+            assert new Optimization2().minCost(new int[][]{{1,2},{2,3},{3,4}}, 1) == 9;
+        });
+
         Benchmark.benchmark("Optimization", () -> {
             assert new Optimization().minCost(new int[][]{{19,10}, {23,13}, {16,32}, {38,41}, {30,36}, {53,31}}, 1) == 55;
             assert new Optimization().minCost(new int[][]{{3,1},{10,4}}, 7) == 4;
