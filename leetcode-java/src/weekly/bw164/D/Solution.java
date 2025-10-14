@@ -17,38 +17,52 @@ package weekly.bw164.D;
 public class Solution {
 
     public int minOperations(String s, int k) {
-        int n = s.length(), zero = 0;
-        for (var c : s.toCharArray()) zero += (c & 1) ^ 1;
+        // 字符串 s 的长度是 n, 其中 '0' 的数量为 z, k 是每次操作需要翻转的下标个数
+        //  - 我们假设需要操作的次数是 ans
+        //
+        // 由于我们可以任何选择所要翻转的下标, 所以是与 s 的字符顺序无关的
+        //
+        // 我们的目的是使得字符串 s 中的所有 '0' 都变成 '1'
+        //  - 也就是所有的 '0' 都需要翻转奇数次, 而所有的 '1' 都需要翻转偶数次(保持不变)
+        //
+        // 由于我们一共操作 ans 次, 每次操作需要翻转 k 个下标, 所以一共需要翻转 ans * k 个下标
+        //  - ans * k - z 必须是偶数: 减去 '0' 的翻转次数后就是所有 '1' 的翻转次数
+        //  - ans * k >= z: 翻转的下标个数肯定要至少超过 '0' 的数量
+        //      - 也就是 ans >= ceil(z / k)
+        //
+        // 如果 ans 是一个偶数
+        //  - 由于 '0' 必须翻转奇数次, 所以 '0' 的翻转次数至多为 ans - 1
+        //      - '0' 的翻转次数为: z * (ans - 1), '1' 的翻转次数为: (n - z) * ans
+        //          - z * (ans - 1) + (n - z) * ans >= ans * k
+        //          - 化简得: ans >= ceil(z / (n - k))
+        //  - 组合得 ans >= max(ceil(z / k), ceil(z / (n - k)))
+        //
+        // 如果 ans 是一个奇数
+        //  - 由于 '1' 必须翻转偶数次, 所以 '1' 的翻转次数至多为 ans - 1
+        //      - '1' 的翻转次数为: (n - z) * (ans - 1), '0' 的翻转次数为: z * ans
+        //          - z * ans + (n - z) * (ans - 1) >= ans * k
+        //          - 化简得: ans >= ceil((n - z) / (n - k))
+        //  - 组合得 ans >= max(ceil(z / k), ceil((n - z) / (n - k)))
+        int n = s.length(), z = 0, ans = Integer.MAX_VALUE;
+        for (var c : s.toCharArray()) z += (c & 1) ^ 1;
 
         // 特殊情况直接判断返回
-        if (k == 1) return zero;
-        if (k == n) return zero == k ? 1 : -1;
-        if (zero % k == 0) return zero / k;
+        if (z == 0) return 0;
+        if (n == k) return z == n ? 1 : -1;
 
-        // 一次选择 k 个不同的下标进行翻转
-        //  - 如果有 2 个 0, 和 k - 1 个任意的字符集 s, 我们可以通过 2 次操作将其全部翻转为 1
-        //      - 选择 k - 1 个字符集 s, 和其中一个 0, 将其翻转为 1 和 s'
-        //      - 选择刚刚翻转的字符集 s', 和另外一个 0, 将其翻转为 1 和 s
-        //  - 如果只有 1 个 0, 则需要 k 个 0 一起才能将其翻转为 1
-
-        // 如果 0 的个数为 c, 则有
-        //  - 如果 c 为偶数, 则可以通过至多 c 次操作将其翻转为全为 1 的字符串
-        //      - 如果 k 为偶数, 则可以通过 (c / k) + (c % k) 次操作完成
-        //      - 如果 k 为奇数, 则需要满足 c % (2 * k) == 0, 否则无法完成
-        if (zero % 2 == 0) {
-            if (k % 2 == 0) return (zero / k) + (zero % k);
-
-            // k 为奇数的情况下, 需要使得 k' = 2 * k 能实现翻转
-            return zero % (2 * k) == 0 ? (zero / (2 * k)) : -1;
+        // 如果操作次数 ans 是个偶数
+        if (z % 2 == 0) {
+            int curr = Math.max(((z + k - 1) / k), ((z + (n - k) - 1) / (n - k)));
+            ans = curr + (curr & 1); // 将 ans 调整为一个偶数
         }
 
-        // c 为奇数的情况下, 则需要 k 也要为奇数且 c > k, 否则无法翻转
-        if (k % 2 == 1 && zero > k) {
-            // 删除奇数个 k 集合, 剩下偶数个 c' 就可以用 c' 次完成翻转
-            int g = zero / k; if (g % 2 == 0) g--;
-            return g + (zero - g * k);
+        // 如果操作系数 ans 是个奇数
+        if (z % 2 == k % 2) {
+            int curr = Math.max(((z + k - 1) / k), (((n - z) + (n - k) - 1) / (n - k)));
+            ans = Math.min(ans, curr | 1);
         }
-        return -1;
+
+        return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 
     public static void main(String[] args) {
