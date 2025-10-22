@@ -25,7 +25,10 @@ public class Solution {
         int[] dp = new int[mx = 1 << w];
         for (var v : nums) dp[v] = v;
 
-        // 从小到大枚举所有集合
+        // 从小到大枚举所有集合, 对于一个集合 A, 我们可以从 A 去掉任意一个元素的所有子集转移过来
+        //  - 例如 A = {a, b, c, d}
+        //  - 我们可以取 max({a, b, c}, {a, c, d}, {a, b, d}, {b, c, d}) 进行转移
+        // 也就是我们从最小的集合 {x} 开始递推所有的超集 {x, ?}
         for (int i = 0; i < mx; i++) {
             // 枚举当前集合中的所有元素
             for (int j = 0; j < w; j++) {
