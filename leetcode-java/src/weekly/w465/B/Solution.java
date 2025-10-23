@@ -88,6 +88,35 @@ public class Solution {
         }
     }
 
+    private static class Optimization {
+        public int[] minDifference(int n, int k) {
+            dfs(n, 0, new int[k], Integer.MAX_VALUE, Integer.MIN_VALUE);
+            return ans;
+        }
+
+        private int[] ans = null;
+        private int minDiff = Integer.MAX_VALUE;
+
+        private void dfs(int v, int i, int[] path, int min, int max) {
+            if (i == path.length - 1) {
+                // 最后一个因子就是当前的数 v
+                int diff = Math.max(max, v) - Math.min(min, v);
+                if (diff < minDiff) {
+                    minDiff = diff; path[i] = v; ans = path.clone();
+                }
+                return;
+            }
+
+            // 枚举当前 v 的所有因子
+            for (int d = 1; d <= v; d++) {
+                if (v % d == 0) {
+                    path[i] = d;
+                    dfs(v / d, i + 1, path, Math.min(min, d), Math.max(max, d));
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         assert Checker.check(new Solution().minDifference(1492, 3), new int[]{2,2,373});
 
