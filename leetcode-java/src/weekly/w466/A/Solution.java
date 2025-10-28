@@ -24,6 +24,15 @@ public class Solution {
         return 0;
     }
 
+    private static class Optimization {
+        public int minOperations(int[] nums) {
+            for (int i = 1, v = nums[0]; i < nums.length; i++) {
+                if (nums[i] != v) return 1;
+            }
+            return 0;
+        }
+    }
+
     public static void main(String[] args) {
     }
 

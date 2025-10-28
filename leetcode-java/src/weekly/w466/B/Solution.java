@@ -35,6 +35,15 @@ public class Solution {
         return ans;
     }
 
+    private static class Optimization {
+        public int minOperations(String s) {
+            // 实际上就是找到最小的不为 a 的字符的操作次数
+            char firstChar = 'z' + 1;
+            for (var c : s.toCharArray()) if (c != 'a') firstChar = (char) Math.min(firstChar, c);
+            return 'z' + 1 - firstChar;
+        }
+    }
+
     public static void main(String[] args) {
     }
     

@@ -1,5 +1,7 @@
 package weekly.w466.C;
 
+import common.Tag;
+
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -57,6 +59,25 @@ public class Solution {
             if (gtL[i] != -1 && gtL[i] - i > 1) ans++;
         }
         return ans;
+    }
+
+    @Tag({"单调栈", "比当前位置大的左右位置"})
+    private static class Optimization {
+        public long bowlSubarrays(int[] nums) {
+            int top = -1; long ans = 0;
+            int[] st = new int[nums.length];
+            for (int i = 0; i < nums.length; i++) {
+                while (top >= 0 && nums[st[top]] < nums[i]) {
+                    // 当前值大于栈顶元素, 说明找到了一个在 top 右侧比较大的元素
+                    if (i - st[top--] > 1) ans++;
+                }
+
+                // 如果此时在循环外, 则说明不满足循环, 也就是 top (左侧)是比当前位置大的元素
+                if (top >= 0 && i - st[top] > 1) ans++;
+                st[++top] = i;
+            }
+            return ans;
+        }
     }
 
     public static void main(String[] args) {
