@@ -1,7 +1,5 @@
 package weekly.w467.D;
 
-import common.PrettyPrinter;
-
 /**
  * Q4. Number of Stable Subsequences
  *
