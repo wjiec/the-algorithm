@@ -22,7 +22,7 @@ public class Solution {
 
         k = Math.min(k, s.size());
         int[] ans = new int[k];
-        for (int i = 0; i < k; i++) ans[i] = s.removeLast();
+        for (int i = 0; i < k; i++) ans[i] = s.pollLast();
         return ans;
     }
 
