@@ -1,8 +1,5 @@
 package weekly.bw167.D;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Q4. Maximum Partition Factor
  *
@@ -31,18 +28,21 @@ public class Solution {
         // 将点划分到两个组内, 每个组的划分因子是与这个组内的所有点之间的最小距离
         // 求最大可能划分因子
 
-        // 二分划分, 枚举最大可能划分因子 k, 也就是
+        // 二分处理, 枚举最大可能划分因子 k, 也就是
         //  - 每个点只能加入 A 组或者 B 组
         //  - 新加入的点必须和组内的其他点的最小距离为 k
+        // 如果当前点既可以加入 A 组也可以加入 B 组的话, 我们需要找到一个最优的情况
+
+        // 现在问题变成: 是否可以将一堆点分成 2 个组, 并且每个组之内任意两点的距离不超过 k
+        //  - 每个点只能属于单个组
+        //  - 可能有一个点即可以加入 A 组, 也可以加入 B 组
 
         // 将曼哈顿距离转换为切比雪夫距离
         //  - 也就是对于点 (x, y) 转换到切比雪夫距离为 (x + y, x - y)
         //  - 对于两点之间的切比雪夫距离为 max(|x_a - x_b|, |y_a - y_b|)
-        // 此时在一个组内加入一个点 (x_c, y_c), 我们只需要找到 min(|x_i - x_c|) 和 min(|y_i - y_c|) 即可
-        Point[] pts = new Point[points.length];
-        for (int i = 0; i < points.length; i++) {
-            pts[i] = new Point(points[i][0] + points[i][1], points[i][0] - points[i][1]);
-        }
+        //
+        // 此时在一个组内加入一个点 (x_c, y_c), 我们需要找到距离该点最近的距离是多少
+        //  - 也就是对于组内的所有点 i, 计算 min{ max(|x_c - x_i|, |y_c - y_i|) }
 
         int l = 0, r = (int) (1e9 + 1);
         while (l + 1 < r) {
@@ -50,30 +50,12 @@ public class Solution {
             if (check(points, mid)) l = mid;
             else r = mid;
         }
-        System.out.println(l);
         return l;
     }
 
     // 是否能将所有点分成两组, 且每组内的最小距离为 lower
     private boolean check(int[][] points, int lower) {
-        List<int[]> groupA = new ArrayList<>();
-        List<int[]> groupB = new ArrayList<>();
-        for (var point : points) {
-            // 选择将当前点加入到 a 组
-            if (minDistance(point, groupA) >= lower) groupA.add(point);
-            else if (minDistance(point, groupB) >= lower) groupB.add(point);
-            else return false;
-        }
         return true;
-    }
-
-    private int minDistance(int[] p, List<int[]> group) {
-        // 每个点的计算方式是 max{ |p.x - x|, |p.y - y| }
-        //  - 我们需要找到 p 与这里面所有点的最小距离
-        // 也就是 min{ max{ |p.x - x_1|, |p.y - y_1| }, max{ |p.x - x_2|, |p.y - y_2| } }
-        int ans = Integer.MAX_VALUE;
-        for (var x : group) ans = Math.min(ans, Math.abs(p[0] - x[0]) + Math.abs(p[1] - x[1]));
-        return ans;
     }
 
     public static void main(String[] args) {
