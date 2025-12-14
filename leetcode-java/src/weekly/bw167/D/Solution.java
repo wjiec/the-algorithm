@@ -1,5 +1,7 @@
 package weekly.bw167.D;
 
+import common.Tag;
+
 /**
  * Q4. Maximum Partition Factor
  *
@@ -21,28 +23,11 @@ package weekly.bw167.D;
 
 public class Solution {
 
-    private record Point(int x, int y) {}
-
+    @Tag({"二分图", "二分图染色"})
     public int maxPartitionFactor(int[][] points) {
         if (points.length == 2) return 0;
         // 将点划分到两个组内, 每个组的划分因子是与这个组内的所有点之间的最小距离
         // 求最大可能划分因子
-
-        // 二分处理, 枚举最大可能划分因子 k, 也就是
-        //  - 每个点只能加入 A 组或者 B 组
-        //  - 新加入的点必须和组内的其他点的最小距离为 k
-        // 如果当前点既可以加入 A 组也可以加入 B 组的话, 我们需要找到一个最优的情况
-
-        // 现在问题变成: 是否可以将一堆点分成 2 个组, 并且每个组之内任意两点的距离不超过 k
-        //  - 每个点只能属于单个组
-        //  - 可能有一个点即可以加入 A 组, 也可以加入 B 组
-
-        // 将曼哈顿距离转换为切比雪夫距离
-        //  - 也就是对于点 (x, y) 转换到切比雪夫距离为 (x + y, x - y)
-        //  - 对于两点之间的切比雪夫距离为 max(|x_a - x_b|, |y_a - y_b|)
-        //
-        // 此时在一个组内加入一个点 (x_c, y_c), 我们需要找到距离该点最近的距离是多少
-        //  - 也就是对于组内的所有点 i, 计算 min{ max(|x_c - x_i|, |y_c - y_i|) }
 
         int l = 0, r = (int) (1e9 + 1);
         while (l + 1 < r) {
@@ -55,6 +40,25 @@ public class Solution {
 
     // 是否能将所有点分成两组, 且每组内的最小距离为 lower
     private boolean check(int[][] points, int lower) {
+        // 由于我们要求同组内的任意点的最小曼哈顿距离都大于等于 lower
+        //  - 我们我们在不满足要求的点上连一条边, 使得这两个点必须在二分图中被分到不同的组里
+        //  - 最后我们检查建图之后是否满足二分图划分即可
+
+        // 可能包含多个连通块
+        int[] colors = new int[points.length];
+        for (int i = 0; i < points.length; i++) {
+            if (colors[i] == 0 && !dfs(points, colors, i, 1, lower)) return false;
+        }
+        return true;
+    }
+
+    // 检查是否是二分图
+    private boolean dfs(int[][] points, int[] colors, int i, int c, int lower) {
+        colors[i] = c;
+        for (int j = 0; j < points.length; j++) {
+            if (j == i || Math.abs(points[i][0] - points[j][0]) + Math.abs(points[i][1] - points[j][1]) >= lower) continue;
+            if (colors[j] == c || (colors[j] == 0 && !dfs(points, colors, j, -c, lower))) return false;
+        }
         return true;
     }
 
