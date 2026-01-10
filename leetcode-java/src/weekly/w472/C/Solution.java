@@ -1,5 +1,7 @@
 package weekly.w472.C;
 
+import java.util.Arrays;
+
 /**
  * Q3. Lexicographically Smallest Permutation Greater Than Target
  *
@@ -53,6 +55,38 @@ public class Solution {
             ans[i] = c; freq[c]--;
             dfs(target, i + 1, freq, ans, c > target[i]);
             freq[c]++;
+        }
+    }
+
+    private static class Optimization {
+        public String lexGreaterPermutation(String s, String target) {
+            // freq 中保存的是 s 字符串中剩余可用字符的频率
+            int[] freq = new int[128];
+            for (var c : s.toCharArray()) freq[c]++;
+
+            // 从后往前考虑, 假设要使得第 i 位恰好大于 target[i], 那么 s[0:i] 就需要
+            // 与 target[0:i] 一致, 否则无法实现恰好在 i 位置大于 target
+            //
+            // 我们从后往前枚举, 先把所有字母都从 s 里删掉, 然后再枚举一个个加回来
+            for (var c : target.toCharArray()) freq[c]--;
+            for (int i = target.length() - 1; i >= 0; i--) {
+                freq[target.charAt(i)]++;
+                // 检查 s 前面是否能与 target 保持一致, 也就是在 freq 中不存在负频率
+                if (Arrays.stream(freq).anyMatch(a -> a < 0)) continue;
+
+                // 现在我们可以使得 s 前面与 target 保持一致, 尝试增加当前位的字符
+                for (char c = (char) (target.charAt(i) + 1); c <= 'z'; c++) {
+                    // 我们需要 s 中存在这个字符
+                    if (freq[c] == 0) continue;
+
+                    freq[c]--;
+                    // 然后开始构建字符串, 也就是 [0, i) 是 target, i 是 c, 之后的按照 freq 从小到大排序
+                    StringBuilder sb = (new StringBuilder(target.substring(0, i))).append(c);
+                    for (char x = 'a'; x <= 'z'; x++) sb.append(String.valueOf(x).repeat(freq[x]));
+                    return sb.toString();
+                }
+            }
+            return ""; // unreached
         }
     }
 
