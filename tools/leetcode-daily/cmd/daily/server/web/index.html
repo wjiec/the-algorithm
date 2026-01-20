@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Leetcode Daily Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css">
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .current {
+      padding: 1rem;
+    }
+    .reset-form {
+      padding: .5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="current">
+        <p>Current User: <span id="username">N/A</span>
+          (Combo: <span id="combo">N/A</span>; Today: <span id="today">N/A</span>)</p>
+        <p>Today Question: <span id="question">N/A</span></p>
+        <p>Next Job: <span id="next">N/A</span></p>
+      </div>
+    </header>
+    <main>
+      <div class="reset-form">
+        <input id="cookies" type="text" placeholder="Cookies ..." />
+        <button id="reset">Reset</button>
+      </div>
+    </main>
+  </div>
+  <script>
+    const username = document.querySelector('#username')
+    const combo = document.querySelector('#combo')
+    const today = document.querySelector('#today')
+    const question = document.querySelector('#question')
+    const next = document.querySelector('#next')
+    fetch('/api/status').then(resp => resp.json()).then((data) => {
+      combo.innerText = data.combo
+      today.innerText = data.today
+      username.innerText = data.username
+      question.innerText = data.question
+      next.innerText = data.next
+    })
+
+    document.querySelector('#reset').addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const cookies = document.querySelector('#cookies').value
+      if (cookies.length !== 0) {
+        fetch('/api/cookies', {method: 'POST', body: JSON.stringify({cookies})})
+          .then(resp => resp.json()).then(() => location.reload())
+      }
+    })
+  </script>
+</body>
+</html>
