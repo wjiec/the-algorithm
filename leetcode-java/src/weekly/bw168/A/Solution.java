@@ -3,7 +3,7 @@ package weekly.bw168.A;
 /**
  * Q1. Lexicographically Smallest String After Reverse
  *
- * https://leetcode.cn/contest/biweekly-contest-168/problems/lexicographically-smallest-string-after-reverse/
+ *ttps://leetcode.cn/contest/biweekly-contest-168/problems/lexicographically-smallest-string-after-reverse/
  *
  * You are given a string s of length n consisting of lowercase English letters.
  *
