@@ -9,8 +9,10 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/imroc/req/v3"
 	"github.com/samber/lo"
 
@@ -33,6 +35,28 @@ type Client struct {
 }
 
 func (c *Client) Username() (string, error) {
+	return c.claimFromJwtSession(func(claims jwt.MapClaims) (string, error) {
+		if raw, ok := claims["username"]; ok {
+			if username, ok := raw.(string); ok {
+				return username, nil
+			}
+		}
+		return "", errors.New("username not found in claims")
+	})
+}
+
+func (c *Client) DeviceId() (string, error) {
+	return c.claimFromJwtSession(func(claims jwt.MapClaims) (string, error) {
+		if raw, ok := claims["device_id"]; ok {
+			if deviceId, ok := raw.(string); ok {
+				return deviceId, nil
+			}
+		}
+		return "", errors.New("device_id not found in claims")
+	})
+}
+
+func (c *Client) claimFromJwtSession(f func(jwt.MapClaims) (string, error)) (string, error) {
 	for _, cookie := range c.jar.Cookies(lo.Must(url.Parse(baseURL))) {
 		if cookie.Name == CookieJwtSession {
 			token, _, err := jwt.NewParser().ParseUnverified(cookie.Value, &jwt.MapClaims{})
@@ -40,11 +64,10 @@ func (c *Client) Username() (string, error) {
 				return "", err
 			}
 
-			mapClaims := *token.Claims.(*jwt.MapClaims)
-			return mapClaims["username"].(string), nil
+			return f(*token.Claims.(*jwt.MapClaims))
 		}
 	}
-	return "", errors.New("username not found in cookies")
+	return "", errors.New("jwt session not found in cookies")
 }
 
 func (c *Client) TodayQuestion(ctx context.Context) (*api.TodayQuestion, error) {
@@ -137,13 +160,29 @@ func (c *Client) SaveCookies(w io.Writer) error {
 	return json.NewEncoder(w).Encode(cookies)
 }
 
+func (c *Client) beforeSendQuery() req.RequestMiddleware {
+	return func(rc *req.Client, req *req.Request) error {
+		for _, cookie := range c.jar.Cookies(lo.Must(url.Parse(baseURL))) {
+			if cookie.Name == CookieCsrfToken {
+				req.Headers.Set("X-Csrftoken", cookie.Value)
+			}
+		}
+
+		req.Headers.Set("Accept", "*/*")
+		req.Headers.Set("uuuserid", lo.Must(c.DeviceId()))
+		req.Headers.Set("random-uuid", uuid.NewString())
+		return nil
+	}
+}
+
 func New(options ...Option) (*Client, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	c := &Client{jar: jar, http: req.C().ImpersonateChrome().SetCookieJar(jar)}
+	c := &Client{jar: jar}
+	c.http = req.C().ImpersonateChrome().SetCookieJar(jar).OnBeforeRequest(c.beforeSendQuery())
 	for _, applyOption := range options {
 		if err := applyOption(c); err != nil {
 			return nil, err
@@ -156,7 +195,7 @@ type Option func(*Client) error
 
 func WithHttpClient(http *req.Client) Option {
 	return func(c *Client) error {
-		c.http = http
+		c.http = http.OnBeforeRequest(c.beforeSendQuery())
 		return nil
 	}
 }
@@ -169,6 +208,19 @@ func WithCookies(r io.Reader) Option {
 		}
 
 		c.jar.SetCookies(lo.Must(url.Parse(baseURL)), cookies)
+		return nil
+	}
+}
+
+func WithRawCookies(cookies string) Option {
+	return func(c *Client) error {
+		for _, cookie := range strings.Split(cookies, ";") {
+			if name, value, ok := strings.Cut(cookie, "="); ok {
+				c.jar.SetCookies(lo.Must(url.Parse(baseURL)), []*http.Cookie{
+					{Name: strings.TrimSpace(name), Value: strings.TrimSpace(value)},
+				})
+			}
+		}
 		return nil
 	}
 }

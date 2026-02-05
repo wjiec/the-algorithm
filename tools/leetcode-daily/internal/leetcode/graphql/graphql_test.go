@@ -10,12 +10,13 @@ import (
 
 	"github.com/wjiec/leetcode-daily/internal/leetcode/api"
 	"github.com/wjiec/leetcode-daily/internal/leetcode/graphql"
+	"github.com/wjiec/leetcode-daily/internal/leetcode/graphql/query"
 )
 
 const testEndpoint = "http://localhost/graphql/"
 
 func TestNew(t *testing.T) {
-	c, err := graphql.New[*api.TodayQuestion](testEndpoint, req.C())
+	c, err := graphql.New[*api.TodayQuestion, *query.Empty](testEndpoint, req.C())
 	if assert.NoError(t, err) {
 		assert.NotNil(t, c)
 	}
@@ -31,8 +32,8 @@ func TestClient_Query(t *testing.T) {
 		return resp, nil
 	})
 
-	if c, err := graphql.New[*api.TodayQuestion](testEndpoint, httpClient); assert.NoError(t, err) {
-		resp, err := c.Query(t.Context(), map[string]any{})
+	if c, err := graphql.New[*api.TodayQuestion, *query.Empty](testEndpoint, httpClient); assert.NoError(t, err) {
+		resp, err := c.Query(t.Context(), &query.Empty{})
 		if assert.NoError(t, err) && assert.NotEmpty(t, resp.TodayRecord) {
 			assert.Equal(t, resp.TodayRecord[0].Date, "2026-01-01")
 			assert.Equal(t, resp.TodayRecord[0].Question.Title, "hello world")

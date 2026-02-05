@@ -8,9 +8,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
-	"slices"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
@@ -106,18 +104,6 @@ func (s *Server) apiResetCookies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var jwtSession, csrfToken string
-	for _, cookie := range strings.Split(body.Cookies, ";") {
-		if name, value, ok := strings.Cut(cookie, "="); ok {
-			switch strings.TrimSpace(name) {
-			case leetcode.CookieJwtSession:
-				jwtSession = strings.TrimSpace(value)
-			case leetcode.CookieCsrfToken:
-				csrfToken = strings.TrimSpace(value)
-			}
-		}
-	}
-
 	var username string
 	err := s.withClient(func(c *leetcode.Client) (err error) {
 		if username, err = c.Username(); err != nil {
@@ -126,7 +112,7 @@ func (s *Server) apiResetCookies(w http.ResponseWriter, r *http.Request) {
 
 		slog.Info("resetting cookies", "username", username)
 		return nil
-	}, leetcode.WithCredential(csrfToken, jwtSession))
+	}, leetcode.WithRawCookies(body.Cookies))
 	if err != nil {
 		slog.Warn("failed to reset cookies", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -151,12 +137,13 @@ func (s *Server) dailySubmission() {
 }
 
 func (s *Server) withClient(f func(*leetcode.Client) error, extraOptions ...leetcode.Option) error {
-	options := append(slices.Clone(extraOptions), leetcode.WithHttpTrace(s.debug))
+	options := []leetcode.Option{leetcode.WithHttpTrace(s.debug)}
 	if r, err := automator.LoadFromConfig(*s.config); err != nil {
 		return err
 	} else if r != nil {
 		options = append(options, leetcode.WithCookies(r))
 	}
+	options = append(options, extraOptions...)
 
 	c, err := leetcode.New(options...)
 	if err != nil {
