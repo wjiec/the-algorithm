@@ -68,6 +68,8 @@ public class Solution {
     private static class Optimization {
         public int maxPathScore(int[][] grid, int k) {
             int m = grid.length, n = grid[0].length;
+            // 要么向右要么向下, 所以最多只能走 m + n - 2 个步数
+            k = Math.min(k, m + n - 2);
 
             // 预计算所有的单元格开销
             int[][] cost = new int[m][n];
@@ -77,36 +79,72 @@ public class Solution {
                 }
             }
 
-            // 反向计算想要到达 grid[m - 1][n - 1] 所需的最少花费
-            int[][] step = cost.clone();
-            for (int j = n - 2; j >= 0; j--) step[m - 1][j] = cost[m - 1][j + 1] + cost[m - 1][j];
-            for (int i = m - 2; i >= 0; i--) {
-                step[i][n - 1] = cost[i + 1][n - 1] + cost[i][n - 1];
-                for (int j = n - 2; j >= 0; j--) {
-                    step[i][j] = Math.min(cost[i + 1][j], cost[i][j + 1]) + cost[i][j];
+            // 反向计算想要到达 (m - 1, n - 1) 所需的最少花费
+            int[][] step = new int[m][n]; step[0][0] = cost[0][0];
+            for (int j = 1; j < n; j++) step[0][j] = step[0][j - 1] + cost[0][j];
+            for (int i = 1; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    step[i][j] = step[i - 1][j] + cost[i][j];
+                    if (j > 0) step[i][j] = Math.min(step[i][j], step[i][j - 1] + cost[i][j]);
                 }
             }
-            if (k < step[0][0]) return -1;
-            // 如果是 0 花费的话, 说明没有单元格可以得分
-            if (step[0][0] == 0) return 0;
+            // 无法走到目标位置的提前判断
+            if (k < step[m - 1][n - 1]) return -1;
 
-            // dp[i][j][k] 表示当到达 grid[i][j] 时, 剩余花费为 k 时的最大得分是多少
+            // dp[i][j][k] 表示当到达 grid[i][j] 时, 已经花费为 k 的最大得分
             //  - 当前位置 grid[i][j] 所需要的花费为 c = cost[i][j]
-            //  - 可以从 dp[i - 1][j][k + c] 或 dp[i][j - 1][k + c] 转移得来
+            //  - 可以从 dp[i - 1][j][k - c] 或 dp[i][j - 1][k - c] 转移得来
             // 总计算开销为 m * n * k ~= 2e2 * 2e2 * 1e3
             //                      ~= 4e7
-            //
-            // 当到达一个位置时, 如果可用的 k 越大, 那么肯定得分就会越高, 在一个位置
-            //  - 可以是分数最大 (满足 k >= cost)
-            //  - 也可以是剩余花费最大(也就是可以走更多的格子)
-            // 我们需要记录在每一个位置最大的 k 以及最大的分数对应的 pair 各是什么
+            // 每一行只和上一行有关, 可以优化掉一个维度
+            int[][][] dp = new int[2][n][k + 1];
+            for (var r : dp[0]) Arrays.fill(r, Integer.MIN_VALUE);
+            // 我们将 (1, 1) 作为起始坐标, 也就是从 (0, 1) 和 (1, 0) 转移而来
+            dp[0][0][0] = 0; if (n > 1) dp[0][1][0] = 0;
+            // 枚举所有位置并计算对应的花费的得分
+            for (int i = 1; i <= m; i++) {
+                int[][] curr = dp[i & 1], prev = dp[(i & 1) ^ 1];
+                for (var r : curr) Arrays.fill(r, Integer.MIN_VALUE);
 
-            return 1;
+                for (int j = 0; j < n; j++) {
+                    int c = cost[i - 1][j], v = grid[i - 1][j];
+                    for (int kk = c; kk <= Math.min(k, i + j); kk++) {
+                        curr[j][kk] = v + prev[j][kk - c];
+                        if (j > 0) curr[j][kk] = Math.max(curr[j][kk], v + curr[j - 1][kk - c]);
+                    }
+                }
+            }
+
+            int ans = 0;
+            for (int kk = step[m - 1][n - 1]; kk <= k; kk++) {
+                ans = Math.max(ans, dp[m & 1][n - 1][kk]);
+            }
+            return ans;
         }
     }
 
     public static void main(String[] args) {
-        Benchmark.benchmark("optimization", () -> {
+        Benchmark.benchmark("Optimization", () -> {
+            assert new Optimization().maxPathScore(new int[][]{{0}}, 0) == 0;
+            assert new Optimization().maxPathScore(new int[][]{{0, 1}, {2, 0}}, 1) == 2;
+
+            assert new Optimization().maxPathScore(new int[][]{
+                {0, 1, 1, 1, 0}, {0, 1, 0, 2, 0}, {0, 1, 2, 2, 1}, {1, 0, 0, 2, 0}, {2, 0, 1, 1, 2},
+                {2, 1, 0, 2, 2}, {1, 0, 0, 0, 1}, {1, 2, 2, 1, 0}, {2, 0, 0, 0, 0}, {0, 1, 2, 2, 0},
+                {1, 0, 2, 1, 2}, {0, 1, 1, 1, 2}, {0, 0, 2, 1, 1}, {0, 1, 1, 1, 2}, {1, 0, 0, 0, 1},
+                {2, 0, 1, 0, 0}, {2, 1, 0, 2, 2}, {2, 1, 2, 0, 2}, {1, 1, 2, 2, 2}, {1, 2, 2, 0, 0},
+                {0, 0, 1, 0, 2}, {0, 1, 2, 2, 0}, {0, 1, 2, 1, 1}, {2, 2, 0, 2, 2}, {1, 0, 1, 0, 0},
+                {0, 1, 2, 1, 1}, {1, 2, 2, 2, 0}, {1, 2, 2, 2, 0}, {0, 1, 2, 0, 2}, {2, 1, 2, 2, 0},
+                {1, 0, 0, 1, 2}, {1, 2, 1, 2, 0}, {2, 1, 2, 2, 0}, {2, 2, 1, 1, 1}, {0, 1, 1, 1, 0},
+                {2, 1, 2, 1, 1}, {2, 2, 2, 1, 2}, {0, 0, 1, 2, 2}, {1, 2, 2, 1, 0}, {2, 1, 0, 1, 2},
+                {1, 2, 0, 1, 1}, {0, 1, 2, 1, 2}, {0, 0, 0, 0, 2}, {1, 0, 1, 2, 2}, {0, 2, 2, 0, 1},
+                {2, 0, 1, 2, 0}, {2, 0, 0, 1, 1}, {2, 0, 0, 0, 0}, {2, 2, 0, 0, 0}, {1, 1, 1, 2, 0},
+                {0, 2, 0, 1, 1}, {2, 1, 0, 1, 0}, {2, 1, 2, 0, 0}, {1, 2, 0, 2, 1}, {2, 2, 1, 2, 2},
+                {1, 0, 1, 0, 2}, {1, 0, 0, 2, 1}, {1, 2, 0, 1, 0}, {2, 1, 2, 2, 0}, {2, 0, 2, 0, 1},
+                {1, 1, 1, 1, 0}, {1, 0, 2, 2, 0}, {1, 2, 0, 2, 1}, {0, 1, 0, 0, 2}, {0, 1, 0, 1, 2},
+                {0, 1, 1, 0, 0},
+            }, 43) == 69;
+            assert new Optimization().maxPathScore(new int[][]{{0, 0}, {1, 0}}, 38) == 1;
             assert new Optimization().maxPathScore(new int[][]{
                 {0, 0, 1, 2, 2, 2, 1, 1, 2, 2},{0, 1, 2, 1, 2, 2, 2, 0, 2, 2},{0, 1, 1, 1, 1, 1, 0, 1, 1, 0},
                 {0, 1, 0, 0, 2, 1, 2, 0, 2, 0},{1, 1, 1, 0, 1, 2, 0, 1, 0, 0},{2, 2, 2, 0, 2, 2, 1, 1, 1, 1},
@@ -137,7 +175,11 @@ public class Solution {
             }, 325) == 117;
 
             assert new Optimization().maxPathScore(new int[200][200], 0) == 0;
-            assert new Optimization().maxPathScore(new int[][]{{0, 1, 1, 1}, {1, 2, 2, 0}, {1, 0, 1, 2}}, 4) == 7;
+            assert new Optimization().maxPathScore(new int[][]{
+                {0, 1, 1, 1},
+                {1, 2, 2, 0},
+                {1, 0, 1, 2}
+            }, 4) == 7;
             assert new Optimization().maxPathScore(new int[][]{{0, 1}, {1, 2}}, 1) == -1;
             assert new Optimization().maxPathScore(new int[][]{{0, 2, 2}, {1, 1, 1}, {0, 0, 2}}, 3) == 5;
         });
