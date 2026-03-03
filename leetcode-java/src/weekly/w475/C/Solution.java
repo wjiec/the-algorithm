@@ -29,6 +29,7 @@ import java.util.Map;
 
 public class Solution {
 
+    @SuppressWarnings("unchecked")
     public int maxPathScore(int[][] grid, int k) {
         m = grid.length; n = grid[0].length;
         req = new int[m][n];
