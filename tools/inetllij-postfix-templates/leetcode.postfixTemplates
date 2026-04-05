@@ -1,0 +1,57 @@
+## Math
+
+.abs : abs
+	INT [java.lang.Math]	→	java.lang.Math.abs($expr$)
+	LONG [java.lang.Math]	→	java.lang.Math.abs($expr$)
+	FLOAT [java.lang.Math]	→	java.lang.Math.abs($expr$)
+	DOUBLE [java.lang.Math]	→	java.lang.Math.abs($expr$)
+
+.abse : expr = abs(expr)
+	INT [java.lang.Math]	→	$expr$ = java.lang.Math.abs($expr$)
+	LONG [java.lang.Math]	→	$expr$ = java.lang.Math.abs($expr$)
+	FLOAT [java.lang.Math]	→	$expr$ = java.lang.Math.abs($expr$)
+	DOUBLE [java.lang.Math]	→	$expr$ = java.lang.Math.abs($expr$)
+
+.min : min
+	INT [java.lang.Math]	→	java.lang.Math.min($expr$)
+	LONG [java.lang.Math]	→	java.lang.Math.min($expr$)
+	FLOAT [java.lang.Math]	→	java.lang.Math.min($expr$)
+	DOUBLE [java.lang.Math]	→	java.lang.Math.min($expr$)
+
+.mine : expr = min(expr, |)
+	INT [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
+	LONG [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
+	FLOAT [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
+	DOUBLE [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
+
+.max : max
+	INT [java.lang.Math]	→	java.lang.Math.max($expr$)
+	LONG [java.lang.Math]	→	java.lang.Math.max($expr$)
+	FLOAT [java.lang.Math]	→	java.lang.Math.max($expr$)
+	DOUBLE [java.lang.Math]	→	java.lang.Math.max($expr$)
+
+.maxe : expr = max(expr, |)
+	INT [java.lang.Math]	→	$expr$ = java.lang.Math.max($expr$, $end$)
+	LONG [java.lang.Math]	→	$expr$ = java.lang.Math.max($expr$, $end$)
+	FLOAT [java.lang.Math]	→	$expr$ = java.lang.Math.max($expr$, $end$)
+	DOUBLE [java.lang.Math]	→	$expr$ = java.lang.Math.max($expr$, $end$)
+
+
+## Conversions
+
+.toChar : convert to char
+	INT	→	(char) ('0' + $expr$)
+	LONG	→	(char) ('0' + $expr$)
+
+.toNumber : convert to number
+	CHAR	→	$expr$ - '0'
+	java.lang.String	→	Integer.parseInt($expr$)
+
+
+## Collection
+
+.fori : foreach
+	ARRAY	→	for (int $idx#suggestVariableName():i$ = 0; i < $expr$.length; $idx$++) {\
+		$end$\
+	}
+
