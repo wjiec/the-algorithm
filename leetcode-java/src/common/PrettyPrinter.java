@@ -106,7 +106,7 @@ public class PrettyPrinter {
             } else if (object instanceof Collection<?>) {
                 return toString(((Collection<?>) object).toArray(), new Indent());
             } else if (object instanceof Map<?,?>) {
-                return toString((Map<?,?>) object, new Indent());
+                return toString(object, new Indent());
             }
             return object.toString();
         }
@@ -124,14 +124,14 @@ public class PrettyPrinter {
         if (object.getClass().getComponentType() != null && object.getClass().getComponentType().isArray()) {
             sb.append(indent).append("[\n");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
-                sb.append(toString(Array.get(object, i), indent.next()))
+                sb.append(i).append(": ").append(toString(Array.get(object, i), indent.next()))
                     .append(i == l - 1 ? "" : ", ").append("\n");
             }
             sb.append(indent).append("]");
         } else if (object.getClass().isArray()) {
             sb.append(indent).append("[");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
-                sb.append(toString(Array.get(object, i)))
+                sb.append(i).append(": ").append(toString(Array.get(object, i)))
                     .append(i == l - 1 ? "" : ", ");
             }
             sb.append("]");
