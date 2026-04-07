@@ -33,7 +33,8 @@ public class Solution {
             while (!q.isEmpty() && q.peek() <= i) {
                 if (q.remove() == i) numbers.add(i);
             }
-            for (int j = i << 1; j < MAX_N; j += i) primes[j] = false;
+            if (MAX_N / i < i) continue;
+            for (int j = i * i; j < MAX_N; j += i) primes[j] = false;
         }
     }
 

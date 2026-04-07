@@ -51,9 +51,40 @@ public class Solution {
         return Arrays.stream(nums).map(v -> nearest[v]).toArray();
     }
 
-    public static void main(String[] args) {
-        assert Checker.check(new Solution().minOperations(new int[]{3664}), new int[]{23});
+    private static class Optimization {
+        public int[] minOperations(int[] nums) {
+            // 计算一个数的左半边 l, 那么根据回文, 右半边也是相同的
+            //  - 我们直接枚举从 0 开始到左半边长度的二进制数
+            //  - 离 number 最近的肯定是 l, l + 1, l - 1 的位置
+            //      - 如果左半边是 l + 2 的话, 肯定是比 l + 1 大的
+            //      - 如果左半边是 l - 2 的话, 右半边可能会取反之后再比原来的大
+            //
+            // 对于一个数 v, 它的二进制长度是 l, 我们只需要取它的左半边, 拼接到右半边上即可
+            //  - 长度为偶数, 则左半边就是 v >> (l >> 1)
+            //  - 长度是奇数, 则左半边就是 v >> ((l >> 1) + 1)
+            //
+            // 整合一下就是 v >> ((l + 1) >> 1)
+            int[] ans = new int[nums.length];
+            for (int i = 0; i < nums.length; i++) {
+                int v = nums[i], n = 32 - Integer.numberOfLeadingZeros(v);
+                if (n == 1) { ans[i] = 0; continue; }
 
+                int m = n >> 1, l1 = v >> m, l2 = l1 + 1, l3 = l1 - 1;
+                int v1 = (l1 << m) | Integer.reverse(l1 >> (n % 2)) >>> (32 - m);
+                int v2 = (l2 << m) | Integer.reverse(l2 >> (n % 2)) >>> (32 - m);
+                int v3 = (l3 << m) | Integer.reverse(l3 >> (n % 2)) >>> (32 - m);
+                ans[i] = Math.min(Math.min(Math.abs(v - v1), Math.abs(v2 - v)), Math.abs(v3 - v));
+            }
+            return ans;
+        }
+    }
+
+    public static void main(String[] args) {
+        assert Checker.check(new Optimization().minOperations(new int[]{1,2,4}), new int[]{0,1,1});
+        assert Checker.check(new Optimization().minOperations(new int[]{3664}), new int[]{23});
+        assert Checker.check(new Optimization().minOperations(new int[]{3521}), new int[]{38});
+
+        assert Checker.check(new Solution().minOperations(new int[]{3664}), new int[]{23});
         assert Checker.check(new Solution().minOperations(new int[]{3521}), new int[]{38});
     }
 

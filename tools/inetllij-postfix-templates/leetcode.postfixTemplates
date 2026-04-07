@@ -13,10 +13,10 @@
 	DOUBLE [java.lang.Math]	→	$expr$ = java.lang.Math.abs($expr$)
 
 .min : min
-	INT [java.lang.Math]	→	java.lang.Math.min($expr$)
-	LONG [java.lang.Math]	→	java.lang.Math.min($expr$)
-	FLOAT [java.lang.Math]	→	java.lang.Math.min($expr$)
-	DOUBLE [java.lang.Math]	→	java.lang.Math.min($expr$)
+	INT [java.lang.Math]	→	java.lang.Math.min($expr$, $end$)
+	LONG [java.lang.Math]	→	java.lang.Math.min($expr$, $end$)
+	FLOAT [java.lang.Math]	→	java.lang.Math.min($expr$, $end$)
+	DOUBLE [java.lang.Math]	→	java.lang.Math.min($expr$, $end$)
 
 .mine : expr = min(expr, |)
 	INT [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
@@ -25,10 +25,10 @@
 	DOUBLE [java.lang.Math]	→	$expr$ = java.lang.Math.min($expr$, $end$)
 
 .max : max
-	INT [java.lang.Math]	→	java.lang.Math.max($expr$)
-	LONG [java.lang.Math]	→	java.lang.Math.max($expr$)
-	FLOAT [java.lang.Math]	→	java.lang.Math.max($expr$)
-	DOUBLE [java.lang.Math]	→	java.lang.Math.max($expr$)
+	INT [java.lang.Math]	→	java.lang.Math.max($expr$, $end$)
+	LONG [java.lang.Math]	→	java.lang.Math.max($expr$, $end$)
+	FLOAT [java.lang.Math]	→	java.lang.Math.max($expr$, $end$)
+	DOUBLE [java.lang.Math]	→	java.lang.Math.max($expr$, $end$)
 
 .maxe : expr = max(expr, |)
 	INT [java.lang.Math]	→	$expr$ = java.lang.Math.max($expr$, $end$)
@@ -55,3 +55,5 @@
 		$end$\
 	}
 
+.lidx : create index list
+	ARRAY	→	Integer[] $name#suggestVariableName():sorted$ = java.util.stream.IntStream.range(0, nums.length).boxed().toArray(Integer[]::new);
