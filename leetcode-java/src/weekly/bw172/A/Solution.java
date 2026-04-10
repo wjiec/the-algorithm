@@ -1,7 +1,9 @@
 package weekly.bw172.A;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Q1. Minimum Number of Operations to Have Distinct Elements
@@ -36,6 +38,22 @@ public class Solution {
             if (c.size() == n - ans * 3) break;
         }
         return ans;
+    }
+
+    private static class optimization {
+        public int minOperations(int[] nums) {
+            Set<Integer> seen = new HashSet<>();
+            for (int i = nums.length - 1; i >= 0; i--) {
+                if (!seen.add(nums[i])) {
+                    // 不重复的区间是 (i, n), 所以需要删除的区间就是 [0, i]
+                    //  - 一共 i + 1 个元素需要删除, 操作次数就是 ceil((i + 1) / 3)
+                    //  - 也就是 ((i + 1) + 2) / 3 = i / 3 + 1
+                    return i / 3 + 1;
+                }
+            }
+            // 否则就是不用删除的
+            return 0;
+        }
     }
 
     public static void main(String[] args) {
