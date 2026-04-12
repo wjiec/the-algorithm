@@ -45,6 +45,14 @@
     FLOAT [java.lang.Math] → $expr$ = java.lang.Math.max($expr$, $end$)
     DOUBLE [java.lang.Math] → $expr$ = java.lang.Math.max($expr$, $end$)
 
+.divmod : div and mod
+    INT → for (var $copy#suggestVariableName():v$ = $expr$; $copy$ != 0; $copy$ /= 10) {\
+        var mod = $copy$ % 10;\
+    }
+    LONG → for (var $copy#suggestVariableName():v$ = $expr$; $copy$ != 0; $copy$ /= 10) {\
+        var mod = $copy$ % 10;\
+    }
+
 
 ## Bitwise
 
