@@ -83,7 +83,7 @@ public class LowestCommonAncestor {
             // 如果两者不同, 则说明最近公共祖先还在更上面
             //  - 但是不足以到达 2 ^ (j + 1) 个祖先
             //  - 也就是 2 ^ j < LCA < 2 ^ (j + 1)
-            if (px != py) {u = px; v = py; }
+            if (px != py) { u = px; v = py; }
         }
 
         // 最后我们使得 u 和 v 的父节点相同, 则这就是我们要找的最近的公共祖先了

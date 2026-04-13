@@ -1,5 +1,8 @@
 package weekly.w481.D;
 
+import common.TODO;
+import common.Tag;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +73,11 @@ public class Solution {
         }
 
         return ans;
+    }
+
+    @TODO
+    @Tag("虚树")
+    private static class VirtualTree {
     }
 
     public static void main(String[] args) {
