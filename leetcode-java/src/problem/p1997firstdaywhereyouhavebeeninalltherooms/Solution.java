@@ -21,7 +21,7 @@ package problem.p1997firstdaywhereyouhavebeeninalltherooms;
  *
  * Return the label of the first day where you have been in all the rooms.
  * It can be shown that such a day exists. Since the answer may be very large, return
- * it modulo 109 + 7.
+ * it modulo 1e9 + 7.
  */
 
 public class Solution {

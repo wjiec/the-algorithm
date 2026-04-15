@@ -26,7 +26,7 @@ package weekly.bw164.C;
  *
  * Return the number of unique valid paths from (0, 0) to (m - 1, n - 1).
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note: If a reflection moves the robot into a mirror cell, the robot is immediately
  * reflected again based on the direction it used to enter that mirror: if it entered

@@ -16,7 +16,7 @@ package weekly.w421.B;
  *
  * Return the length of the resulting string after exactly t transformations.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

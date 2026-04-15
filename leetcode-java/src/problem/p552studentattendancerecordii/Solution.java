@@ -18,7 +18,7 @@ package problem.p552studentattendancerecordii;
  * The student was absent ('A') for strictly fewer than 2 days total.
  * The student was never late ('L') for 3 or more consecutive days.
  * Given an integer n, return the number of possible attendance records of length n that
- * make a student eligible for an attendance award. The answer may be very large, so return it modulo 109 + 7.
+ * make a student eligible for an attendance award. The answer may be very large, so return it modulo 1e9 + 7.
  */
 
 public class Solution {

@@ -15,7 +15,7 @@ import java.util.Arrays;
  * lengths 1, 3, and 5 are visible from the left.
  *
  * Given n and k, return the number of such arrangements. Since the answer
- * may be large, return it modulo 109 + 7.
+ * may be large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

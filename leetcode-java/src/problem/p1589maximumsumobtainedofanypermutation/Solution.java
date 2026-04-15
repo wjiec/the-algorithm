@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  *
  * Return the maximum total sum of all requests among all permutations of nums.
  *
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

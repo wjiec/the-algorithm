@@ -8,7 +8,7 @@ import common.TODO;
  * https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
  *
  * Given an integer n, return the decimal value of the binary string formed by
- * concatenating the binary representations of 1 to n in order, modulo 109 + 7.
+ * concatenating the binary representations of 1 to n in order, modulo 1e9 + 7.
  */
 
 public class Solution {

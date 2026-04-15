@@ -13,7 +13,7 @@ import java.util.Map;
  * any adjacent cell in all 4 directions.
  *
  * Return the number of strictly increasing paths in the grid such that you can start from
- * any cell and end at any cell. Since the answer may be very large, return it modulo 109 + 7.
+ * any cell and end at any cell. Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Two paths are considered different if they do not have exactly the same sequence of visited cells.
  */

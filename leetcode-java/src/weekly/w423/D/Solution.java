@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * Return an integer denoting the number of positive integers less than n that are k-reducible.
  *
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

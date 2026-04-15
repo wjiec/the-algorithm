@@ -11,7 +11,7 @@ package problem.p1955countnumberofspecialsubsequences;
  * For example, [0,1,2] and [0,0,1,1,1,2] are special.
  * In contrast, [2,1,0], [1], and [0,1,2,0] are not special.
  * Given an array nums (consisting of only integers 0, 1, and 2), return the number of different
- * subsequences that are special. Since the answer may be very large, return it modulo 109 + 7.
+ * subsequences that are special. Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * A subsequence of an array is a sequence that can be derived from the array by deleting
  * some or no elements without changing the order of the remaining elements.

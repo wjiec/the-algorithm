@@ -12,7 +12,7 @@ package weekly.w463.B;
  *
  * Set idx = li.
  * While idx <= ri:
- * Update: nums[idx] = (nums[idx] * vi) % (109 + 7)
+ * Update: nums[idx] = (nums[idx] * vi) % (1e9 + 7)
  * Set idx += ki.
  *
  * Return the bitwise XOR of all elements in nums after processing all queries.

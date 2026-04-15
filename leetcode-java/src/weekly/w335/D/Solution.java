@@ -10,7 +10,7 @@ package weekly.w335.D;
  * there are counti questions of the ith type, and each one of them is worth marksi points.
  *
  * Return the number of ways you can earn exactly target points in the exam. Since the answer
- * may be too large, return it modulo 109 + 7.
+ * may be too large, return it modulo 1e9 + 7.
  *
  * Note that questions of the same type are indistinguishable.
  *

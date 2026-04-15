@@ -10,7 +10,7 @@ package problem.p1155numberofdicerollswithtargetsum;
  * Given three integers n, k, and target, return the number of possible ways (out of the kn total ways)
  * to roll the dice so the sum of the face-up numbers equals target.
  *
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

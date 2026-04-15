@@ -15,7 +15,7 @@ import ability.Ability;
  * at an even index but is not even.
  *
  * Given an integer n, return the total number of good digit strings of length n.
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * A digit string is a string consisting of digits 0 through 9 that may contain leading zeros.
  */

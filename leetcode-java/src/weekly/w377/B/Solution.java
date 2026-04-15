@@ -18,7 +18,7 @@ import java.util.Set;
  * Return the maximum area of a square field that can be formed by removing some
  * fences (possibly none) or -1 if it is impossible to make a square field.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * Note: The field is surrounded by two horizontal fences from the
  * coordinates (1, 1) to (1, n) and (m, 1) to (m, n) and two vertical

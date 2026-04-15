@@ -14,7 +14,7 @@ import static ability.Ability.Math.pow;
  *
  * A valid arrangement is a placement of all k pieces on the grid with at most one piece per cell.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * The Manhattan Distance between two cells (xi, yi) and (xj, yj) is |xi - xj| + |yi - yj|.
  */

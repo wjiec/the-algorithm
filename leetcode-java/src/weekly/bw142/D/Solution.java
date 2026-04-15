@@ -20,7 +20,7 @@ import java.util.Map;
  * Return the total number of possible original strings that Alice might have intended to type,
  * if she was trying to type a string of size at least k.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 @SuppressWarnings("DuplicatedCode")

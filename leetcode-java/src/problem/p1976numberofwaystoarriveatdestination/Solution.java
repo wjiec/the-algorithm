@@ -19,7 +19,7 @@ import common.TODO;
  * in the shortest amount of time.
  *
  * Return the number of ways you can arrive at your destination in the shortest amount of time.
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

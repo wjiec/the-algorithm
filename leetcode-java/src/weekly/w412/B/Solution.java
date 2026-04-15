@@ -15,7 +15,7 @@ import java.util.Set;
  * Find the minimum value x in nums. If there are multiple occurrences of the
  * minimum value, select the one that appears first.
  * Replace the selected minimum value x with x * multiplier.
- * After the k operations, apply modulo 109 + 7 to every value in nums.
+ * After the k operations, apply modulo 1e9 + 7 to every value in nums.
  *
  * Return an integer array denoting the final state of nums after performing
  * all k operations and then applying the modulo.

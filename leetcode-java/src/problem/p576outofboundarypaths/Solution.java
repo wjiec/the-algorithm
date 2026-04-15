@@ -14,7 +14,7 @@ package problem.p576outofboundarypaths;
  * Given the five integers m, n, maxMove, startRow, startColumn, return the number of paths to
  * move the ball out of the grid boundary.
  *
- * Since the answer can be very large, return it modulo 109 + 7.
+ * Since the answer can be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

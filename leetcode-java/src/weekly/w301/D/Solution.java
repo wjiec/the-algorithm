@@ -11,7 +11,7 @@ package weekly.w301.D;
  *
  * Every arr[i] is a value from 1 to maxValue, for 0 <= i < n.
  * Every arr[i] is divisible by arr[i - 1], for 0 < i < n.
- * Return the number of distinct ideal arrays of length n. Since the answer may be very large, return it modulo 109 + 7.
+ * Return the number of distinct ideal arrays of length n. Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

@@ -14,7 +14,7 @@ import java.util.Map;
  * You can paint each cell red, green, or blue. All cells must be painted.
  *
  * Return the number of ways to color the grid with no two adjacent cells having the same color.
- * Since the answer can be very large, return it modulo 109 + 7.
+ * Since the answer can be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

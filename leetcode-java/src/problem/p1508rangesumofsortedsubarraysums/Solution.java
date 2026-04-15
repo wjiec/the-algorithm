@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  *
  * Return the sum of the numbers from index left to index right (indexed
  * from 1), inclusive, in the new array. Since the answer can be a huge
- * number return it modulo 109 + 7.
+ * number return it modulo 1e9 + 7.
  */
 
 public class Solution {

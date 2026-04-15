@@ -21,7 +21,7 @@ import java.util.Arrays;
  *
  * For example, [1, 3] and [2, 5] are overlapping because 2 and 3 occur in both ranges.
  * Return the total number of ways to split ranges into two groups. Since the answer
- * may be very large, return it modulo 109 + 7.
+ * may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

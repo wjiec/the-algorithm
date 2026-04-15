@@ -18,7 +18,7 @@ import java.util.Arrays;
  * No three consecutive elements form a strictly increasing or strictly decreasing sequence.
  * Return the total number of valid ZigZag arrays.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * A sequence is said to be strictly increasing if each element is strictly greater than its previous one (if exists).
  * A sequence is said to be strictly decreasing if each element is strictly smaller than its previous one (if exists).

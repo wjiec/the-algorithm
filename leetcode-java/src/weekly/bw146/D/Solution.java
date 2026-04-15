@@ -14,7 +14,7 @@ import static ability.Ability.Math.pow;
  *
  * Given an integer array nums, find the number of subsequences of size 5 of nums with a unique middle mode.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * A mode of a sequence of numbers is defined as the element that appears the maximum number of times in the sequence.
  *

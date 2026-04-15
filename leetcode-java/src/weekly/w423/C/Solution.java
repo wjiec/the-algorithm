@@ -10,7 +10,7 @@ package weekly.w423.C;
  *
  * Return the sum of all possible good subsequences of nums.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note that a subsequence of size 1 is considered good by definition.
  */

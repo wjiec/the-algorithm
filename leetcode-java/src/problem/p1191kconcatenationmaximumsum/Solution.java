@@ -12,7 +12,7 @@ package problem.p1191kconcatenationmaximumsum;
  * Return the maximum sub-array sum in the modified array.
  * Note that the length of the sub-array can be 0 and its sum in that case is 0.
  *
- * As the answer can be very large, return the answer modulo 109 + 7.
+ * As the answer can be very large, return the answer modulo 1e9 + 7.
  */
 
 public class Solution {

@@ -6,7 +6,7 @@ package problem.p1513numberofsubstringswithonly1s;
  * https://leetcode.cn/problems/number-of-substrings-with-only-1s/
  *
  * Given a binary string s, return the number of substrings with all characters 1's.
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

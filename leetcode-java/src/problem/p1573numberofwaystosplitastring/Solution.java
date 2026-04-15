@@ -9,7 +9,7 @@ package problem.p1573numberofwaystosplitastring;
  * where s1 + s2 + s3 = s.
  *
  * Return the number of ways s can be split such that the number of ones is the
- * same in s1, s2, and s3. Since the answer may be too large, return it modulo 109 + 7.
+ * same in s1, s2, and s3. Since the answer may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

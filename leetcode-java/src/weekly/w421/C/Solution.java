@@ -21,7 +21,7 @@ import static ability.Ability.Math.gcd;
  * The GCD of the elements of seq1 is equal to the GCD of the elements of seq2.
  * Return the total number of such pairs.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

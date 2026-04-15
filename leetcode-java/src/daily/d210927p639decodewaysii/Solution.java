@@ -30,7 +30,7 @@ package daily.d210927p639decodewaysii;
  *
  * Given a string s consisting of digits and '*' characters, return the number of ways to decode it.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

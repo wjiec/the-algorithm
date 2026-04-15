@@ -27,7 +27,7 @@ import java.util.TreeMap;
  * provided the conditions above are met.
  *
  * Return the number of ways to form target from words. Since the answer may be
- * too large, return it modulo 109 + 7.
+ * too large, return it modulo 1e9 + 7.
  * @noinspection unchecked
  */
 

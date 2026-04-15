@@ -6,7 +6,7 @@ package problem.p1759countnumberofhomogenoussubstrings;
  * https://leetcode.cn/problems/count-number-of-homogenous-substrings/
  *
  * Given a string s, return the number of homogenous substrings of s.
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  *
  * A string is homogenous if all the characters of the string are the same.
  *

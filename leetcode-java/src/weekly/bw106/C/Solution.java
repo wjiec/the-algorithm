@@ -19,7 +19,7 @@ import java.util.Arrays;
  * If two robots collide, they will start moving in opposite directions.
  *
  * Return the sum of distances between all the pairs of robots d seconds after the command.
- * Since the sum can be very large, return it modulo 109 + 7.
+ * Since the sum can be very large, return it modulo 1e9 + 7.
  *
  * Note:
  *

@@ -14,7 +14,7 @@ package weekly.bw141.D;
  *
  * Return the total number of possible ways the event can take place.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note that two events are considered to have been held differently if either of the
  * following conditions is satisfied:

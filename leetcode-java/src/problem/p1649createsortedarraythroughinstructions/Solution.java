@@ -18,7 +18,7 @@ package problem.p1649createsortedarraythroughinstructions;
  *
  * Return the total cost to insert all elements from instructions into nums.
  *
- * Since the answer may be large, return it modulo 109 + 7
+ * Since the answer may be large, return it modulo 1e9 + 7
  */
 
 public class Solution {

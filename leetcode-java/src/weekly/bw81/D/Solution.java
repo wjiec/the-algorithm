@@ -16,7 +16,7 @@ import java.util.Map;
  * roll is equal to the value of the jth roll, then abs(i - j) > 2.
  *
  * Return the total number of distinct sequences possible. Since the answer may be very
- * large, return it modulo 109 + 7.
+ * large, return it modulo 1e9 + 7.
  *
  * Two sequences are considered distinct if at least one element is different.
  */

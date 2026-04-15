@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * Return the total number of good partitions of nums.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

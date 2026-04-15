@@ -22,7 +22,7 @@ import static ability.Ability.Math.pow;
  * Select any one node x at the maximum depth. Return the number of ways to assign edge weights
  * in the path from node 1 to x such that its total cost is odd.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * Note: Ignore all edges not in the path from node 1 to x.
  */

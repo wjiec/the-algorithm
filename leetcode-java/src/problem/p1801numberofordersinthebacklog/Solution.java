@@ -29,7 +29,7 @@ import java.util.PriorityQueue;
  * Else, the sell order is added to the backlog.
  *
  * Return the total amount of orders in the backlog after placing all the orders from the input.
- * Since this number can be large, return it modulo 109 + 7.
+ * Since this number can be large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

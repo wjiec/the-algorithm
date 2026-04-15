@@ -17,7 +17,7 @@ package weekly.bw146.B;
  *
  * Return the total number of such paths.
  *
- * Since the answer can be very large, return the result modulo 109 + 7.
+ * Since the answer can be very large, return the result modulo 1e9 + 7.
  */
 
 public class Solution {

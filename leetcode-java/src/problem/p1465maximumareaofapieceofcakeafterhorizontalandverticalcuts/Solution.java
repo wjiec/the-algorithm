@@ -13,7 +13,7 @@ import java.util.Arrays;
  * verticalCuts[j] is the distance from the left of the rectangular cake to the jth vertical cut.
  * Return the maximum area of a piece of cake after you cut at each horizontal and vertical position
  * provided in the arrays horizontalCuts and verticalCuts. Since the answer
- * can be a large number, return this modulo 109 + 7.
+ * can be a large number, return this modulo 1e9 + 7.
  */
 
 public class Solution {

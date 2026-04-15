@@ -20,7 +20,7 @@ import java.math.BigInteger;
  * have x = 1111 and y = 0001.
  *
  * Find the minimum non-zero product of nums after performing the above operation any number of times.
- * Return this product modulo 109 + 7.
+ * Return this product modulo 1e9 + 7.
  *
  * Note: The answer should be the minimum product before the modulo operation is done.
  */

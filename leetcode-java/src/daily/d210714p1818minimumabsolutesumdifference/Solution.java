@@ -16,7 +16,7 @@ import java.util.Arrays;
  * any other element in nums1 to minimize the absolute sum difference.
  *
  * Return the minimum absolute sum difference after replacing at most one element in the array nums1.
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * |x| is defined as:
  *

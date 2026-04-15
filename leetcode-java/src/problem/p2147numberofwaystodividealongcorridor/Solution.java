@@ -19,7 +19,7 @@ package problem.p2147numberofwaystodividealongcorridor;
  * way but not in the second way.
  *
  * Return the number of ways to divide the corridor. Since the answer may be very large, return
- * it modulo 109 + 7. If there is no way, return 0.
+ * it modulo 1e9 + 7. If there is no way, return 0.
  */
 
 public class Solution {

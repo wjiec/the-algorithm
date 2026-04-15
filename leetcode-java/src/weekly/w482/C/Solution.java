@@ -1,5 +1,8 @@
 package weekly.w482.C;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Q3. Smallest All-Ones Multiple
  *
@@ -55,7 +58,22 @@ public class Solution {
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 
+    private static class Optimization {
+        public int minAllOneMultiple(int k) {
+            if (k % 2 == 0 || k % 5 == 0) return -1;
+
+            // 直接中途取模即可
+            Set<Integer> seen = new HashSet<>(); int x = 0;
+            do { x = (x * 10 + 1) % k; } while (x != 0 && seen.add(x));
+            return x == 0 ? seen.size() + 1 : -1;
+        }
+    }
+
     public static void main(String[] args) {
+        assert new Optimization().minAllOneMultiple(3) == 3;
+        assert new Optimization().minAllOneMultiple(7) == 6;
+        assert new Optimization().minAllOneMultiple(2) == -1;
+
         assert new Solution().minAllOneMultiple(3) == 3;
         assert new Solution().minAllOneMultiple(7) == 6;
         assert new Solution().minAllOneMultiple(2) == -1;

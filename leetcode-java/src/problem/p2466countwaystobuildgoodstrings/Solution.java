@@ -16,7 +16,7 @@ package problem.p2466countwaystobuildgoodstrings;
  * between low and high (inclusive).
  *
  * Return the number of different good strings that can be constructed satisfying
- * these properties. Since the answer can be large, return it modulo 109 + 7.
+ * these properties. Since the answer can be large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

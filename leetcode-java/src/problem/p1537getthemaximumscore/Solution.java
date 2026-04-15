@@ -19,7 +19,7 @@ package problem.p1537getthemaximumscore;
  * The score is defined as the sum of uniques values in a valid path.
  *
  * Return the maximum score you can obtain of all possible valid paths. Since the answer
- * may be too large, return it modulo 109 + 7.
+ * may be too large, return it modulo 1e9 + 7.
  */
 
 @SuppressWarnings("DuplicatedCode")

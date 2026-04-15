@@ -16,7 +16,7 @@ package weekly.w330.B;
  *
  * Return the number of ways the monkeys can move so that at least one collision happens.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note that each monkey can only move once.
  */

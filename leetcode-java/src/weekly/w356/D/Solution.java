@@ -14,7 +14,7 @@ import java.util.Arrays;
  *
  * Return an integer denoting the count of stepping numbers in the inclusive range [low, high].
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note: A stepping number should not have a leading zero.
  */

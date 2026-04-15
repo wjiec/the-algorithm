@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * For all indexes 0 <= i < n - 1, either nums[i] % nums[i+1] == 0 or nums[i+1] % nums[i] == 0.
  *
- * Return the total number of special permutations. As the answer could be large, return it modulo 109 + 7.
+ * Return the total number of special permutations. As the answer could be large, return it modulo 1e9 + 7.
  */
 
 @SuppressWarnings("unchecked")

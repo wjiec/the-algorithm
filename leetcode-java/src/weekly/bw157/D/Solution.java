@@ -25,7 +25,7 @@ import static ability.Ability.Math.pow;
  *
  * Return an array answer, where answer[i] is the number of valid assignments for queries[i].
  *
- * Since the answer may be large, apply modulo 109 + 7 to each answer[i].
+ * Since the answer may be large, apply modulo 1e9 + 7 to each answer[i].
  *
  * Note: For each query, disregard all edges not in the path between node ui and vi.
  */

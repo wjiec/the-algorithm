@@ -11,7 +11,7 @@ import java.util.PriorityQueue;
  * you may choose any element from nums and increment it by 1.
  *
  * Return the maximum product of nums after at most k operations. Since the answer may be very large,
- * return it modulo 109 + 7.
+ * return it modulo 1e9 + 7.
  */
 
 public class Solution {

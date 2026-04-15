@@ -14,7 +14,7 @@ import java.util.Map;
  * You can pick any two different foods to make a good meal.
  *
  * Given an array of integers deliciousness where deliciousness[i] is the deliciousness of the ith item of food,
- * return the number of different good meals you can make from this list modulo 109 + 7.
+ * return the number of different good meals you can make from this list modulo 1e9 + 7.
  *
  * Note that items with different indices are considered different even if they have the same deliciousness value.
  */

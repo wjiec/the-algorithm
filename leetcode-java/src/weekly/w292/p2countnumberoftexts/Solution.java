@@ -21,7 +21,7 @@ package weekly.w292.p2countnumberoftexts;
  * Given a string pressedKeys representing the string received by Bob, return the total
  * number of possible text messages Alice could have sent.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

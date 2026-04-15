@@ -23,7 +23,7 @@ import java.util.*;
  * also satisfies that distanceToLastNode(zi) > distanceToLastNode(zi+1) where 0 <= i <= k-1.
  *
  * Return the number of restricted paths from node 1 to node n. Since that number may be too
- * large, return it modulo 109 + 7.
+ * large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

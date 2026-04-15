@@ -15,7 +15,7 @@ package weekly.w300.C;
  * they forgot it, or on any day afterwards.
  *
  * Given an integer n, return the number of people who know the secret at the end of day n.
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

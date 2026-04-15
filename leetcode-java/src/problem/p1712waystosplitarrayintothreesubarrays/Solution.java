@@ -16,7 +16,7 @@ import common.TODO;
  * the sum of the elements in mid is less than or equal to the sum of the elements in right.
  *
  * Given nums, an array of non-negative integers, return the number of good ways to split nums.
- * As the number may be too large, return it modulo 109 + 7.
+ * As the number may be too large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

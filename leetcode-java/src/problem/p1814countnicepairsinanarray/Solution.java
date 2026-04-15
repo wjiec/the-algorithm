@@ -14,7 +14,7 @@ import java.util.Arrays;
  * 0 <= i < j < nums.length
  * nums[i] + rev(nums[j]) == nums[j] + rev(nums[i])
  * Return the number of nice pairs of indices. Since that number can be too
- * large, return it modulo 109 + 7.
+ * large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

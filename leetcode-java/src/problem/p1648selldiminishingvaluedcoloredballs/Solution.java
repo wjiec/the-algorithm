@@ -21,7 +21,7 @@ import java.util.Deque;
  * balls that the customer wants. You can sell the balls in any order.
  *
  * Return the maximum total value that you can attain after selling orders colored balls.
- * As the answer may be too large, return it modulo 109 + 7.
+ * As the answer may be too large, return it modulo 1e9 + 7.
  */
 
 @SuppressWarnings("ConstantConditions")

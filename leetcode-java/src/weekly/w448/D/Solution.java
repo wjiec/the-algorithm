@@ -19,7 +19,7 @@ import static ability.Ability.Math.pow;
  *
  * Return the sum of the array products for all valid magical sequences.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * A set bit refers to a bit in the binary representation of a number that has a value of 1.
  */

@@ -14,7 +14,7 @@ import common.TODO;
  * they are allowed to share endpoints.
  *
  * Return the number of ways we can draw k non-overlapping line segments.
- * Since this number can be huge, return it modulo 109 + 7.
+ * Since this number can be huge, return it modulo 1e9 + 7.
  */
 
 public class Solution {

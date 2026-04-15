@@ -19,7 +19,7 @@ import java.util.Arrays;
  * After applying the mentioned algorithm to arr, the value search_cost is equal to k.
  *
  * Return the number of ways to build the array arr under the mentioned conditions.
- * As the answer may grow large, the answer must be computed modulo 109 + 7.
+ * As the answer may grow large, the answer must be computed modulo 1e9 + 7.
  */
 
 public class Solution {

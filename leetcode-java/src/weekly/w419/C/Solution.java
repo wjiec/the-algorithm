@@ -33,7 +33,7 @@ package weekly.w419.C;
  *
  * Return the number of distinct sequences Bob can use to beat Alice.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

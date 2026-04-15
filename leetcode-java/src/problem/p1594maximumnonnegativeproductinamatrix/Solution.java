@@ -13,7 +13,7 @@ package problem.p1594maximumnonnegativeproductinamatrix;
  *
  * The product of a path is the product of all integers in the grid cells visited along the path.
  *
- * Return the maximum non-negative product modulo 109 + 7. If the maximum product is negative, return -1.
+ * Return the maximum non-negative product modulo 1e9 + 7. If the maximum product is negative, return -1.
  *
  * Notice that the modulo is performed after getting the maximum product.
  */

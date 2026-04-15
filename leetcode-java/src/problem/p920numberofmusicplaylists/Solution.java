@@ -14,7 +14,7 @@ package problem.p920numberofmusicplaylists;
  * A song can only be played again only if k other songs have been played.
  * Given n, goal, and k, return the number of possible playlists that you can create.
  *
- * Since the answer can be very large, return it modulo 109 + 7.
+ * Since the answer can be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

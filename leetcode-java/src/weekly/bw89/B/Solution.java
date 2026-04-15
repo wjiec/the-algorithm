@@ -15,7 +15,7 @@ package weekly.bw89.B;
  *
  * Return an array answers, equal in length to queries, where answers[i] is the answer
  * to the ith query. Since the answer to the ith query may be too large, each answers[i]
- * should be returned modulo 109 + 7.
+ * should be returned modulo 1e9 + 7.
  */
 
 public class Solution {

@@ -14,7 +14,7 @@ import java.util.Arrays;
  * group is max(nums[i0], nums[i1], ... ,nums[ik])2 * min(nums[i0], nums[i1], ... ,nums[ik]).
  *
  * Return the sum of the power of all non-empty groups of heroes possible. Since the sum
- * could be very large, return it modulo 109 + 7.
+ * could be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

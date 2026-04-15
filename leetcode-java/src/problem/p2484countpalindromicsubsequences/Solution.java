@@ -6,7 +6,7 @@ package problem.p2484countpalindromicsubsequences;
  * https://leetcode.cn/problems/count-palindromic-subsequences
  *
  * Given a string of digits s, return the number of palindromic subsequences of s having length 5.
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  *
  * Note:
  *

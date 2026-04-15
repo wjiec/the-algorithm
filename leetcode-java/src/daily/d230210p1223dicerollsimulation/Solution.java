@@ -14,7 +14,7 @@ import java.util.Arrays;
  * Given an array of integers rollMax and an integer n, return the number of
  * distinct sequences that can be obtained with exact n rolls.
  *
- * Since the answer may be too large, return it modulo 109 + 7.
+ * Since the answer may be too large, return it modulo 1e9 + 7.
  *
  * Two sequences are considered different if at least one element differs from each other.
  */

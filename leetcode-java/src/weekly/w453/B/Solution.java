@@ -22,7 +22,7 @@ package weekly.w453.B;
  * Find the number of permutations of [0, 1, 2, ..., (n - 1)] that represent a valid order
  * in which the computers can be unlocked, starting from computer 0 as the only initially unlocked one.
  *
- * Since the answer may be large, return it modulo 109 + 7.
+ * Since the answer may be large, return it modulo 1e9 + 7.
  *
  * Note that the password for the computer with label 0 is decrypted, and not the computer
  * with the first position in the permutation.

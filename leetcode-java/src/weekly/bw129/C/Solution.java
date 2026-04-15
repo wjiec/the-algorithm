@@ -16,7 +16,7 @@ import common.Timer;
  * Each subarray of arr with a size greater than limit must contain both 0 and 1.
  * Return the total number of stable binary arrays.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 1e9 + 7.
  */
 
 public class Solution {

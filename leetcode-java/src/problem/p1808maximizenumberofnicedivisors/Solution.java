@@ -17,7 +17,7 @@ import static ability.Ability.Math.pow;
  * prime factors are [2,2,3], then 6 and 12 are nice divisors, while 3 and 4 are not.
  *
  * Return the number of nice divisors of n. Since that number
- * can be too large, return it modulo 109 + 7.
+ * can be too large, return it modulo 1e9 + 7.
  *
  * Note that a prime number is a natural number greater than 1 that is not a
  * product of two smaller natural numbers. The prime factors of a number n is
