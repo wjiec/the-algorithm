@@ -54,6 +54,16 @@
     }
 
 
+## Utility
+
+.swap : a, b = b, a
+    INT → var $tmp#suggestVariableName():tmp$ = $expr$; $expr$ = $rhs$; $rhs$ = $tmp$;
+    LONG → var $tmp#suggestVariableName():tmp$ = $expr$; $expr$ = $rhs$; $rhs$ = $tmp$;
+    FLOAT → var $tmp#suggestVariableName():tmp$ = $expr$; $expr$ = $rhs$; $rhs$ = $tmp$;
+    DOUBLE → var $tmp#suggestVariableName():tmp$ = $expr$; $expr$ = $rhs$; $rhs$ = $tmp$;
+    CHAR → var $tmp#suggestVariableName():tmp$ = $expr$; $expr$ = $rhs$; $rhs$ = $tmp$;
+
+
 ## Bitwise
 
 .bit_length : the number of bits

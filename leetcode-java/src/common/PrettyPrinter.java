@@ -5,6 +5,10 @@ import java.util.*;
 
 public class PrettyPrinter {
 
+    // ANSI escape codes
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GRAY = "\u001B[90m";
+
     /**
      * └   ┘
      *                         <100>
@@ -124,14 +128,16 @@ public class PrettyPrinter {
         if (object.getClass().getComponentType() != null && object.getClass().getComponentType().isArray()) {
             sb.append(indent).append("[\n");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
-                sb.append(i).append(": ").append(toString(Array.get(object, i), indent.next()))
+                sb.append(ANSI_GRAY).append(i).append(": ").append(ANSI_RESET)
+                    .append(toString(Array.get(object, i), indent.next()))
                     .append(i == l - 1 ? "" : ", ").append("\n");
             }
             sb.append(indent).append("]");
         } else if (object.getClass().isArray()) {
             sb.append(indent).append("[");
             for (int i = 0, l = Array.getLength(object); i < l; i++) {
-                sb.append(i).append(": ").append(toString(Array.get(object, i)))
+                sb.append(ANSI_GRAY).append(i).append(": ").append(ANSI_RESET)
+                    .append(toString(Array.get(object, i)))
                     .append(i == l - 1 ? "" : ", ");
             }
             sb.append("]");
