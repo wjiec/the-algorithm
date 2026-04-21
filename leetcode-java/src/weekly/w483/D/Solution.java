@@ -3,6 +3,30 @@ package weekly.w483.D;
 import java.util.*;
 import java.util.stream.IntStream;
 
+/**
+ * Q4. Minimum Cost to Merge Sorted Lists
+ *
+ * https://leetcode.cn/contest/weekly-contest-483/problems/minimum-cost-to-merge-sorted-lists/
+ *
+ * You are given a 2D integer array lists, where each lists[i] is a non-empty
+ * array of integers sorted in non-decreasing order.
+ *
+ * You may repeatedly choose two lists a = lists[i] and b = lists[j], where i != j,
+ * and merge them. The cost to merge a and b is:
+ *
+ * len(a) + len(b) + abs(median(a) - median(b)), where len and median
+ * denote the list length and median, respectively.
+ *
+ * After merging a and b, remove both a and b from lists and insert the new merged
+ * sorted list in any position. Repeat merges until only one list remains.
+ *
+ * Return an integer denoting the minimum total cost required to merge all lists into one single sorted list.
+ *
+ * The median of an array is the middle element after sorting it in non-decreasing order.
+ * If the array has an even number of elements, the median is the left middle element.
+ */
+
+@SuppressWarnings("DuplicatedCode")
 public class Solution {
 
     private static final int MAX_N = 13;
@@ -104,32 +128,27 @@ public class Solution {
 
     @SuppressWarnings("DuplicatedCode")
     private static class Iteration {
-
-        private static final int MAX_N = 13;
-        private final int[] min = new int[MAX_N];
-        private final int[] max = new int[MAX_N];
-        { Arrays.fill(min, Integer.MAX_VALUE); }
-        { Arrays.fill(max, Integer.MIN_VALUE); }
-
         public long minMergeCost(int[][] lists) {
+            int n = lists.length, MAX_N = 1 << n;
             // 合并两个有序数组的代价是 len(a) + len(b) + abs(median(a) - median(b))
             //  - 在数组合并之后, 如何快速取到中位数
 
-            // 预计算所有数组的最大最小值
-            for (int i = 0; i < lists.length; i++) {
-                for (var v : lists[i]) {
-                    min[i] = Math.min(min[i], v);
-                    max[i] = Math.max(max[i], v);
-                }
-            }
-
-            // 预计算所有可能的组合的长度
-            int n = lists.length, MAX_N = 1 << n;
+            // 预计算所有可能的组合的长度以及中位数
             int[] lens = new int[MAX_N];
+            int[][] sorted = new int[MAX_N][];
             for (int i = 0; i < n; i++) {
                 int curr = lists[i].length, mask = 1 << i;
                 for (int j = 0; j < mask; j++) {
-                    lens[(1 << i) + j] = curr + lens[j];
+                    int fromLen = lens[j], mergedLen = lens[mask | j] = curr + fromLen;
+                    if (sorted[j] != null) {
+                        // 合并新的数组
+                        int[] nums = new int[mergedLen];
+                        for (int a = 0, b = 0, k = 0; a < curr || b < fromLen; ) {
+                            if (a == curr || (b < fromLen && sorted[j][b] < lists[i][a])) nums[k++] = sorted[j][b++];
+                            else nums[k++] = lists[i][a++];
+                        }
+                        sorted[mask | j] = nums;
+                    } else sorted[mask | j] = lists[i].clone();
                 }
             }
 
@@ -142,50 +161,13 @@ public class Solution {
                     dp[i] = Long.MAX_VALUE;
                     // 现在需要从 i 中选一个 a 合并到 i ^ a
                     for (var a = (i - 1) & i; a > 0; a = (a - 1) & i) {
-                        dp[i] = Math.min(dp[i], dp[a] + dp[a ^ i] + lens[a] + lens[a ^ i] + Math.abs(median(lists, a) - median(lists, a ^ i)));
+                        int la = lens[a], lb = lens[a ^ i];
+                        dp[i] = Math.min(dp[i], dp[a] + dp[a ^ i] + la + lb + Math.abs(sorted[a][(la - 1) >> 1] - sorted[a ^ i][(lb - 1) >> 1]));
                     }
                 }
             }
 
             return dp[(1 << n) - 1];
-        }
-
-        private final long[] memo = new long[1 << 13];
-        { Arrays.fill(memo, -1); }
-
-        // 在 lists 中选择 mask 个列表, 找出这些列表中的中位数
-        private long median(int[][] lists, int mask) {
-            if (memo[mask] != -1) return memo[mask];
-
-            int k = 0; List<int[]> used = new ArrayList<>();
-            // 找到所选择数组的最小值和最大值
-            int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
-            for (int i = 0; i < lists.length; i++) {
-                if ((mask & (1 << i)) != 0) {
-                    mn = Math.min(mn, min[i]);
-                    mx = Math.max(mx, max[i]);
-                    k += lists[i].length; used.add(lists[i]);
-                }
-            }
-            // 中位数位置
-            k = (k - 1) >> 1;
-
-            // 使用值域二分找到中位数的位置
-            int l = mn - 1, r = mx + 1;
-            while (l + 1 < r) {
-                int mid = l + (r - l) / 2, cnt = 0;
-                for (var u : used) {
-                    int ui = Arrays.binarySearch(u, mid);
-                    if (ui < 0) ui = ~ui; else ui++;
-                    cnt += ui;
-                }
-
-                // 根据 <= mid 的数量与 k 的关系进行二分
-                if (cnt > k) r = mid;
-                else l = mid;
-            }
-
-            return memo[mask] = l;
         }
     }
 

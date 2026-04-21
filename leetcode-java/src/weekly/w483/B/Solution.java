@@ -4,6 +4,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Q2. Word Squares II
+ *
+ * https://leetcode.cn/contest/weekly-contest-483/problems/word-squares-ii/
+ *
+ * You are given a string array words, consisting of distinct 4-letter strings, each containing lowercase English letters.
+ *
+ * A word square consists of 4 distinct words: top, left, right and bottom, arranged as follows:
+ *
+ * top forms the top row.
+ * bottom forms the bottom row.
+ * left forms the left column (top to bottom).
+ * right forms the right column (top to bottom).
+ * It must satisfy:
+ *
+ * top[0] == left[0], top[3] == right[0]
+ * bottom[0] == left[3], bottom[3] == right[3]
+ *
+ * Return all valid distinct word squares, sorted in ascending lexicographic
+ * order by the 4-tuple (top, left, right, bottom).
+ */
+
 public class Solution {
 
     public List<List<String>> wordSquares(String[] words) {
