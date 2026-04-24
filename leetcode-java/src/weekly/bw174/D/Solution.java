@@ -1,6 +1,8 @@
 package weekly.bw174.D;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Q4. Minimum Edge Toggles on a Tree
@@ -23,50 +25,49 @@ import java.util.*;
  * If it is impossible to transform start into target, return an array containing a single element equal to -1.
  */
 
+@SuppressWarnings("unchecked")
 public class Solution {
 
     public List<Integer> minimumFlips(int n, int[][] edges, String start, String target) {
         // 一次翻转会修改两个节点的值, 如果错误是奇数的话, 则无法修复
-        Set<Integer> wrongs = new HashSet<>();
-        for (int i = 0; i < n; i++) if (start.charAt(i) != target.charAt(i)) wrongs.add(i);
-        if ((wrongs.size() & 1) == 1) return List.of(-1);
+        int wrongs = 0; char[] s = start.toCharArray(), t = target.toCharArray();
+        for (int i = 0; i < n; i++) if (s[i] != t[i]) wrongs++;
+        if ((wrongs & 1) == 1) return List.of(-1);
 
+        // 如果叶子节点需要修复的话, 那么一定需要翻转叶子节点, 同时也会导致连接叶子节点的父节点也会被翻转
         List<int[]>[] g = new List[n]; Arrays.setAll(g, i -> new ArrayList<>());
         for (int i = 0; i < edges.length; i++) {
-            g[edges[i][0]].add(new int[]{edges[i][1], i});
-            g[edges[i][1]].add(new int[]{edges[i][0], i});
+            int a = edges[i][0], b = edges[i][1];
+            g[a].add(new int[]{b, i});
+            g[b].add(new int[]{a, i});
         }
 
-        boolean[] flips = new boolean[n];
-        List<Integer> path = new ArrayList<>();
-        if (wrongs.contains(0)) path.add(0);
-        dfs(g, 0, -1, -1, wrongs, path, flips);
-
+        // 从叶子节点倒序枚举即可
         List<Integer> ans = new ArrayList<>();
-        for (int i = 0; i < flips.length; i++) {
-            if (flips[i]) ans.add(i);
-        }
+        dfs(g, 0, -1, s, t, ans);
+        ans.sort(Integer::compare);
         return ans;
     }
 
-    private void dfs(List<int[]>[] g, int curr, int parent, int prev, Set<Integer> wrongs, List<Integer> p, boolean[] flips) {
-        boolean currIsWrong = wrongs.contains(curr);
-        if (prev != -1 && currIsWrong) {
-            for (var v : p) flips[v] = !flips[v];
-        }
+    // 当前在 curr 节点, 检查 parent -> curr 这条边是否需要翻转
+    private boolean dfs(List<int[]>[] g, int curr, int parent, char[] s, char[] t, List<Integer> ans) {
+        boolean reverse = s[curr] != t[curr];
+        for (var pair : g[curr]) {
+            int next = pair[0], i = pair[1];
+            if (next == parent) continue;
 
-        for (var next : g[curr]) {
-            if (next[0] == parent) continue;
-            p.add(next[1]);
-            dfs(g, next[0], curr, currIsWrong ? curr : prev, wrongs, currIsWrong ? new ArrayList<>() : p, flips);
-            p.remove(p.size() - 1);
+            // 如果子节点需要翻转, 那么当前节点也会被翻转
+            if (dfs(g, next, curr, s, t, ans)) {
+                ans.add(i); reverse = !reverse;
+            }
         }
+        return reverse;
     }
 
     public static void main(String[] args) {
-//        System.out.println(new Solution().minimumFlips(7, new int[][]{{3,0},{0,5},{4,2},{2,6},{5,1},{1,6}}, "1000101", "0110100"));
+        System.out.println(new Solution().minimumFlips(7, new int[][]{{3,0},{0,5},{4,2},{2,6},{5,1},{1,6}}, "1000101", "0110100"));
 
-//        System.out.println(new Solution().minimumFlips(3, new int[][]{{0,1},{1,2}}, "010", "100"));
+        System.out.println(new Solution().minimumFlips(3, new int[][]{{0,1},{1,2}}, "010", "100"));
         System.out.println(new Solution().minimumFlips(7, new int[][]{{0,1},{1,2},{2,3},{3,4},{3,5},{1,6}}, "0011000", "0010001"));
         System.out.println(new Solution().minimumFlips(2, new int[][]{{0,1}}, "00", "01"));
     }
