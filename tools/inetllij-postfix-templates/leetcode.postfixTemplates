@@ -99,3 +99,6 @@
 
 .lidx : create index list
     ARRAY → Integer[] $name#suggestVariableName():sorted$ = java.util.stream.IntStream.range(0, nums.length).boxed().toArray(Integer[]::new);
+
+.setall : set all
+    ARRAY → java.util.Arrays.setAll($expr$, i -> $end$)

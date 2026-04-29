@@ -43,6 +43,34 @@ public class LowestCommonAncestor {
             g[edge[0]].add(new int[]{edge[1], edge[2]});
             g[edge[1]].add(new int[]{edge[0], edge[2]});
         }
+
+        build(g, n, logN);
+    }
+
+    @SuppressWarnings("unchecked")
+    public LowestCommonAncestor(int[][] edges, int w) {
+        // 图中节点的数量
+        int n = edges.length + 1;
+        // 我们至少需要使用多少位二进制才能表示所有的 n
+        //  - 在后续倍增时, 我们需要最多需要跳跃 logN 次才能到达根节点
+        int logN = 32 - Integer.numberOfLeadingZeros(n);
+
+        depth = new int[n];
+        distance = new long[n];
+        table = new int[n][logN];
+
+        // 开始遍历树上的所有节点
+        List<int[]>[] g = new List[n];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for (var edge : edges) {
+            g[edge[0]].add(new int[]{edge[1], w});
+            g[edge[1]].add(new int[]{edge[0], w});
+        }
+
+        build(g, n, logN);
+    }
+
+    private void build(List<int[]>[] g, int n, int logN) {
         dfs(g, 0, -1);
 
         // 开始倍增向上 2 ^ j 次可以到达的节点
