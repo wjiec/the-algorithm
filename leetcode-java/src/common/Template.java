@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 public @interface Template {
 
     // 模板的名字
-    String value() default "";
+    String[] value() default {};
 
+    @interface Templates {
+        Template[] value() default {};
+    }
 }
