@@ -74,9 +74,47 @@ public class Solution {
         return ans;
     }
 
+    @SuppressWarnings("unchecked")
+    private static class Optimization {
+        public int countSequences(int[] nums, long k) {
+            // 由于数据范围是 1 <= v <= 6, 考虑质因数分解只有 2 3 5 (1 不对结果产生影响)
+            //  - 所以所有的可以凑成的整数都是 2 ^ e1 * 3 ^ e2 * 5 ^ e3
+            //  - 因子为 2 最多只有 2 * n 个, 3 和 5 最多只有 n 个, 所以总数量就是 n^3 个
+            //
+            // 直接记忆化搜索即可
+            return count(nums, nums.length - 1, 1, 1, k);
+        }
+
+        private final Map<Long, Map<Long, Integer>>[] memo = new Map[20];
+        { Arrays.setAll(memo, i -> new HashMap<>()); }
+
+        // 枚举当前在 i 位置, 当前值是 p / q 的数量是多少
+        private int count(int[] nums, int i, long p, long q, long k) {
+            if (i < 0) return p == k && q == 1 ? 1 : 0;
+            if (memo[i].containsKey(p) && memo[i].get(p).containsKey(q)) return memo[i].get(p).get(q);
+
+            // 不选
+            int ans1 = count(nums, i - 1, p, q, k);
+            // 选乘
+            long g1 = gcd(p * nums[i], q);
+            int ans2 = count(nums, i - 1, p * nums[i] / g1, q / g1, k);
+            // 选除
+            long g2 = gcd(p, q * nums[i]);
+            int ans3 = count(nums, i - 1, p / g2, q * nums[i] / g2, k);
+
+            memo[i].computeIfAbsent(p, key -> new HashMap<>()).put(q, ans1 + ans2 + ans3);
+            return ans1 + ans2 + ans3;
+        }
+
+        private static long gcd(long a, long b) { return a % b == 0 ? b : gcd(b, a % b); }
+    }
+
     public static void main(String[] args) {
         int[] nums = new int[19]; int k = ThreadLocalRandom.current().nextInt((int) 1e15);
         Arrays.setAll(nums, i -> ThreadLocalRandom.current().nextInt(6) + 1);
+        Benchmark.benchmark("Optimization", () -> {
+            System.out.println(new Optimization().countSequences(nums, k));
+        });
         Benchmark.benchmark("", () -> {
             System.out.println(new Solution().countSequences(nums, k));
         });
