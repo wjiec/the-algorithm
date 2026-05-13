@@ -1,6 +1,11 @@
 package weekly.w493.D;
 
-import java.util.*;
+import common.Tag;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Q4. Maximum Points Activated with One Addition
@@ -22,63 +27,37 @@ import java.util.*;
 
 public class Solution {
 
-    private static class UnionFind {
-        // 记录每个节点的父节点是谁, 默认都指向自己
-        private int groups = 0;
-        private final int[] parent;
-        private final int[] count;
+    private final Map<Long, Long> parent = new HashMap<>();
 
-        // 初始化并查集, 设置每个节点的父节点为自己
-        public UnionFind(int n) {
-            groups = n;
-            parent = new int[n];
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-            }
+    private long find(long x) {
+        if (!parent.containsKey(x)) return x;
 
-            count = new int[n];
-            Arrays.fill(count, 1);
-        }
-
-        // 合并两个节点
-        public boolean union(int a, int b) {
-            int fa = find(a), fb = find(b);
-            if (fa == fb) return false;
-
-            groups--;
-            parent[fa] = fb;
-            count[fb] += count[fa];
-            return true;
-        }
-
-        // 查找指定节点的父节点同时压缩树
-        public int find(int v) {
-            while (v != parent[v]) {
-                parent[v] = parent[parent[v]];
-                v = parent[v];
-            }
-            return v;
-        }
+        long px = parent.get(x);
+        if (px != x) parent.put(x, find(px));
+        return parent.get(x);
     }
 
+    private void union(long a, long b) {
+        parent.put(find(a), find(b));
+    }
+
+    @Tag({"二维并查集", "中介并查集"})
     public int maxActivated(int[][] points) {
+        final long GAP = 3_000_000_007L;
         // 某个点被激活, 则具有相同的 x 或 y 的点也都会被激活(连通)
-        UnionFind uf = new UnionFind(points.length);
-        Map<Integer, List<Integer>> xAxis = new HashMap<>();
-        Map<Integer, List<Integer>> yAxis = new HashMap<>();
-        for (int i = 0; i < points.length; i++) {
-            var x = xAxis.computeIfAbsent(points[i][0], k -> new ArrayList<>());
-            if (!x.isEmpty()) uf.union(i, x.get(x.size() - 1)); x.add(i);
+        //  - 使用"中介"来连接所有的点, 也就是每个点连接到坐标轴的数字上
+        for (var point : points) union(point[0], point[1] + GAP);
 
-            var y = yAxis.computeIfAbsent(points[i][1], k -> new ArrayList<>());
-            if (!y.isEmpty()) uf.union(i, y.get(y.size() - 1)); y.add(i);
-        }
-        // 如果只有一个组的话, 那么就是这个组的大小 + 1
-        if (uf.groups == 1) return points.length + 1;
+        // 统计所有连通块的大小
+        Map<Long, Integer> size = new HashMap<>();
+        for (var p : points) size.merge(find(p[0]), 1, Integer::sum);
 
-        // 如果存在 k 个组, 我们需要找到最大的两个组
+        // 找到两个最大的连通块
+        List<Integer> sorted = new ArrayList<>(size.values());
+        if (sorted.size() == 1) return sorted.get(0) + 1;
 
-        return 1;
+        sorted.sort(Integer::compare);
+        return sorted.get(sorted.size() - 1) + sorted.get(sorted.size() - 2) + 1;
     }
 
     public static void main(String[] args) {
